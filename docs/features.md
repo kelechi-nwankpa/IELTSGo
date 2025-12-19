@@ -76,32 +76,32 @@ Legend:
 
 ### Content
 
-- [ ] Task 2 essay prompts (minimum 10)
-- [ ] Prompt display UI
+- [x] Task 2 essay prompts (minimum 10)
+- [x] Prompt display UI
 
 ### Submission
 
-- [ ] Essay text editor component
-- [ ] Word count display
-- [ ] Timer component (optional use)
-- [ ] Essay submission API endpoint
-- [ ] Input validation (min/max words)
+- [x] Essay text editor component
+- [x] Word count display
+- [x] Timer component (optional use)
+- [x] Essay submission API endpoint
+- [x] Input validation (min/max words)
 
 ### AI Evaluation
 
-- [ ] AI service layer created
-- [ ] Claude API integration
-- [ ] Writing evaluation prompt integrated
-- [ ] Structured JSON response parsing
-- [ ] Error handling for AI failures
+- [x] AI service layer created
+- [x] Claude API integration
+- [x] Writing evaluation prompt integrated
+- [x] Structured JSON response parsing
+- [x] Error handling for AI failures
 - [ ] Evaluation storage in database
 
 ### Feedback Display
 
-- [ ] Band score display (4 criteria + overall)
-- [ ] Criterion breakdown UI
-- [ ] Specific feedback with essay references
-- [ ] Improvement suggestions display
+- [x] Band score display (4 criteria + overall)
+- [x] Criterion breakdown UI
+- [x] Specific feedback with essay references
+- [x] Improvement suggestions display
 - [ ] Evaluation history view
 - [ ] Error highlighting
 - [ ] Band 8/9 model answers
