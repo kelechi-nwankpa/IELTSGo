@@ -1,6 +1,7 @@
 # Listening Explanation Prompt
 
 ## Metadata
+
 - **Version:** 1.0.0
 - **Model:** Claude Haiku
 - **Last Updated:** 2025-01
@@ -136,16 +137,16 @@ interface ListeningExplanation {
 
 ## Template Variables
 
-| Variable | Type | Description |
-|----------|------|-------------|
-| `section_number` | number | Section 1, 2, 3, or 4 |
-| `transcript` | string | Full transcript of the audio |
-| `question_type` | string | Type of question |
-| `question_number` | number | Question number |
-| `question_text` | string | The question being asked |
-| `correct_answer` | string | The correct answer |
-| `student_answer` | string | What the student answered |
-| `was_correct` | boolean | Whether the student was correct |
+| Variable          | Type    | Description                     |
+| ----------------- | ------- | ------------------------------- |
+| `section_number`  | number  | Section 1, 2, 3, or 4           |
+| `transcript`      | string  | Full transcript of the audio    |
+| `question_type`   | string  | Type of question                |
+| `question_number` | number  | Question number                 |
+| `question_text`   | string  | The question being asked        |
+| `correct_answer`  | string  | The correct answer              |
+| `student_answer`  | string  | What the student answered       |
+| `was_correct`     | boolean | Whether the student was correct |
 
 ---
 
@@ -169,6 +170,7 @@ interface ListeningExplanation {
 ## Caching Strategy
 
 This prompt's output is highly cacheable:
+
 - **Cache key:** `explanation:listening:{content_id}:{question_id}`
 - **TTL:** 7 days
 - **Invalidation:** On prompt version change or content update
@@ -190,6 +192,7 @@ Like reading explanations, the core explanation is the same for all students.
 ## Changelog
 
 ### 1.0.0 (2025-01)
+
 - Initial prompt version
 - Covers all IELTS Listening sections and question types
 - JSON output format defined

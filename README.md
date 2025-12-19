@@ -18,16 +18,19 @@ IELTSGo helps IELTS candidates prepare for all four test sections:
 ## Key Features
 
 ### AI-Powered Feedback (Writing & Speaking)
+
 - Band estimates for each scoring criterion
 - Specific, actionable suggestions referencing your actual response
 - Feedback modeled on examiner standards
 
 ### Traditional Practice (Reading & Listening)
+
 - Auto-scored with instant results
 - AI explanations available on request
 - Timed practice modes
 
 ### Personalized Study Plans
+
 - Diagnostic-based recommendations
 - Weekly/daily task suggestions
 - Progress tracking
@@ -44,16 +47,16 @@ IELTSGo helps IELTS candidates prepare for all four test sections:
 
 ## Monetization
 
-| Feature | Free | Premium |
-|---------|------|---------|
-| Writing evaluation | 3/month | Unlimited* |
-| Speaking evaluation | 3/month | Unlimited* |
-| Reading practice | Limited passages | Full library |
-| Listening practice | Limited exercises | Full library |
-| AI explanations | Limited | Unlimited |
-| Study plans | Basic | Personalized |
+| Feature             | Free              | Premium      |
+| ------------------- | ----------------- | ------------ |
+| Writing evaluation  | 3/month           | Unlimited\*  |
+| Speaking evaluation | 3/month           | Unlimited\*  |
+| Reading practice    | Limited passages  | Full library |
+| Listening practice  | Limited exercises | Full library |
+| AI explanations     | Limited           | Unlimited    |
+| Study plans         | Basic             | Personalized |
 
-*Subject to fair use limits
+\*Subject to fair use limits
 
 ---
 

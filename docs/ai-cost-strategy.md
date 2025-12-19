@@ -20,19 +20,20 @@ Compared to naive "call AI for everything" approach.
 
 ### Cost Reduction Levers
 
-| Lever | Estimated Savings | Implementation |
-|-------|-------------------|----------------|
-| No AI for reading/listening scoring | 30-40% | Deterministic answer matching |
-| Explanation caching | 15-20% | Redis cache with 7-day TTL |
-| Model tiering | 10-15% | Haiku for explanations, Sonnet for evaluation |
-| Request batching | 5-10% | Combine multiple evaluations where possible |
-| Quota enforcement | Variable | Hard caps prevent runaway costs |
+| Lever                               | Estimated Savings | Implementation                                |
+| ----------------------------------- | ----------------- | --------------------------------------------- |
+| No AI for reading/listening scoring | 30-40%            | Deterministic answer matching                 |
+| Explanation caching                 | 15-20%            | Redis cache with 7-day TTL                    |
+| Model tiering                       | 10-15%            | Haiku for explanations, Sonnet for evaluation |
+| Request batching                    | 5-10%             | Combine multiple evaluations where possible   |
+| Quota enforcement                   | Variable          | Hard caps prevent runaway costs               |
 
 ---
 
 ## AI Usage by Feature
 
 ### Writing Evaluation
+
 - **AI Required:** Yes
 - **Model:** Claude Sonnet
 - **Estimated tokens per call:** 2,000-4,000 (input + output)
@@ -40,6 +41,7 @@ Compared to naive "call AI for everything" approach.
 - **Optimization:** Prompt efficiency, structured output
 
 ### Speaking Evaluation
+
 - **AI Required:** Yes (two stages)
 - **Stage 1:** Whisper STT (~$0.006/minute of audio)
 - **Stage 2:** Claude Sonnet for evaluation
@@ -48,6 +50,7 @@ Compared to naive "call AI for everything" approach.
 - **Optimization:** Prompt efficiency, structured output
 
 ### Reading Explanation
+
 - **AI Required:** Only for explanations
 - **Model:** Claude Haiku
 - **Estimated tokens per call:** 500-1,000
@@ -55,6 +58,7 @@ Compared to naive "call AI for everything" approach.
 - **Cache key:** `explanation:reading:{content_id}:{question_id}`
 
 ### Listening Explanation
+
 - **AI Required:** Only for explanations
 - **Model:** Claude Haiku
 - **Estimated tokens per call:** 500-1,000
@@ -62,6 +66,7 @@ Compared to naive "call AI for everything" approach.
 - **Cache key:** `explanation:listening:{content_id}:{question_id}`
 
 ### Study Plan Generation
+
 - **AI Required:** Yes
 - **Model:** Claude Sonnet
 - **Estimated tokens per call:** 1,500-2,500
@@ -73,24 +78,29 @@ Compared to naive "call AI for everything" approach.
 ## Quota System
 
 ### Free Tier Limits (Monthly)
+
 - Writing evaluations: 3
 - Speaking evaluations: 3
 - Explanations: 20
 - Study plan: 1 (basic)
 
 ### Premium Tier Limits (Monthly)
+
 - Writing evaluations: 100 (soft cap, alert at 80)
 - Speaking evaluations: 100 (soft cap, alert at 80)
 - Explanations: Unlimited (but rate-limited)
 - Study plan: Unlimited regeneration
 
 ### Daily Caps (All Tiers)
+
 Even premium users have daily caps to prevent abuse:
+
 - Writing: 20/day
 - Speaking: 20/day
 - Explanations: 100/day
 
 ### Enforcement
+
 ```
 On evaluation request:
 1. Check daily cap → 429 if exceeded
@@ -126,6 +136,7 @@ Cache invalidation:
 ### Response Caching (Future)
 
 For identical writing submissions (e.g., sample essays for testing):
+
 - Hash the input text
 - Check cache before AI call
 - Useful for demo/testing, minimal production impact
@@ -136,21 +147,21 @@ For identical writing submissions (e.g., sample essays for testing):
 
 ### Decision Matrix
 
-| Task | Quality Need | Latency Need | Model Choice |
-|------|--------------|--------------|--------------|
-| Writing eval | High | Medium | Sonnet |
-| Speaking eval | High | Medium | Sonnet |
-| Reading explain | Medium | Low | Haiku |
-| Listening explain | Medium | Low | Haiku |
-| Study plan | High | Low | Sonnet |
+| Task              | Quality Need | Latency Need | Model Choice |
+| ----------------- | ------------ | ------------ | ------------ |
+| Writing eval      | High         | Medium       | Sonnet       |
+| Speaking eval     | High         | Medium       | Sonnet       |
+| Reading explain   | Medium       | Low          | Haiku        |
+| Listening explain | Medium       | Low          | Haiku        |
+| Study plan        | High         | Low          | Sonnet       |
 
 ### Cost Comparison (Approximate, per 1K tokens)
 
-| Model | Input | Output |
-|-------|-------|--------|
-| Claude Haiku | $0.00025 | $0.00125 |
-| Claude Sonnet | $0.003 | $0.015 |
-| Claude Opus | $0.015 | $0.075 |
+| Model         | Input    | Output   |
+| ------------- | -------- | -------- |
+| Claude Haiku  | $0.00025 | $0.00125 |
+| Claude Sonnet | $0.003   | $0.015   |
+| Claude Opus   | $0.015   | $0.075   |
 
 **Strategy:** Never use Opus in production. Haiku for simple tasks, Sonnet for evaluation.
 
@@ -159,10 +170,12 @@ For identical writing submissions (e.g., sample essays for testing):
 ## Request Batching
 
 ### When Applicable
+
 - Bulk explanation pre-generation for new content
 - Multiple questions from same session (batch explanation request)
 
 ### Implementation
+
 ```
 Batch explanation request:
 - User requests explanations for questions 1, 3, 5
@@ -172,7 +185,9 @@ Batch explanation request:
 ```
 
 ### Latency Trade-off
+
 Batching increases latency for first item but reduces total cost. Use for:
+
 - Background jobs (pre-warming cache)
 - End-of-session review (show all explanations)
 
@@ -183,6 +198,7 @@ Do not batch real-time evaluation requests.
 ## Cost Monitoring
 
 ### Metrics to Track
+
 - Total AI spend (daily, weekly, monthly)
 - Cost per evaluation by type
 - Cost per user (free vs premium)
@@ -190,12 +206,14 @@ Do not batch real-time evaluation requests.
 - Token efficiency (output tokens / input tokens)
 
 ### Alerts
+
 - Daily spend > 120% of expected
 - Cache hit rate < 70%
 - Average tokens per request > 150% of baseline
 - Any Opus usage (should be zero)
 
 ### Dashboards
+
 - Real-time spend tracker
 - Cost breakdown by feature
 - User-level cost analysis (for abuse detection)
@@ -207,12 +225,14 @@ Do not batch real-time evaluation requests.
 ### Per-User Monthly Cost (Estimated)
 
 **Free User (using full quota):**
+
 - 3 writing evals × $0.10 = $0.30
 - 3 speaking evals × $0.12 = $0.36
 - 20 explanations × $0.01 × 20% (cache miss) = $0.04
 - **Total: ~$0.70/month**
 
 **Active Premium User:**
+
 - 30 writing evals × $0.10 = $3.00
 - 20 speaking evals × $0.12 = $2.40
 - 50 explanations × $0.01 × 20% = $0.10
@@ -225,21 +245,25 @@ Do not batch real-time evaluation requests.
 ## Optimization Roadmap
 
 ### Phase 1 (MVP)
+
 - Basic quota system
 - No caching yet
 - Manual cost monitoring
 
 ### Phase 2
+
 - Explanation caching
 - Automated cost alerts
 - Usage dashboard
 
 ### Phase 3
+
 - Request batching for explanations
 - Prompt optimization (reduce token count)
 - A/B test Haiku vs Sonnet for edge cases
 
 ### Phase 4
+
 - Predictive quota management
 - Dynamic model selection based on complexity
 - Cost-per-user profiling

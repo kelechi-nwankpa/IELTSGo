@@ -1,6 +1,7 @@
 # Reading Explanation Prompt
 
 ## Metadata
+
 - **Version:** 1.0.0
 - **Model:** Claude Haiku
 - **Last Updated:** 2025-01
@@ -132,16 +133,16 @@ interface ReadingExplanation {
 
 ## Template Variables
 
-| Variable | Type | Description |
-|----------|------|-------------|
-| `passage_title` | string | Title of the reading passage |
-| `passage_text` | string | Full passage text |
-| `question_type` | string | Type of question (see list above) |
-| `question_number` | number | Question number |
-| `question_text` | string | The question being asked |
-| `correct_answer` | string | The correct answer |
-| `student_answer` | string | What the student answered |
-| `was_correct` | boolean | Whether the student was correct |
+| Variable          | Type    | Description                       |
+| ----------------- | ------- | --------------------------------- |
+| `passage_title`   | string  | Title of the reading passage      |
+| `passage_text`    | string  | Full passage text                 |
+| `question_type`   | string  | Type of question (see list above) |
+| `question_number` | number  | Question number                   |
+| `question_text`   | string  | The question being asked          |
+| `correct_answer`  | string  | The correct answer                |
+| `student_answer`  | string  | What the student answered         |
+| `was_correct`     | boolean | Whether the student was correct   |
 
 ---
 
@@ -165,6 +166,7 @@ interface ReadingExplanation {
 ## Caching Strategy
 
 This prompt's output is highly cacheable:
+
 - **Cache key:** `explanation:reading:{content_id}:{question_id}`
 - **TTL:** 7 days
 - **Invalidation:** On prompt version change or content update
@@ -176,6 +178,7 @@ The explanation does not change based on the student's answer — the same expla
 ## Changelog
 
 ### 1.0.0 (2025-01)
+
 - Initial prompt version
 - Covers all IELTS Reading question types
 - JSON output format defined

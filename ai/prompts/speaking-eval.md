@@ -1,6 +1,7 @@
 # Speaking Evaluation Prompt
 
 ## Metadata
+
 - **Version:** 1.0.0
 - **Model:** Claude Sonnet
 - **Last Updated:** 2025-01
@@ -201,16 +202,16 @@ interface SuggestedPhrase {
 
 ## Template Variables
 
-| Variable | Type | Description |
-|----------|------|-------------|
-| `speaking_part` | string | One of: part1, part2, part3 |
-| `question_prompt` | string | The examiner's question |
-| `cue_card` | string | Part 2 cue card text (empty for Part 1/3) |
-| `wpm` | number | Words per minute |
-| `filler_count` | number | Count of filler words |
-| `repetition_count` | number | Count of repeated phrases |
-| `duration_seconds` | number | Length of response |
-| `transcript` | string | Transcribed spoken response |
+| Variable           | Type   | Description                               |
+| ------------------ | ------ | ----------------------------------------- |
+| `speaking_part`    | string | One of: part1, part2, part3               |
+| `question_prompt`  | string | The examiner's question                   |
+| `cue_card`         | string | Part 2 cue card text (empty for Part 1/3) |
+| `wpm`              | number | Words per minute                          |
+| `filler_count`     | number | Count of filler words                     |
+| `repetition_count` | number | Count of repeated phrases                 |
+| `duration_seconds` | number | Length of response                        |
+| `transcript`       | string | Transcribed spoken response               |
 
 ---
 
@@ -234,6 +235,7 @@ interface SuggestedPhrase {
 ## Changelog
 
 ### 1.0.0 (2025-01)
+
 - Initial prompt version
 - Covers Parts 1, 2, and 3
 - Explicit pronunciation limitations acknowledged

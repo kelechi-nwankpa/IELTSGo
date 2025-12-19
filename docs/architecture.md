@@ -7,6 +7,7 @@ This document describes the system architecture for IELTSGo.
 ## Overview
 
 IELTSGo is a full-stack application with:
+
 - Web frontend (React/Next.js)
 - Mobile apps (React Native)
 - Backend API (Node.js/Express or Next.js API routes)
@@ -51,17 +52,20 @@ IELTSGo is a full-stack application with:
 ## Frontend Architecture
 
 ### Web (Next.js 14+)
+
 - App Router with Server Components
 - Client components for interactive features
 - Tailwind CSS for styling
 - Responsive design (mobile-first)
 
 ### Mobile (React Native)
+
 - Shared business logic with web where possible
 - Native audio recording
 - Offline-first for practice content
 
 ### Key UI Components
+
 - Writing editor with word count and timer
 - Audio recorder with waveform visualization
 - Reading passage viewer with highlighting
@@ -72,6 +76,7 @@ IELTSGo is a full-stack application with:
 ## Backend Architecture
 
 ### API Design
+
 - RESTful endpoints
 - JSON request/response
 - JWT authentication
@@ -80,30 +85,35 @@ IELTSGo is a full-stack application with:
 ### Core Services
 
 **Auth Service**
+
 - Email/password registration
 - Social login (Google, Apple)
 - Session management
 - Password reset
 
 **User Service**
+
 - Profile management
 - Subscription status
 - Usage tracking
 - Preferences
 
 **Practice Service**
+
 - Content delivery (questions, passages, audio)
 - Session management
 - Progress tracking
 - Answer submission and scoring (non-AI)
 
 **Evaluation Service**
+
 - AI evaluation orchestration
 - Quota management
 - Result storage
 - Feedback formatting
 
 **Study Plan Service**
+
 - Diagnostic assessment
 - Plan generation
 - Task scheduling
@@ -114,6 +124,7 @@ IELTSGo is a full-stack application with:
 ## AI Architecture
 
 ### AI Service Layer
+
 Abstraction layer between application and AI providers.
 
 ```
@@ -131,21 +142,23 @@ Abstraction layer between application and AI providers.
 ```
 
 ### Provider Strategy
+
 - Primary: Claude API (Anthropic)
 - Speech-to-text: Whisper API (OpenAI) or local Whisper
 - Fallback: OpenAI GPT-4 for evaluation (if Claude unavailable)
 
 ### Model Selection by Task
 
-| Task | Model | Rationale |
-|------|-------|-----------|
-| Writing evaluation | Claude Sonnet | Balance of quality and cost |
-| Speaking evaluation | Claude Sonnet | Needs nuanced feedback |
-| Reading explanation | Claude Haiku | Simpler task, cost-sensitive |
-| Listening explanation | Claude Haiku | Simpler task, cost-sensitive |
-| Study plan generation | Claude Sonnet | Requires reasoning |
+| Task                  | Model         | Rationale                    |
+| --------------------- | ------------- | ---------------------------- |
+| Writing evaluation    | Claude Sonnet | Balance of quality and cost  |
+| Speaking evaluation   | Claude Sonnet | Needs nuanced feedback       |
+| Reading explanation   | Claude Haiku  | Simpler task, cost-sensitive |
+| Listening explanation | Claude Haiku  | Simpler task, cost-sensitive |
+| Study plan generation | Claude Sonnet | Requires reasoning           |
 
 ### Prompt Management
+
 - Prompts stored in `/ai/prompts/` as markdown
 - Version controlled
 - Loaded at runtime
@@ -213,29 +226,32 @@ usage_quota
 
 ### Redis Cache Strategy
 
-| Key Pattern | TTL | Purpose |
-|-------------|-----|---------|
-| `explanation:{content_id}:{question_id}` | 7 days | Cache AI explanations |
-| `user:{id}:quota` | 1 hour | Quota lookup cache |
-| `session:{id}` | 24 hours | Active session data |
-| `content:{id}` | 1 day | Content delivery cache |
+| Key Pattern                              | TTL      | Purpose                |
+| ---------------------------------------- | -------- | ---------------------- |
+| `explanation:{content_id}:{question_id}` | 7 days   | Cache AI explanations  |
+| `user:{id}:quota`                        | 1 hour   | Quota lookup cache     |
+| `session:{id}`                           | 24 hours | Active session data    |
+| `content:{id}`                           | 1 day    | Content delivery cache |
 
 ---
 
 ## Security
 
 ### Authentication
+
 - JWT tokens with short expiry (15 min)
 - Refresh tokens (7 days)
 - Secure HTTP-only cookies
 
 ### Data Protection
+
 - Passwords hashed with bcrypt
 - PII encrypted at rest
 - TLS for all connections
 - Audio files encrypted in storage
 
 ### Rate Limiting
+
 - API: 100 requests/minute per user
 - AI evaluation: Per tier limits (see cost strategy)
 - Auth endpoints: Stricter limits
@@ -245,6 +261,7 @@ usage_quota
 ## Infrastructure (Recommended)
 
 ### Hosting
+
 - Vercel for Next.js frontend
 - Railway or Render for backend services
 - Supabase or Neon for PostgreSQL
@@ -252,6 +269,7 @@ usage_quota
 - Cloudflare R2 for object storage
 
 ### Scaling Considerations
+
 - Stateless backend for horizontal scaling
 - Database connection pooling
 - CDN for static content
@@ -262,18 +280,21 @@ usage_quota
 ## Monitoring
 
 ### Application Metrics
+
 - Request latency (p50, p95, p99)
 - Error rates by endpoint
 - AI evaluation duration
 - Cache hit rates
 
 ### Business Metrics
+
 - Daily active users
 - Evaluations per user
 - Conversion rate (free to premium)
 - AI cost per user
 
 ### Alerting
+
 - Error rate spikes
 - AI API failures
 - Quota system issues

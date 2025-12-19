@@ -46,3 +46,5 @@ prisma/*.db-journal
 # Misc
 *.pem
 .cache/
+
+/src/generated/prisma

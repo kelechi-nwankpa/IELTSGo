@@ -27,7 +27,7 @@ IELTSGo is an AI-powered IELTS preparation platform that provides instant, exami
 These are explicitly out of scope:
 
 - **Not a general English learning app.** All features must be IELTS-specific.
-- **No claims of official IELTS scoring.** We provide band *estimates*, not certifications.
+- **No claims of official IELTS scoring.** We provide band _estimates_, not certifications.
 - **No live tutors at MVP.** Future consideration only.
 - **No copyrighted IELTS material.** All practice content must be original or licensed.
 - **No Cambridge/British Council affiliation.** Always disclaim this clearly.
@@ -37,6 +37,7 @@ These are explicitly out of scope:
 ## Module Intent
 
 ### Writing Module (Premium)
+
 - Supports IELTS Task 1 (Academic: charts/graphs, GT: letters) and Task 2 (essays)
 - AI evaluates against the four official criteria: Task Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy
 - Outputs band estimates per criterion + overall band
@@ -44,6 +45,7 @@ These are explicitly out of scope:
 - Structured JSON output for frontend consumption
 
 ### Speaking Module (Premium)
+
 - User records spoken responses to IELTS-style prompts (Parts 1, 2, 3)
 - Speech-to-text transcription followed by AI evaluation
 - Evaluates: Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation (approximate)
@@ -51,16 +53,19 @@ These are explicitly out of scope:
 - Structured JSON output
 
 ### Reading Module (Free + Premium)
+
 - Auto-scored via answer key matching — no AI scoring
 - AI used only for explanation requests (why an answer is correct/incorrect)
 - Free tier: limited passages; Premium: full access
 
 ### Listening Module (Free + Premium)
+
 - Auto-scored via answer key matching — no AI scoring
 - AI used only for explanation requests
 - Free tier: limited; Premium: full access
 
 ### Study Plan Module (Premium)
+
 - AI generates personalized study plans based on diagnostic results and target band
 - Weekly/daily task recommendations
 - Adapts based on practice history
@@ -70,17 +75,21 @@ These are explicitly out of scope:
 ## AI Philosophy
 
 ### Role of AI
+
 AI is a feedback tool, not a tutor replacement. It evaluates, explains, and suggests — it does not teach fundamentals.
 
 ### Calibration
+
 All AI outputs must align with public IELTS band descriptors. Feedback must be actionable, not generic.
 
 ### Honesty
+
 - Never claim certainty about exact band scores
 - Use language like "estimated band," "approximately," "likely in the range of"
 - Acknowledge limitations (e.g., pronunciation assessment is approximate)
 
 ### Consistency
+
 - Use structured prompts with explicit output schemas
 - Version all prompts; changes require review
 - Test prompts against reference samples before deployment
@@ -92,6 +101,7 @@ All AI outputs must align with public IELTS band descriptors. Feedback must be a
 AI usage must be economically sustainable. See `/docs/ai-cost-strategy.md` for details.
 
 **Key principles:**
+
 1. **No AI for objective scoring.** Reading and Listening are scored programmatically.
 2. **Tiered access.** Free users get limited AI evaluations; premium gets more.
 3. **Cache aggressively.** Explanation requests for the same question should be cached.
@@ -104,17 +114,20 @@ AI usage must be economically sustainable. See `/docs/ai-cost-strategy.md` for d
 ## Quality Bar
 
 ### Code
+
 - TypeScript everywhere (frontend and backend)
 - Strict typing; no `any` unless absolutely necessary
 - Tests for business logic and AI prompt outputs
 - Mobile-first responsive design
 
 ### Content
+
 - All practice questions must be original or licensed
 - Band score feedback must reference specific text from user's response
 - No vague feedback like "improve your vocabulary"
 
 ### UX
+
 - Feedback delivered in under 30 seconds
 - Clear progress tracking
 - Offline mode for reading/listening practice (future)

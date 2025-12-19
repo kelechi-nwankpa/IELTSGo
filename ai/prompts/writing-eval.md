@@ -1,6 +1,7 @@
 # Writing Evaluation Prompt
 
 ## Metadata
+
 - **Version:** 1.0.0
 - **Model:** Claude Sonnet
 - **Last Updated:** 2025-01
@@ -138,12 +139,12 @@ interface CriterionEvaluation {
 
 ## Template Variables
 
-| Variable | Type | Description |
-|----------|------|-------------|
-| `task_type` | string | One of: task1_academic, task1_general, task2 |
-| `test_type` | string | One of: academic, general |
+| Variable          | Type   | Description                                    |
+| ----------------- | ------ | ---------------------------------------------- |
+| `task_type`       | string | One of: task1_academic, task1_general, task2   |
+| `test_type`       | string | One of: academic, general                      |
 | `question_prompt` | string | The original question/prompt given to the user |
-| `user_response` | string | The user's written response |
+| `user_response`   | string | The user's written response                    |
 
 ---
 
@@ -163,6 +164,7 @@ interface CriterionEvaluation {
 ## Changelog
 
 ### 1.0.0 (2025-01)
+
 - Initial prompt version
 - Covers Task 1 (Academic/GT) and Task 2
 - JSON output format defined

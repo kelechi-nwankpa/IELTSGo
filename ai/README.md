@@ -22,13 +22,17 @@ This directory contains all AI system prompts used in IELTSGo.
 ## Prompt Design Principles
 
 ### 1. Structured Output
+
 All prompts must specify JSON output format. This enables:
+
 - Reliable parsing
 - Consistent UI rendering
 - Type safety in application code
 
 ### 2. Band Descriptor Alignment
+
 Writing and Speaking evaluations must align with official IELTS band descriptors:
+
 - Task Achievement / Response
 - Coherence and Cohesion
 - Lexical Resource
@@ -36,19 +40,25 @@ Writing and Speaking evaluations must align with official IELTS band descriptors
 - (Speaking) Fluency and Coherence, Pronunciation
 
 ### 3. Specificity Over Generality
+
 Feedback must reference the user's actual content:
+
 - Quote specific phrases
 - Point to specific paragraphs/sentences
 - Give concrete examples of improvements
 
 ### 4. Honest Uncertainty
+
 Never claim certainty about band scores:
+
 - Use "estimated band," "approximately," "likely range"
 - Acknowledge limitations (especially pronunciation)
 - Note that actual IELTS scoring may differ
 
 ### 5. Actionable Feedback
+
 Every piece of feedback should suggest a concrete action:
+
 - Bad: "Improve your vocabulary"
 - Good: "Replace 'good' in paragraph 2 with more precise alternatives like 'beneficial,' 'advantageous,' or 'favorable'"
 
@@ -64,7 +74,9 @@ Each prompt file includes a version number. When modifying prompts:
 4. Update any cached responses that depend on the prompt
 
 ### Version Format
+
 `MAJOR.MINOR.PATCH`
+
 - MAJOR: Significant output format changes
 - MINOR: Logic or criteria changes
 - PATCH: Wording improvements, bug fixes
@@ -100,6 +112,7 @@ Before deploying prompt changes:
 4. **Edge cases:** Empty input, very short, very long, off-topic
 
 ### Reference Sample Categories
+
 - Band 5 (borderline)
 - Band 6 (competent)
 - Band 7 (good)
@@ -109,13 +122,13 @@ Before deploying prompt changes:
 
 ## Model Assignment
 
-| Prompt | Model | Rationale |
-|--------|-------|-----------|
-| writing-eval | Claude Sonnet | Complex evaluation, needs nuance |
-| speaking-eval | Claude Sonnet | Complex evaluation, needs nuance |
-| reading-explain | Claude Haiku | Simpler task, cost-sensitive |
-| listening-explain | Claude Haiku | Simpler task, cost-sensitive |
-| study-plan | Claude Sonnet | Requires reasoning about user progress |
+| Prompt            | Model         | Rationale                              |
+| ----------------- | ------------- | -------------------------------------- |
+| writing-eval      | Claude Sonnet | Complex evaluation, needs nuance       |
+| speaking-eval     | Claude Sonnet | Complex evaluation, needs nuance       |
+| reading-explain   | Claude Haiku  | Simpler task, cost-sensitive           |
+| listening-explain | Claude Haiku  | Simpler task, cost-sensitive           |
+| study-plan        | Claude Sonnet | Requires reasoning about user progress |
 
 ---
 

@@ -1,6 +1,7 @@
 # Study Plan Generation Prompt
 
 ## Metadata
+
 - **Version:** 1.0.0
 - **Model:** Claude Sonnet
 - **Last Updated:** 2025-01
@@ -228,19 +229,19 @@ interface AdaptationTrigger {
 
 ## Template Variables
 
-| Variable | Type | Description |
-|----------|------|-------------|
-| `current_listening` | number | Diagnostic band estimate |
-| `current_reading` | number | Diagnostic band estimate |
-| `current_writing` | number | Diagnostic band estimate |
-| `current_speaking` | number | Diagnostic band estimate |
-| `target_band` | number | User's target overall band |
-| `test_type` | string | academic or general |
-| `test_date` | string | ISO date or null |
-| `days_until_test` | number | Days remaining or null |
-| `hours_per_day` | number | Available study time |
-| `weak_areas` | string[] | Specific weak areas from diagnostic |
-| `practice_summary` | string | Brief history of user's practice |
+| Variable            | Type     | Description                         |
+| ------------------- | -------- | ----------------------------------- |
+| `current_listening` | number   | Diagnostic band estimate            |
+| `current_reading`   | number   | Diagnostic band estimate            |
+| `current_writing`   | number   | Diagnostic band estimate            |
+| `current_speaking`  | number   | Diagnostic band estimate            |
+| `target_band`       | number   | User's target overall band          |
+| `test_type`         | string   | academic or general                 |
+| `test_date`         | string   | ISO date or null                    |
+| `days_until_test`   | number   | Days remaining or null              |
+| `hours_per_day`     | number   | Available study time                |
+| `weak_areas`        | string[] | Specific weak areas from diagnostic |
+| `practice_summary`  | string   | Brief history of user's practice    |
 
 ---
 
@@ -272,6 +273,7 @@ interface AdaptationTrigger {
 ## Caching Strategy
 
 Study plans are personalized but can be partially cached:
+
 - **Cacheable:** Generic activity templates, question-type strategies
 - **Not cacheable:** Specific weekly plans, time allocations
 
@@ -282,6 +284,7 @@ Consider generating a "plan template" that gets personalized at runtime.
 ## Changelog
 
 ### 1.0.0 (2025-01)
+
 - Initial prompt version
 - Comprehensive weekly plan structure
 - Skill-building focus section
