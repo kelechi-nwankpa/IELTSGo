@@ -40,6 +40,7 @@ Development phases for IELTSGo, from MVP to v1.0.
 - [ ] Basic user dashboard
 - [ ] Usage quota system (3 free evaluations)
 - [ ] Simple landing page
+- [ ] Robust error handling (user-friendly error messages, no raw API errors)
 
 ### Scope Limits
 

@@ -35,10 +35,15 @@ interface CriterionEvaluation {
   improvements: string[];
 }
 
+interface ErrorState {
+  message: string;
+  canRetry: boolean;
+}
+
 export function WritingPractice({ promptId, title, prompt, topic }: WritingPracticeProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ErrorState | null>(null);
 
   const handleSubmit = async (content: string, wordCount: number) => {
     setIsSubmitting(true);
@@ -59,13 +64,24 @@ export function WritingPractice({ promptId, title, prompt, topic }: WritingPract
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to evaluate essay');
+        setError({
+          message: errorData.error || 'Unable to evaluate your essay. Please try again.',
+          canRetry: errorData.retry ?? true,
+        });
+        return;
       }
 
       const result = await response.json();
       setEvaluation(result.evaluation);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      // Handle network errors and other unexpected issues
+      const isNetworkError = err instanceof TypeError && err.message.includes('fetch');
+      setError({
+        message: isNetworkError
+          ? 'Unable to connect to the server. Please check your internet connection.'
+          : 'Something went wrong. Please try again.',
+        canRetry: true,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -87,8 +103,20 @@ export function WritingPractice({ promptId, title, prompt, topic }: WritingPract
           <WritingPrompt title={title} prompt={prompt} topic={topic} taskType="Task 2" />
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              {error}
+            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-red-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-red-700">{error.message}</p>
+                  {error.canRetry && (
+                    <p className="text-red-600 text-sm mt-1">
+                      Click &quot;Submit for Evaluation&quot; to try again.
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 

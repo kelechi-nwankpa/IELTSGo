@@ -1,7 +1,11 @@
 import Anthropic from '@anthropic-ai/sdk';
 
+// Timeout for AI requests (60 seconds)
+const AI_TIMEOUT_MS = 60000;
+
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+  timeout: AI_TIMEOUT_MS,
 });
 
 export interface WritingEvaluationInput {
@@ -149,20 +153,71 @@ ${input.userResponse}`;
   }
 
   // Parse the JSON response
-  let evaluation: WritingEvaluation;
+  const evaluation = parseEvaluationResponse(textContent.text);
+
+  const tokensUsed = (response.usage?.input_tokens || 0) + (response.usage?.output_tokens || 0);
+
+  return { evaluation, tokensUsed };
+}
+
+/**
+ * Parse and validate the AI response
+ */
+function parseEvaluationResponse(text: string): WritingEvaluation {
+  let parsed: unknown;
+
   try {
-    evaluation = JSON.parse(textContent.text);
+    parsed = JSON.parse(text);
   } catch {
     // Try to extract JSON from potential markdown code blocks
-    const jsonMatch = textContent.text.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
     if (jsonMatch) {
-      evaluation = JSON.parse(jsonMatch[1]);
+      try {
+        parsed = JSON.parse(jsonMatch[1]);
+      } catch {
+        throw new Error('Failed to parse AI response as JSON');
+      }
     } else {
       throw new Error('Failed to parse AI response as JSON');
     }
   }
 
-  const tokensUsed = (response.usage?.input_tokens || 0) + (response.usage?.output_tokens || 0);
+  // Validate the response structure
+  if (!isValidEvaluation(parsed)) {
+    throw new Error('AI response is missing required fields');
+  }
 
-  return { evaluation, tokensUsed };
+  return parsed;
+}
+
+/**
+ * Type guard to validate the evaluation response structure
+ */
+function isValidEvaluation(obj: unknown): obj is WritingEvaluation {
+  if (typeof obj !== 'object' || obj === null) {
+    return false;
+  }
+
+  const evaluation = obj as Record<string, unknown>;
+
+  // Check required top-level fields
+  if (typeof evaluation.overall_band !== 'number') return false;
+  if (typeof evaluation.overall_feedback !== 'string') return false;
+  if (typeof evaluation.word_count !== 'number') return false;
+  if (typeof evaluation.criteria !== 'object' || evaluation.criteria === null) return false;
+
+  // Check criteria structure
+  const criteria = evaluation.criteria as Record<string, unknown>;
+  const requiredCriteria = ['task_achievement', 'coherence_cohesion', 'lexical_resource', 'grammatical_range'];
+
+  for (const key of requiredCriteria) {
+    if (!criteria[key] || typeof criteria[key] !== 'object') return false;
+    const criterion = criteria[key] as Record<string, unknown>;
+    if (typeof criterion.band !== 'number') return false;
+    if (typeof criterion.summary !== 'string') return false;
+    if (!Array.isArray(criterion.strengths)) return false;
+    if (!Array.isArray(criterion.improvements)) return false;
+  }
+
+  return true;
 }
