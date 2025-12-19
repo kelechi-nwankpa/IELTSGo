@@ -1,0 +1,119 @@
+IELTSGo Source Code Directory
+==============================
+
+This directory will contain the application source code.
+
+INTENDED STRUCTURE
+------------------
+
+/src
+├── /app                    # Next.js App Router
+│   ├── /api                # API routes
+│   │   ├── /auth           # Authentication endpoints
+│   │   ├── /evaluate       # AI evaluation endpoints
+│   │   ├── /practice       # Practice session endpoints
+│   │   ├── /users          # User management
+│   │   └── /content        # Content delivery
+│   ├── /(auth)             # Auth pages (login, register)
+│   ├── /(dashboard)        # Authenticated pages
+│   │   ├── /writing        # Writing module pages
+│   │   ├── /speaking       # Speaking module pages
+│   │   ├── /reading        # Reading module pages
+│   │   ├── /listening      # Listening module pages
+│   │   ├── /study-plan     # Study plan pages
+│   │   └── /progress       # Progress tracking
+│   ├── layout.tsx
+│   └── page.tsx            # Landing page
+│
+├── /components             # React components
+│   ├── /ui                 # Base UI components (buttons, inputs, etc.)
+│   ├── /writing            # Writing-specific components
+│   ├── /speaking           # Speaking-specific components
+│   ├── /reading            # Reading-specific components
+│   ├── /listening          # Listening-specific components
+│   └── /shared             # Shared components (nav, footer, etc.)
+│
+├── /lib                    # Utility functions and shared logic
+│   ├── /ai                 # AI service layer
+│   │   ├── client.ts       # AI API client
+│   │   ├── prompts.ts      # Prompt loader
+│   │   └── types.ts        # AI response types
+│   ├── /db                 # Database utilities
+│   │   ├── client.ts       # Database client
+│   │   ├── schema.ts       # Schema definitions
+│   │   └── migrations/     # Database migrations
+│   ├── /auth               # Authentication utilities
+│   ├── /cache              # Redis cache utilities
+│   └── /utils              # General utilities
+│
+├── /hooks                  # React hooks
+│   ├── useAudioRecorder.ts
+│   ├── useTimer.ts
+│   └── useQuota.ts
+│
+├── /types                  # TypeScript type definitions
+│   ├── api.ts
+│   ├── content.ts
+│   ├── evaluation.ts
+│   └── user.ts
+│
+├── /styles                 # Global styles
+│   └── globals.css
+│
+└── /config                 # Configuration
+    ├── constants.ts
+    └── env.ts
+
+
+TECHNOLOGY STACK
+----------------
+
+Frontend:
+- Next.js 14+ (App Router)
+- React 18+
+- TypeScript
+- Tailwind CSS
+- React Hook Form
+- Zod (validation)
+
+Backend:
+- Next.js API Routes
+- Prisma (ORM)
+- PostgreSQL
+- Redis (caching)
+
+AI Integration:
+- Anthropic Claude API
+- OpenAI Whisper API (speech-to-text)
+
+Authentication:
+- NextAuth.js or custom JWT
+
+Payments:
+- Stripe
+
+
+GETTING STARTED
+---------------
+
+Implementation begins with Phase 0 (Foundation) from /docs/roadmap.md:
+
+1. Initialize Next.js project
+2. Set up TypeScript configuration
+3. Configure Tailwind CSS
+4. Set up database with Prisma
+5. Implement authentication
+6. Create basic API structure
+7. Set up CI/CD pipeline
+
+Refer to:
+- /claude.md for project rules
+- /docs/architecture.md for system design
+- /docs/roadmap.md for development phases
+- /ai/prompts/ for AI integration
+
+
+NOTE
+----
+
+This file is a placeholder. Delete it once actual source code is added.
