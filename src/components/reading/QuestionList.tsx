@@ -15,6 +15,7 @@ interface QuestionListProps {
   onAnswerChange: (questionId: string, value: string | string[]) => void;
   disabled?: boolean;
   results?: QuestionResult[];
+  stickyHeader?: boolean;
 }
 
 export function QuestionList({
@@ -23,6 +24,7 @@ export function QuestionList({
   onAnswerChange,
   disabled = false,
   results,
+  stickyHeader = true,
 }: QuestionListProps) {
   const showResults = !!results;
 
@@ -33,7 +35,7 @@ export function QuestionList({
 
   return (
     <div className="space-y-4">
-      <div className="sticky top-0 z-10 border-b border-gray-100 bg-white px-1 py-3 lg:top-[57px]">
+      <div className={stickyHeader ? "sticky top-0 z-10 border-b border-gray-100 bg-white px-1 py-3 lg:top-[57px]" : "border-b border-gray-100 px-1 py-3"}>
         <h2 className="text-lg font-semibold text-gray-900">Questions</h2>
         {!showResults && (
           <p className="text-sm text-gray-500">

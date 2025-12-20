@@ -141,6 +141,7 @@ export function ReadingPractice({ passageId, title, passage, questions }: Readin
               answers={answers}
               onAnswerChange={() => {}}
               results={results.questionResults}
+              stickyHeader={false}
             />
           </div>
         </div>
