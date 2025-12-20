@@ -46,6 +46,7 @@ export function ListeningPractice({
   sectionId,
   title,
   audioUrl,
+  transcript,
   questions,
 }: ListeningPracticeProps) {
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
@@ -150,12 +151,19 @@ export function ListeningPractice({
           {/* Question results breakdown */}
           <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-gray-900">Answer Review</h3>
+            <p className="mb-4 text-sm text-gray-500">
+              Click &ldquo;Explain&rdquo; on any question to get an AI-powered explanation.
+            </p>
             <QuestionList
               questions={questions}
               answers={answers}
               onAnswerChange={() => {}}
               results={results.questionResults}
               stickyHeader={false}
+              moduleType="listening"
+              sectionId={sectionId}
+              sectionTitle={title}
+              transcript={transcript}
             />
           </div>
         </div>

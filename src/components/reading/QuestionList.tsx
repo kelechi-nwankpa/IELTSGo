@@ -20,6 +20,11 @@ interface QuestionListProps {
   passageId?: string;
   passageTitle?: string;
   passageText?: string;
+  // For listening module
+  moduleType?: 'reading' | 'listening';
+  sectionId?: string;
+  sectionTitle?: string;
+  transcript?: string;
 }
 
 export function QuestionList({
@@ -32,6 +37,10 @@ export function QuestionList({
   passageId,
   passageTitle,
   passageText,
+  moduleType = 'reading',
+  sectionId,
+  sectionTitle,
+  transcript,
 }: QuestionListProps) {
   const showResults = !!results;
 
@@ -74,6 +83,10 @@ export function QuestionList({
               passageId={passageId}
               passageTitle={passageTitle}
               passageText={passageText}
+              moduleType={moduleType}
+              sectionId={sectionId}
+              sectionTitle={sectionTitle}
+              transcript={transcript}
             />
           );
         })}

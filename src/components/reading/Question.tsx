@@ -13,8 +13,12 @@ export interface QuestionData {
 
 export interface ExplanationData {
   explanation: string;
-  passage_reference: {
+  passage_reference?: {
     paragraph: number | null;
+    key_text: string;
+  };
+  transcript_reference?: {
+    speaker: string | null;
     key_text: string;
   };
   skill_tested: string;
@@ -32,10 +36,15 @@ interface QuestionProps {
   showResult?: boolean;
   isCorrect?: boolean;
   correctAnswer?: string | string[];
-  // For AI explanation feature
+  // For AI explanation feature (reading)
   passageId?: string;
   passageTitle?: string;
   passageText?: string;
+  // For AI explanation feature (listening)
+  moduleType?: 'reading' | 'listening';
+  sectionId?: string;
+  sectionTitle?: string;
+  transcript?: string;
 }
 
 export function Question({
@@ -50,6 +59,10 @@ export function Question({
   passageId,
   passageTitle,
   passageText,
+  moduleType = 'reading',
+  sectionId,
+  sectionTitle,
+  transcript,
 }: QuestionProps) {
   const [explanation, setExplanation] = useState<ExplanationData | null>(null);
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
@@ -71,30 +84,55 @@ export function Question({
       return;
     }
 
-    if (!passageId || !passageText) {
-      setExplanationError('Missing passage data for explanation');
-      return;
+    // Check for required data based on module type
+    const isListening = moduleType === 'listening';
+    if (isListening) {
+      if (!sectionId || !transcript) {
+        setExplanationError('Missing audio transcript for explanation');
+        return;
+      }
+    } else {
+      if (!passageId || !passageText) {
+        setExplanationError('Missing passage data for explanation');
+        return;
+      }
     }
 
     setIsLoadingExplanation(true);
     setExplanationError(null);
 
     try {
-      const response = await fetch('/api/reading/explain', {
+      const apiUrl = isListening ? '/api/listening/explain' : '/api/reading/explain';
+      const requestBody = isListening
+        ? {
+            sectionId,
+            sectionTitle: sectionTitle || 'Listening Section',
+            transcript,
+            questionId: question.id,
+            questionType: question.type,
+            questionNumber,
+            questionText: question.text,
+            correctAnswer: Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer,
+            studentAnswer: Array.isArray(value) ? value.join(', ') : value,
+            wasCorrect: isCorrect,
+          }
+        : {
+            passageId,
+            passageTitle: passageTitle || 'Reading Passage',
+            passageText,
+            questionId: question.id,
+            questionType: question.type,
+            questionNumber,
+            questionText: question.text,
+            correctAnswer: Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer,
+            studentAnswer: Array.isArray(value) ? value.join(', ') : value,
+            wasCorrect: isCorrect,
+          };
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          passageId,
-          passageTitle: passageTitle || 'Reading Passage',
-          passageText,
-          questionId: question.id,
-          questionType: question.type,
-          questionNumber,
-          questionText: question.text,
-          correctAnswer: Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer,
-          studentAnswer: Array.isArray(value) ? value.join(', ') : value,
-          wasCorrect: isCorrect,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -196,7 +234,8 @@ export function Question({
               )}
             </div>
 
-            {passageId && passageText && (
+            {((moduleType === 'reading' && passageId && passageText) ||
+              (moduleType === 'listening' && sectionId && transcript)) && (
               <button
                 onClick={fetchExplanation}
                 disabled={isLoadingExplanation}
@@ -278,16 +317,30 @@ export function Question({
                   </div>
                 )}
 
-                {/* Passage reference */}
-                {explanation.passage_reference?.key_text && (
+                {/* Passage/Transcript reference */}
+                {(explanation.passage_reference?.key_text ||
+                  explanation.transcript_reference?.key_text) && (
                   <div>
-                    <h4 className="text-sm font-semibold text-indigo-900">Key Text from Passage</h4>
+                    <h4 className="text-sm font-semibold text-indigo-900">
+                      {moduleType === 'listening'
+                        ? 'Key Text from Transcript'
+                        : 'Key Text from Passage'}
+                    </h4>
                     <blockquote className="mt-1 border-l-2 border-indigo-300 pl-3 text-sm text-indigo-700 italic">
-                      &ldquo;{explanation.passage_reference.key_text}&rdquo;
-                      {explanation.passage_reference.paragraph && (
+                      &ldquo;
+                      {explanation.transcript_reference?.key_text ||
+                        explanation.passage_reference?.key_text}
+                      &rdquo;
+                      {explanation.passage_reference?.paragraph && (
                         <span className="text-indigo-500 not-italic">
                           {' '}
                           (Paragraph {explanation.passage_reference.paragraph})
+                        </span>
+                      )}
+                      {explanation.transcript_reference?.speaker && (
+                        <span className="text-indigo-500 not-italic">
+                          {' '}
+                          — {explanation.transcript_reference.speaker}
                         </span>
                       )}
                     </blockquote>
