@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { evaluateWriting } from '@/lib/ai/writing-evaluator';
 import { ErrorCode, formatApiError, detectAnthropicError } from '@/lib/errors';
+import { canUseWritingEvaluation, incrementWritingEvaluation, getQuotaStatus } from '@/lib/quota';
 
 interface ContentData {
   prompt: string;
@@ -10,6 +13,27 @@ interface ContentData {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json(formatApiError(ErrorCode.UNAUTHORIZED), { status: 401 });
+    }
+
+    const userId = session.user.id;
+
+    // Check quota before processing
+    const canEvaluate = await canUseWritingEvaluation(userId);
+    if (!canEvaluate) {
+      const quotaStatus = await getQuotaStatus(userId);
+      return NextResponse.json(
+        {
+          ...formatApiError(ErrorCode.USER_QUOTA_EXCEEDED),
+          quota: quotaStatus.writing,
+        },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const { promptId, essay, wordCount } = body;
 
@@ -45,13 +69,41 @@ export async function POST(request: NextRequest) {
       userResponse: essay,
     });
 
-    // For now, we're not storing sessions without auth
-    // In a full implementation, we'd create a practice session and evaluation record
+    // Create practice session and evaluation records
+    const practiceSession = await prisma.practiceSession.create({
+      data: {
+        userId,
+        module: 'WRITING',
+        contentId: promptId,
+        completedAt: new Date(),
+        submissionData: { essay, wordCount: wordCount || evaluation.word_count },
+      },
+    });
+
+    await prisma.evaluation.create({
+      data: {
+        userId,
+        sessionId: practiceSession.id,
+        module: 'WRITING',
+        promptVersion: '1.0',
+        inputText: essay,
+        aiResponse: JSON.parse(JSON.stringify(evaluation)),
+        bandEstimate: evaluation.overall_band,
+        tokensUsed,
+      },
+    });
+
+    // Increment quota after successful evaluation
+    await incrementWritingEvaluation(userId);
+
+    // Get updated quota status to return to client
+    const updatedQuota = await getQuotaStatus(userId);
 
     return NextResponse.json({
       evaluation,
       tokensUsed,
       wordCount: wordCount || evaluation.word_count,
+      quota: updatedQuota.writing,
     });
   } catch (error) {
     console.error('Evaluation error:', error);

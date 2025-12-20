@@ -15,6 +15,10 @@ export enum ErrorCode {
   AI_RESPONSE_INVALID = 'AI_RESPONSE_INVALID',
   AI_SERVICE_UNAVAILABLE = 'AI_SERVICE_UNAVAILABLE',
 
+  // User quota errors
+  USER_QUOTA_EXCEEDED = 'USER_QUOTA_EXCEEDED',
+  UNAUTHORIZED = 'UNAUTHORIZED',
+
   // Validation errors
   MISSING_FIELDS = 'MISSING_FIELDS',
   INVALID_INPUT = 'INVALID_INPUT',
@@ -74,6 +78,15 @@ const ERROR_MESSAGES: Record<ErrorCode, { userMessage: string; retry: boolean }>
   },
   [ErrorCode.CONTENT_NOT_FOUND]: {
     userMessage: 'The writing prompt could not be found. Please refresh the page and try again.',
+    retry: false,
+  },
+  [ErrorCode.USER_QUOTA_EXCEEDED]: {
+    userMessage:
+      "You've used all your free evaluations. Upgrade to Premium for unlimited access.",
+    retry: false,
+  },
+  [ErrorCode.UNAUTHORIZED]: {
+    userMessage: 'Please sign in to continue.',
     retry: false,
   },
   [ErrorCode.UNKNOWN]: {

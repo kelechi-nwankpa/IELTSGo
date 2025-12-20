@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { EssayEditor, WritingPrompt, Timer } from '@/components/writing';
 
 interface WritingPracticeProps {
@@ -38,6 +39,7 @@ interface CriterionEvaluation {
 interface ErrorState {
   message: string;
   canRetry: boolean;
+  isQuotaExceeded?: boolean;
 }
 
 export function WritingPractice({ promptId, title, prompt, topic }: WritingPracticeProps) {
@@ -67,6 +69,7 @@ export function WritingPractice({ promptId, title, prompt, topic }: WritingPract
         setError({
           message: errorData.error || 'Unable to evaluate your essay. Please try again.',
           canRetry: errorData.retry ?? true,
+          isQuotaExceeded: errorData.code === 'USER_QUOTA_EXCEEDED',
         });
         return;
       }
@@ -103,10 +106,18 @@ export function WritingPractice({ promptId, title, prompt, topic }: WritingPract
           <WritingPrompt title={title} prompt={prompt} topic={topic} taskType="Task 2" />
 
           {error && (
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+            <div
+              className={`rounded-lg border px-4 py-3 ${
+                error.isQuotaExceeded
+                  ? 'border-amber-200 bg-amber-50'
+                  : 'border-red-200 bg-red-50'
+              }`}
+            >
               <div className="flex items-start gap-3">
                 <svg
-                  className="mt-0.5 h-5 w-5 shrink-0 text-red-500"
+                  className={`mt-0.5 h-5 w-5 shrink-0 ${
+                    error.isQuotaExceeded ? 'text-amber-500' : 'text-red-500'
+                  }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -119,11 +130,32 @@ export function WritingPractice({ promptId, title, prompt, topic }: WritingPract
                   />
                 </svg>
                 <div className="flex-1">
-                  <p className="text-red-700">{error.message}</p>
-                  {error.canRetry && (
-                    <p className="mt-1 text-sm text-red-600">
-                      Click &quot;Submit for Evaluation&quot; to try again.
-                    </p>
+                  <p className={error.isQuotaExceeded ? 'text-amber-700' : 'text-red-700'}>
+                    {error.message}
+                  </p>
+                  {error.isQuotaExceeded ? (
+                    <div className="mt-3">
+                      <Link
+                        href="/pricing"
+                        className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:from-blue-500 hover:to-indigo-500"
+                      >
+                        Upgrade to Premium
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+                  ) : (
+                    error.canRetry && (
+                      <p className="mt-1 text-sm text-red-600">
+                        Click &quot;Submit for Evaluation&quot; to try again.
+                      </p>
+                    )
                   )}
                 </div>
               </div>
