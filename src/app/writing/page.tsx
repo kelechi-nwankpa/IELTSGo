@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/prisma';
 import { WritingPractice } from './WritingPractice';
 
+// Force dynamic rendering - this page needs database access
+export const dynamic = 'force-dynamic';
+
 interface ContentData {
   prompt: string;
   topic: string;
