@@ -13,11 +13,11 @@ Development phases for IELTSGo, from MVP to v1.0.
 - [x] Repository structure
 - [x] Documentation (claude.md, architecture, this roadmap)
 - [x] AI prompt definitions
-- [ ] Development environment setup
-- [ ] CI/CD pipeline
-- [ ] Database schema and migrations
+- [x] Development environment setup
+- [x] CI/CD pipeline (GitHub Actions + Vitest)
+- [x] Database schema and migrations
 - [ ] Authentication system
-- [ ] Basic API structure
+- [x] Basic API structure
 
 ### Definition of Done
 
