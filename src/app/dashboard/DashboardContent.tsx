@@ -287,20 +287,73 @@ export default function DashboardContent() {
           )}
         </div>
 
-        {/* Quick Actions */}
-        {recentSessions.length > 0 && (
-          <div className="mt-6 flex justify-center">
+        {/* Practice Modules */}
+        <div className="mt-8">
+          <h2 className="mb-4 text-lg font-semibold text-slate-900">Practice Modules</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
             <Link
               href="/writing"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-blue-200 hover:shadow-lg"
             >
-              Continue Practice
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Writing Practice</h3>
+                  <p className="text-sm text-slate-500">Task 2 essays with AI feedback</p>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <span className="text-xs text-slate-400">40 min per essay</span>
+                <span className="flex items-center gap-1 text-sm font-medium text-blue-600">
+                  Start
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </Link>
+
+            <Link
+              href="/reading"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-green-200 hover:shadow-lg"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-600 transition-colors group-hover:bg-green-600 group-hover:text-white">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Reading Practice</h3>
+                  <p className="text-sm text-slate-500">Passages with auto-scoring</p>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <span className="text-xs text-slate-400">60 min per passage</span>
+                <span className="flex items-center gap-1 text-sm font-medium text-green-600">
+                  Start
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
             </Link>
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
