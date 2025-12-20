@@ -50,6 +50,8 @@ export async function GET() {
       select: {
         id: true,
         module: true,
+        score: true,
+        submissionData: true,
         startedAt: true,
         completedAt: true,
         content: {
@@ -122,16 +124,22 @@ export async function GET() {
         evaluationsRemaining,
         evaluationsUsed,
       },
-      recentSessions: recentSessions.map((s) => ({
-        id: s.id,
-        module: s.module,
-        type: s.content.type,
-        title: s.content.title || getDefaultTitle(s.content.type),
-        prompt: getPromptPreview(s.content.contentData),
-        completedAt: s.completedAt,
-        bandScore: s.evaluation?.bandEstimate ?? null,
-        criteriaScores: extractCriteriaScores(s.evaluation?.aiResponse),
-      })),
+      recentSessions: recentSessions.map((s) => {
+        // For reading sessions, extract band estimate from submissionData
+        const isReading = s.module === 'READING';
+        const readingData = isReading ? extractReadingData(s.submissionData, s.score) : null;
+
+        return {
+          id: s.id,
+          module: s.module,
+          type: s.content.type,
+          title: s.content.title || getDefaultTitle(s.content.type, s.module),
+          prompt: isReading ? readingData?.description ?? '' : getPromptPreview(s.content.contentData),
+          completedAt: s.completedAt,
+          bandScore: isReading ? readingData?.bandEstimate ?? null : s.evaluation?.bandEstimate ?? null,
+          criteriaScores: extractCriteriaScores(s.evaluation?.aiResponse),
+        };
+      }),
     });
   } catch (error) {
     console.error('Dashboard API error:', error);
@@ -139,7 +147,10 @@ export async function GET() {
   }
 }
 
-function getDefaultTitle(type: string): string {
+function getDefaultTitle(type: string, module?: string): string {
+  if (module === 'READING') {
+    return 'Reading Practice';
+  }
   switch (type) {
     case 'TASK1_ACADEMIC':
       return 'Task 1 (Academic)';
@@ -147,6 +158,8 @@ function getDefaultTitle(type: string): string {
       return 'Task 1 (General)';
     case 'TASK2':
       return 'Task 2 Essay';
+    case 'READING_PASSAGE':
+      return 'Reading Practice';
     default:
       return 'Writing Practice';
   }
@@ -170,4 +183,48 @@ function extractCriteriaScores(aiResponse: unknown): Record<string, number> | nu
     }
   }
   return null;
+}
+
+function extractReadingData(
+  submissionData: unknown,
+  score: number | null
+): { bandEstimate: number; description: string } | null {
+  if (typeof submissionData !== 'object' || submissionData === null) {
+    return null;
+  }
+
+  const data = submissionData as Record<string, unknown>;
+  const results = data.results as Array<{ isCorrect: boolean }> | undefined;
+
+  if (!results || !Array.isArray(results)) {
+    return null;
+  }
+
+  const totalQuestions = results.length;
+  const correctAnswers = score ?? results.filter((r) => r.isCorrect).length;
+  const percentage = (correctAnswers / totalQuestions) * 100;
+
+  // Calculate band estimate using the same logic as the submit route
+  const bandEstimate = calculateBandScore(percentage);
+
+  return {
+    bandEstimate,
+    description: `${correctAnswers}/${totalQuestions} correct answers`,
+  };
+}
+
+function calculateBandScore(percentage: number): number {
+  if (percentage >= 95) return 9.0;
+  if (percentage >= 87.5) return 8.5;
+  if (percentage >= 80) return 8.0;
+  if (percentage >= 72.5) return 7.5;
+  if (percentage >= 65) return 7.0;
+  if (percentage >= 57.5) return 6.5;
+  if (percentage >= 50) return 6.0;
+  if (percentage >= 42.5) return 5.5;
+  if (percentage >= 35) return 5.0;
+  if (percentage >= 27.5) return 4.5;
+  if (percentage >= 20) return 4.0;
+  if (percentage >= 12.5) return 3.5;
+  return 3.0;
 }

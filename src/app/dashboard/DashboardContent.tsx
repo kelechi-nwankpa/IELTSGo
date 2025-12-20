@@ -249,40 +249,54 @@ export default function DashboardContent() {
             </div>
           ) : (
             <div className="divide-y divide-slate-100">
-              {recentSessions.map((session) => (
-                <div key={session.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                    <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-slate-900">{session.title}</span>
-                      <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
-                        {formatTaskType(session.type)}
-                      </span>
+              {recentSessions.map((session) => {
+                const isReading = session.module === 'READING';
+                return (
+                  <div key={session.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50">
+                    <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${isReading ? 'bg-green-100' : 'bg-blue-100'}`}>
+                      {isReading ? (
+                        <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                          />
+                        </svg>
+                      ) : (
+                        <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
+                        </svg>
+                      )}
                     </div>
-                    <p className="mt-0.5 truncate text-sm text-slate-500">{session.prompt}</p>
-                  </div>
-                  <div className="flex flex-shrink-0 items-center gap-4">
-                    {session.bandScore !== null && (
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-blue-600">{session.bandScore}</div>
-                        <div className="text-xs text-slate-500">Band Score</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-slate-900">{session.title}</span>
+                        <span className={`rounded px-2 py-0.5 text-xs ${isReading ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>
+                          {formatTaskType(session.type)}
+                        </span>
                       </div>
-                    )}
-                    <div className="text-right text-sm text-slate-500">
-                      {formatDate(session.completedAt)}
+                      <p className="mt-0.5 truncate text-sm text-slate-500">{session.prompt}</p>
+                    </div>
+                    <div className="flex flex-shrink-0 items-center gap-4">
+                      {session.bandScore !== null && (
+                        <div className="text-right">
+                          <div className={`text-lg font-bold ${isReading ? 'text-green-600' : 'text-blue-600'}`}>{session.bandScore}</div>
+                          <div className="text-xs text-slate-500">Band Score</div>
+                        </div>
+                      )}
+                      <div className="text-right text-sm text-slate-500">
+                        {formatDate(session.completedAt)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -401,6 +415,8 @@ function formatTaskType(type: string): string {
       return 'Task 1 General';
     case 'TASK2':
       return 'Task 2';
+    case 'READING_PASSAGE':
+      return 'Reading';
     default:
       return type;
   }
