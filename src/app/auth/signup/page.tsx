@@ -53,7 +53,7 @@ export default function SignUpPage() {
       });
 
       if (result?.ok) {
-        router.push('/');
+        router.push('/dashboard');
       } else {
         router.push('/auth/signin');
       }
@@ -64,7 +64,7 @@ export default function SignUpPage() {
   };
 
   const handleGoogleSignUp = () => {
-    signIn('google', { callbackUrl: '/' });
+    signIn('google', { callbackUrl: '/dashboard' });
   };
 
   return (

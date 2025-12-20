@@ -1,0 +1,371 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { signOut } from 'next-auth/react';
+
+interface DashboardData {
+  user: {
+    name: string | null;
+    email: string;
+    image: string | null;
+    targetBand: number | null;
+    testDate: string | null;
+    subscriptionTier: string;
+    memberSince: string;
+  };
+  stats: {
+    totalEvaluations: number;
+    averageBand: number | null;
+    bestScore: number | null;
+    improvement: number | null;
+    evaluationsRemaining: number | null;
+    evaluationsUsed: number;
+  };
+  recentSessions: Array<{
+    id: string;
+    module: string;
+    type: string;
+    title: string;
+    prompt: string;
+    completedAt: string;
+    bandScore: number | null;
+    criteriaScores: Record<string, number> | null;
+  }>;
+}
+
+export default function DashboardContent() {
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchDashboard() {
+      try {
+        const res = await fetch('/api/dashboard');
+        if (!res.ok) {
+          throw new Error('Failed to load dashboard');
+        }
+        const dashboardData = await res.json();
+        setData(dashboardData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Something went wrong');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDashboard();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <div className="mx-auto max-w-6xl px-6 py-12">
+          <div className="animate-pulse space-y-6">
+            <div className="h-8 w-48 rounded bg-slate-200" />
+            <div className="grid gap-4 md:grid-cols-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-32 rounded-2xl bg-slate-200" />
+              ))}
+            </div>
+            <div className="h-96 rounded-2xl bg-slate-200" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <p className="text-lg text-slate-600">{error || 'Failed to load dashboard'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-500"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const { user, stats, recentSessions } = data;
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      {/* Header */}
+      <header className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25">
+              <span className="text-lg font-bold text-white">G</span>
+            </div>
+            <span className="text-xl font-bold text-slate-900">IELTSGo</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/writing"
+              className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl"
+            >
+              Practice Now
+            </Link>
+            <button
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              Sign out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-6xl px-6 py-8">
+        {/* Welcome Section */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Welcome back{user.name ? `, ${user.name.split(' ')[0]}` : ''}!
+            </h1>
+            <p className="mt-1 text-slate-600">Track your progress and keep practicing.</p>
+          </div>
+          {stats.evaluationsRemaining !== null && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2">
+              <span className="text-sm font-medium text-amber-700">
+                {stats.evaluationsRemaining} free evaluation{stats.evaluationsRemaining !== 1 ? 's' : ''} remaining
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Stats Grid */}
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            label="Total Practice"
+            value={stats.totalEvaluations}
+            subtitle="essays evaluated"
+            icon={
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            }
+            color="blue"
+          />
+          <StatCard
+            label="Average Band"
+            value={stats.averageBand ?? '-'}
+            subtitle="overall score"
+            icon={
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            }
+            color="indigo"
+          />
+          <StatCard
+            label="Best Score"
+            value={stats.bestScore ?? '-'}
+            subtitle="highest achieved"
+            icon={
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                />
+              </svg>
+            }
+            color="amber"
+          />
+          <StatCard
+            label="Improvement"
+            value={
+              stats.improvement !== null
+                ? `${stats.improvement >= 0 ? '+' : ''}${stats.improvement}`
+                : '-'
+            }
+            subtitle={stats.improvement !== null ? 'band score change' : 'need 6+ essays'}
+            icon={
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                />
+              </svg>
+            }
+            color="green"
+          />
+        </div>
+
+        {/* Recent Essays */}
+        <div className="rounded-2xl border border-slate-200 bg-white">
+          <div className="border-b border-slate-100 px-6 py-4">
+            <h2 className="text-lg font-semibold text-slate-900">Recent Practice</h2>
+          </div>
+
+          {recentSessions.length === 0 ? (
+            <div className="px-6 py-12 text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
+                <svg
+                  className="h-6 w-6 text-slate-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-slate-900">No practice sessions yet</h3>
+              <p className="mt-1 text-slate-600">Start your first writing practice to see your progress here.</p>
+              <Link
+                href="/writing"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-500"
+              >
+                Start Writing Practice
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            </div>
+          ) : (
+            <div className="divide-y divide-slate-100">
+              {recentSessions.map((session) => (
+                <div key={session.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                    <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-slate-900">{session.title}</span>
+                      <span className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+                        {formatTaskType(session.type)}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 truncate text-sm text-slate-500">{session.prompt}</p>
+                  </div>
+                  <div className="flex flex-shrink-0 items-center gap-4">
+                    {session.bandScore !== null && (
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-blue-600">{session.bandScore}</div>
+                        <div className="text-xs text-slate-500">Band Score</div>
+                      </div>
+                    )}
+                    <div className="text-right text-sm text-slate-500">
+                      {formatDate(session.completedAt)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Quick Actions */}
+        {recentSessions.length > 0 && (
+          <div className="mt-6 flex justify-center">
+            <Link
+              href="/writing"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl"
+            >
+              Continue Practice
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  subtitle,
+  icon,
+  color,
+}: {
+  label: string;
+  value: string | number;
+  subtitle: string;
+  icon: React.ReactNode;
+  color: 'blue' | 'indigo' | 'amber' | 'green';
+}) {
+  const colorClasses = {
+    blue: 'bg-blue-100 text-blue-600',
+    indigo: 'bg-indigo-100 text-indigo-600',
+    amber: 'bg-amber-100 text-amber-600',
+    green: 'bg-green-100 text-green-600',
+  };
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5">
+      <div className="flex items-center gap-3">
+        <div className={`rounded-lg p-2 ${colorClasses[color]}`}>{icon}</div>
+        <span className="text-sm font-medium text-slate-600">{label}</span>
+      </div>
+      <div className="mt-3">
+        <span className="text-3xl font-bold text-slate-900">{value}</span>
+        <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
+      </div>
+    </div>
+  );
+}
+
+function formatTaskType(type: string): string {
+  switch (type) {
+    case 'TASK1_ACADEMIC':
+      return 'Task 1 Academic';
+    case 'TASK1_GENERAL':
+      return 'Task 1 General';
+    case 'TASK2':
+      return 'Task 2';
+    default:
+      return type;
+  }
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    return 'Today';
+  } else if (diffDays === 1) {
+    return 'Yesterday';
+  } else if (diffDays < 7) {
+    return `${diffDays} days ago`;
+  } else {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+}

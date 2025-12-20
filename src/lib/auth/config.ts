@@ -1,5 +1,5 @@
 import { NextAuthOptions } from 'next-auth';
-import { Adapter, AdapterAccount, AdapterUser, AdapterSession } from 'next-auth/adapters';
+import { Adapter, AdapterAccount, AdapterUser } from 'next-auth/adapters';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
