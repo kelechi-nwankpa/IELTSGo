@@ -208,7 +208,12 @@ function isValidEvaluation(obj: unknown): obj is WritingEvaluation {
 
   // Check criteria structure
   const criteria = evaluation.criteria as Record<string, unknown>;
-  const requiredCriteria = ['task_achievement', 'coherence_cohesion', 'lexical_resource', 'grammatical_range'];
+  const requiredCriteria = [
+    'task_achievement',
+    'coherence_cohesion',
+    'lexical_resource',
+    'grammatical_range',
+  ];
 
   for (const key of requiredCriteria) {
     if (!criteria[key] || typeof criteria[key] !== 'object') return false;

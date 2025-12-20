@@ -36,7 +36,8 @@ export interface AppError {
  */
 const ERROR_MESSAGES: Record<ErrorCode, { userMessage: string; retry: boolean }> = {
   [ErrorCode.NETWORK_ERROR]: {
-    userMessage: 'Unable to connect to the server. Please check your internet connection and try again.',
+    userMessage:
+      'Unable to connect to the server. Please check your internet connection and try again.',
     retry: true,
   },
   [ErrorCode.TIMEOUT]: {
@@ -108,7 +109,11 @@ export function detectAnthropicError(error: unknown): ErrorCode {
     if (message.includes('rate limit') || message.includes('429')) {
       return ErrorCode.AI_RATE_LIMITED;
     }
-    if (message.includes('authentication') || message.includes('api key') || message.includes('401')) {
+    if (
+      message.includes('authentication') ||
+      message.includes('api key') ||
+      message.includes('401')
+    ) {
       return ErrorCode.AI_AUTHENTICATION_FAILED;
     }
     if (message.includes('timeout') || message.includes('timed out')) {
@@ -117,10 +122,18 @@ export function detectAnthropicError(error: unknown): ErrorCode {
     if (message.includes('failed to parse') || message.includes('invalid json')) {
       return ErrorCode.AI_RESPONSE_INVALID;
     }
-    if (message.includes('503') || message.includes('service unavailable') || message.includes('overloaded')) {
+    if (
+      message.includes('503') ||
+      message.includes('service unavailable') ||
+      message.includes('overloaded')
+    ) {
       return ErrorCode.AI_SERVICE_UNAVAILABLE;
     }
-    if (message.includes('network') || message.includes('fetch failed') || message.includes('econnrefused')) {
+    if (
+      message.includes('network') ||
+      message.includes('fetch failed') ||
+      message.includes('econnrefused')
+    ) {
       return ErrorCode.NETWORK_ERROR;
     }
   }
@@ -153,7 +166,10 @@ export function detectHttpError(status: number): ErrorCode {
 /**
  * Format error for API response (server-side)
  */
-export function formatApiError(code: ErrorCode, originalMessage?: string): {
+export function formatApiError(
+  code: ErrorCode,
+  originalMessage?: string
+): {
   error: string;
   code: ErrorCode;
   retry: boolean;

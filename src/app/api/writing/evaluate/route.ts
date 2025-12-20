@@ -15,10 +15,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!promptId || !essay) {
-      return NextResponse.json(
-        formatApiError(ErrorCode.MISSING_FIELDS),
-        { status: 400 }
-      );
+      return NextResponse.json(formatApiError(ErrorCode.MISSING_FIELDS), { status: 400 });
     }
 
     // Validate essay is not empty or just whitespace
@@ -35,10 +32,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!content) {
-      return NextResponse.json(
-        formatApiError(ErrorCode.CONTENT_NOT_FOUND),
-        { status: 404 }
-      );
+      return NextResponse.json(formatApiError(ErrorCode.CONTENT_NOT_FOUND), { status: 404 });
     }
 
     const contentData = content.contentData as unknown as ContentData;

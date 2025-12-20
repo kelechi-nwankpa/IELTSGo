@@ -33,9 +33,9 @@ export default async function WritingPage() {
 
   if (!prompt) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">No Prompts Available</h1>
+          <h1 className="mb-2 text-2xl font-bold text-gray-800">No Prompts Available</h1>
           <p className="text-gray-600">Please check back later.</p>
         </div>
       </div>

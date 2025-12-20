@@ -9,22 +9,22 @@ interface WritingPromptProps {
 
 export function WritingPrompt({ title, prompt, topic, taskType = 'Task 2' }: WritingPromptProps) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-4 flex items-center gap-2">
+        <span className="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
           {taskType}
         </span>
         {topic && (
-          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded capitalize">
+          <span className="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 capitalize">
             {topic}
           </span>
         )}
       </div>
 
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">{title}</h2>
+      <h2 className="mb-4 text-lg font-semibold text-gray-800">{title}</h2>
 
       <div className="prose prose-sm max-w-none">
-        <p className="text-gray-700 whitespace-pre-line leading-relaxed">{prompt}</p>
+        <p className="leading-relaxed whitespace-pre-line text-gray-700">{prompt}</p>
       </div>
     </div>
   );
