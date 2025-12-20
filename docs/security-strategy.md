@@ -2,8 +2,8 @@
 
 > **Purpose:** Comprehensive security hardening guide for IELTSGo. This document covers all known attack vectors and mitigation strategies specific to this AI-powered IELTS preparation platform.
 >
-> **Version:** 1.0.0
-> **Last Updated:** 2025-01-20
+> **Version:** 1.1.0
+> **Last Updated:** 2025-12-20
 > **Status:** Reference document for security implementation
 
 ---
@@ -36,6 +36,8 @@
 | Unauthenticated Endpoints | **CRITICAL** | P0       |
 | Brute Force Vulnerability | **HIGH**     | P1       |
 | Rate Limiting Absence     | **HIGH**     | P1       |
+| Rate Limiting Bypass      | **HIGH**     | P1       |
+| SSRF Vulnerabilities      | **HIGH**     | P1       |
 | XSS via AI Responses      | **MEDIUM**   | P2       |
 | CSRF Protection           | **MEDIUM**   | P2       |
 | Data Encryption at Rest   | **MEDIUM**   | P2       |
@@ -593,7 +595,276 @@ export const config = {
 };
 ```
 
-### 5.3 Input Validation
+### 5.3 Rate Limiting Bypass Prevention
+
+Basic rate limiting can be bypassed. Here's how to build a fortress:
+
+#### 5.3.1 Common Bypass Techniques
+
+| Bypass Method | Description | Mitigation |
+| ------------- | ----------- | ---------- |
+| IP Rotation | Attacker uses proxies/VPNs/botnets | Composite keys, behavioral analysis |
+| Header Spoofing | Fake `X-Forwarded-For` headers | Validate headers, use real IP |
+| Account Switching | Rotate between multiple accounts | Per-user + per-IP limits combined |
+| Slowloris | Stay just under thresholds | Adaptive rate limiting |
+| Distributed Attacks | Many IPs, few requests each | Global rate limits, anomaly detection |
+| API Key Abuse | Stolen/shared API keys | Key binding, usage patterns |
+
+#### 5.3.2 Hardened Rate Limiting Implementation
+
+```typescript
+// Create: src/lib/rate-limit/hardened.ts
+
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+import { createHash } from 'crypto';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+// Generate a composite key that's harder to bypass
+function getCompositeKey(request: NextRequest, userId?: string): string {
+  const components: string[] = [];
+
+  // 1. Real IP (not from headers that can be spoofed)
+  // In production behind a trusted proxy, use the LAST IP in X-Forwarded-For
+  // or better, use CF-Connecting-IP (Cloudflare) or similar
+  const realIP = getRealIP(request);
+  components.push(`ip:${realIP}`);
+
+  // 2. User ID if authenticated
+  if (userId) {
+    components.push(`user:${userId}`);
+  }
+
+  // 3. User Agent fingerprint (partial defense against bots)
+  const ua = request.headers.get('user-agent') || 'unknown';
+  const uaHash = createHash('sha256').update(ua).digest('hex').slice(0, 8);
+  components.push(`ua:${uaHash}`);
+
+  // 4. Session token hash if present
+  const sessionToken = request.cookies.get('next-auth.session-token')?.value;
+  if (sessionToken) {
+    const sessionHash = createHash('sha256').update(sessionToken).digest('hex').slice(0, 8);
+    components.push(`session:${sessionHash}`);
+  }
+
+  return components.join(':');
+}
+
+// Get the REAL IP, not a spoofed header
+function getRealIP(request: NextRequest): string {
+  // Priority order for trusted proxies:
+  // 1. Cloudflare: CF-Connecting-IP
+  // 2. AWS ALB: X-Forwarded-For (last value)
+  // 3. Vercel: x-real-ip
+  // 4. Fallback: request.ip
+
+  const cfIP = request.headers.get('cf-connecting-ip');
+  if (cfIP && process.env.TRUST_CLOUDFLARE === 'true') {
+    return cfIP;
+  }
+
+  const vercelIP = request.headers.get('x-real-ip');
+  if (vercelIP && process.env.TRUST_VERCEL === 'true') {
+    return vercelIP;
+  }
+
+  // For X-Forwarded-For, take the FIRST IP (client) only if from trusted proxy
+  // Otherwise, attackers can prepend fake IPs
+  const xff = request.headers.get('x-forwarded-for');
+  if (xff && process.env.TRUST_PROXY === 'true') {
+    // Take first IP only - this is the client IP when proxy is trusted
+    return xff.split(',')[0].trim();
+  }
+
+  // Fallback - direct connection
+  return request.ip || 'unknown';
+}
+
+// Multi-layer rate limiting
+export async function checkRateLimits(
+  request: NextRequest,
+  userId?: string,
+  tier: 'free' | 'premium' = 'free'
+): Promise<{ allowed: boolean; reason?: string; retryAfter?: number }> {
+  const compositeKey = getCompositeKey(request, userId);
+  const ip = getRealIP(request);
+
+  // Layer 1: Per-IP limit (prevents single IP abuse)
+  const ipLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(100, '1 m'),
+    prefix: 'rl:ip',
+  });
+  const ipResult = await ipLimit.limit(ip);
+  if (!ipResult.success) {
+    return {
+      allowed: false,
+      reason: 'IP rate limit exceeded',
+      retryAfter: Math.ceil((ipResult.reset - Date.now()) / 1000),
+    };
+  }
+
+  // Layer 2: Per-user limit (if authenticated)
+  if (userId) {
+    const userLimits = {
+      free: { requests: 50, window: '1 m' as const },
+      premium: { requests: 200, window: '1 m' as const },
+    };
+    const userLimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(
+        userLimits[tier].requests,
+        userLimits[tier].window
+      ),
+      prefix: 'rl:user',
+    });
+    const userResult = await userLimit.limit(userId);
+    if (!userResult.success) {
+      return {
+        allowed: false,
+        reason: 'User rate limit exceeded',
+        retryAfter: Math.ceil((userResult.reset - Date.now()) / 1000),
+      };
+    }
+  }
+
+  // Layer 3: Composite key limit (catches sophisticated attacks)
+  const compositeLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(30, '1 m'),
+    prefix: 'rl:composite',
+  });
+  const compositeResult = await compositeLimit.limit(compositeKey);
+  if (!compositeResult.success) {
+    return {
+      allowed: false,
+      reason: 'Request pattern rate limit exceeded',
+      retryAfter: Math.ceil((compositeResult.reset - Date.now()) / 1000),
+    };
+  }
+
+  // Layer 4: Global rate limit (prevents distributed attacks)
+  const globalLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(10000, '1 m'),
+    prefix: 'rl:global',
+  });
+  const globalResult = await globalLimit.limit('global');
+  if (!globalResult.success) {
+    // Don't reveal this is a global limit
+    return {
+      allowed: false,
+      reason: 'Service temporarily unavailable',
+      retryAfter: 60,
+    };
+  }
+
+  return { allowed: true };
+}
+
+// Adaptive rate limiting - tighten limits for suspicious behavior
+export async function recordSuspiciousActivity(
+  ip: string,
+  reason: string
+): Promise<void> {
+  const key = `suspicious:${ip}`;
+  const count = await redis.incr(key);
+  await redis.expire(key, 3600); // 1 hour TTL
+
+  if (count >= 5) {
+    // Temporarily ban this IP
+    await redis.set(`banned:${ip}`, 'true', { ex: 3600 });
+    await logSecurityEvent({
+      event: 'SUSPICIOUS_ACTIVITY',
+      ip,
+      path: '',
+      userAgent: '',
+      details: { reason, count },
+      timestamp: new Date(),
+    });
+  }
+}
+
+export async function isIPBanned(ip: string): Promise<boolean> {
+  const banned = await redis.get(`banned:${ip}`);
+  return banned === 'true';
+}
+```
+
+#### 5.3.3 CAPTCHA Integration After Soft Limits
+
+```typescript
+// Create: src/lib/rate-limit/captcha.ts
+
+export async function shouldRequireCaptcha(
+  ip: string,
+  userId?: string
+): Promise<boolean> {
+  // Check if this IP/user has hit soft limits recently
+  const softLimitKey = `softlimit:${userId || ip}`;
+  const hits = await redis.get(softLimitKey);
+
+  // Require CAPTCHA after 3 soft limit hits
+  return parseInt(hits as string) >= 3;
+}
+
+export async function recordSoftLimitHit(
+  ip: string,
+  userId?: string
+): Promise<void> {
+  const key = `softlimit:${userId || ip}`;
+  await redis.incr(key);
+  await redis.expire(key, 1800); // 30 min TTL
+}
+
+// In your middleware or route handlers:
+export async function handleRateLimitWithCaptcha(
+  request: NextRequest,
+  userId?: string
+): Promise<NextResponse | null> {
+  const ip = getRealIP(request);
+
+  // Check if banned
+  if (await isIPBanned(ip)) {
+    return new NextResponse('Access denied', { status: 403 });
+  }
+
+  // Check rate limits
+  const result = await checkRateLimits(request, userId);
+
+  if (!result.allowed) {
+    await recordSoftLimitHit(ip, userId);
+
+    // Check if CAPTCHA is required
+    if (await shouldRequireCaptcha(ip, userId)) {
+      return NextResponse.json(
+        {
+          error: 'CAPTCHA required',
+          captchaRequired: true,
+          // Include your CAPTCHA provider's site key
+          captchaSiteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+        },
+        { status: 429 }
+      );
+    }
+
+    return new NextResponse('Too Many Requests', {
+      status: 429,
+      headers: {
+        'Retry-After': result.retryAfter?.toString() || '60',
+      },
+    });
+  }
+
+  return null; // Proceed
+}
+```
+
+### 5.4 Input Validation
 
 ```typescript
 // Create: src/lib/validation/schemas.ts
@@ -670,7 +941,351 @@ const nextConfig = {
 };
 ```
 
-### 5.6 Authentication Enforcement
+### 5.6 SSRF (Server-Side Request Forgery) Prevention
+
+SSRF attacks trick the server into making requests to unintended destinations, potentially accessing internal services, cloud metadata, or performing actions on behalf of the attacker.
+
+#### 5.6.1 Attack Vectors in IELTSGo
+
+| Scenario | Risk | Example |
+| -------- | ---- | ------- |
+| Profile image URL | Access internal services | `http://169.254.169.254/latest/meta-data/` |
+| Webhook callbacks | Port scanning, internal access | `http://localhost:5432` |
+| External resource fetch | Data exfiltration | `http://internal-api.company.local/secrets` |
+| Redirect following | Bypass allowlists | `http://safe.com` → redirects to `http://evil.com` |
+| DNS rebinding | Time-of-check attacks | Domain resolves to `127.0.0.1` after validation |
+
+#### 5.6.2 Current Risk Assessment
+
+```
+Location: Review any code that fetches external URLs based on user input
+Risk Level: HIGH (if URL input exists), LOW (if no URL input)
+
+Potential vulnerable areas:
+- User profile image URLs (if users can provide external URLs)
+- OAuth callback handling
+- Any webhook or callback functionality
+- Link preview generation
+- Export/import functionality with URLs
+```
+
+#### 5.6.3 Comprehensive SSRF Protection
+
+```typescript
+// Create: src/lib/security/ssrf-protection.ts
+
+import { URL } from 'url';
+import dns from 'dns';
+import { promisify } from 'util';
+
+const dnsLookup = promisify(dns.lookup);
+
+// Blocked IP ranges (IANA special-purpose addresses)
+const BLOCKED_IP_RANGES = [
+  // Loopback
+  /^127\./,
+  /^::1$/,
+  /^0:0:0:0:0:0:0:1$/,
+
+  // Private networks (RFC 1918)
+  /^10\./,
+  /^172\.(1[6-9]|2[0-9]|3[0-1])\./,
+  /^192\.168\./,
+
+  // Link-local
+  /^169\.254\./,
+  /^fe80:/i,
+
+  // Cloud metadata endpoints
+  /^169\.254\.169\.254$/, // AWS, GCP, Azure metadata
+  /^fd00:/i, // Unique local addresses
+
+  // Localhost variations
+  /^0\.0\.0\.0$/,
+  /^localhost$/i,
+
+  // Internal Docker/Kubernetes
+  /^172\.17\./, // Docker default bridge
+  /^10\.0\.0\./, // Common k8s pod network
+];
+
+// Allowed protocols
+const ALLOWED_PROTOCOLS = ['https:']; // Only HTTPS in production
+const ALLOWED_PROTOCOLS_DEV = ['http:', 'https:'];
+
+// Domain allowlist (if you need to restrict to specific domains)
+const DOMAIN_ALLOWLIST: string[] = [
+  // Add trusted domains here, e.g.:
+  // 'api.trusted-service.com',
+  // 'cdn.example.com',
+];
+
+// Domain blocklist (known dangerous)
+const DOMAIN_BLOCKLIST = [
+  /\.local$/i,
+  /\.internal$/i,
+  /\.corp$/i,
+  /\.home$/i,
+  /\.lan$/i,
+  /localhost/i,
+  /\.arpa$/i,
+];
+
+interface SSRFValidationResult {
+  safe: boolean;
+  reason?: string;
+  resolvedIP?: string;
+}
+
+export async function validateURL(
+  urlString: string,
+  options: {
+    allowHTTP?: boolean;
+    useAllowlist?: boolean;
+    skipDNSCheck?: boolean;
+  } = {}
+): Promise<SSRFValidationResult> {
+  const {
+    allowHTTP = process.env.NODE_ENV === 'development',
+    useAllowlist = false,
+    skipDNSCheck = false,
+  } = options;
+
+  // 1. Parse the URL
+  let url: URL;
+  try {
+    url = new URL(urlString);
+  } catch {
+    return { safe: false, reason: 'Invalid URL format' };
+  }
+
+  // 2. Check protocol
+  const allowedProtocols = allowHTTP ? ALLOWED_PROTOCOLS_DEV : ALLOWED_PROTOCOLS;
+  if (!allowedProtocols.includes(url.protocol)) {
+    return { safe: false, reason: `Protocol ${url.protocol} not allowed` };
+  }
+
+  // 3. Check for credentials in URL
+  if (url.username || url.password) {
+    return { safe: false, reason: 'URLs with credentials not allowed' };
+  }
+
+  // 4. Check port (block unusual ports)
+  const port = url.port ? parseInt(url.port) : url.protocol === 'https:' ? 443 : 80;
+  const allowedPorts = [80, 443, 8080, 8443];
+  if (!allowedPorts.includes(port)) {
+    return { safe: false, reason: `Port ${port} not allowed` };
+  }
+
+  // 5. Check hostname against blocklist
+  const hostname = url.hostname.toLowerCase();
+  for (const pattern of DOMAIN_BLOCKLIST) {
+    if (pattern.test(hostname)) {
+      return { safe: false, reason: 'Domain is blocklisted' };
+    }
+  }
+
+  // 6. Check against allowlist if enabled
+  if (useAllowlist && DOMAIN_ALLOWLIST.length > 0) {
+    if (!DOMAIN_ALLOWLIST.includes(hostname)) {
+      return { safe: false, reason: 'Domain not in allowlist' };
+    }
+  }
+
+  // 7. Check if hostname is an IP address
+  const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+  const ipv6Regex = /^([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}$/;
+
+  if (ipv4Regex.test(hostname) || ipv6Regex.test(hostname)) {
+    // Direct IP access - check against blocked ranges
+    for (const pattern of BLOCKED_IP_RANGES) {
+      if (pattern.test(hostname)) {
+        return { safe: false, reason: 'IP address is in blocked range' };
+      }
+    }
+  }
+
+  // 8. DNS resolution check (prevents DNS rebinding)
+  if (!skipDNSCheck) {
+    try {
+      const { address } = await dnsLookup(hostname);
+
+      // Check resolved IP against blocked ranges
+      for (const pattern of BLOCKED_IP_RANGES) {
+        if (pattern.test(address)) {
+          return {
+            safe: false,
+            reason: 'Resolved IP is in blocked range',
+            resolvedIP: address,
+          };
+        }
+      }
+
+      return { safe: true, resolvedIP: address };
+    } catch (error) {
+      return { safe: false, reason: 'DNS resolution failed' };
+    }
+  }
+
+  return { safe: true };
+}
+
+// Safe fetch wrapper that prevents SSRF
+export async function safeFetch(
+  urlString: string,
+  options: RequestInit & {
+    ssrfOptions?: Parameters<typeof validateURL>[1];
+    maxRedirects?: number;
+  } = {}
+): Promise<Response> {
+  const { ssrfOptions, maxRedirects = 3, ...fetchOptions } = options;
+
+  // Validate URL before fetching
+  const validation = await validateURL(urlString, ssrfOptions);
+  if (!validation.safe) {
+    throw new Error(`SSRF protection: ${validation.reason}`);
+  }
+
+  // Disable automatic redirects to validate each redirect
+  const response = await fetch(urlString, {
+    ...fetchOptions,
+    redirect: 'manual',
+  });
+
+  // Handle redirects manually
+  if ([301, 302, 303, 307, 308].includes(response.status)) {
+    if (maxRedirects <= 0) {
+      throw new Error('SSRF protection: Too many redirects');
+    }
+
+    const location = response.headers.get('location');
+    if (!location) {
+      throw new Error('SSRF protection: Redirect without location');
+    }
+
+    // Resolve relative URLs
+    const redirectUrl = new URL(location, urlString).toString();
+
+    // Recursively validate and fetch the redirect
+    return safeFetch(redirectUrl, {
+      ...options,
+      maxRedirects: maxRedirects - 1,
+    });
+  }
+
+  return response;
+}
+
+// Validate image URLs specifically
+export async function validateImageURL(urlString: string): Promise<SSRFValidationResult> {
+  const result = await validateURL(urlString);
+  if (!result.safe) return result;
+
+  // Additional checks for images
+  const url = new URL(urlString);
+  const path = url.pathname.toLowerCase();
+
+  // Check file extension
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+  const hasAllowedExtension = allowedExtensions.some((ext) => path.endsWith(ext));
+
+  if (!hasAllowedExtension) {
+    // Don't fail - the content-type header is more reliable
+    // But log for monitoring
+    console.warn(`Image URL without image extension: ${urlString}`);
+  }
+
+  return result;
+}
+```
+
+#### 5.6.4 Usage Examples
+
+```typescript
+// In your API routes or services:
+
+// Example 1: Fetching user-provided image URL
+import { validateImageURL, safeFetch } from '@/lib/security/ssrf-protection';
+
+async function processProfileImage(imageUrl: string): Promise<void> {
+  // Validate before fetching
+  const validation = await validateImageURL(imageUrl);
+  if (!validation.safe) {
+    throw new Error(`Invalid image URL: ${validation.reason}`);
+  }
+
+  // Safe to fetch
+  const response = await safeFetch(imageUrl);
+  const contentType = response.headers.get('content-type');
+
+  if (!contentType?.startsWith('image/')) {
+    throw new Error('URL does not point to an image');
+  }
+
+  // Process the image...
+}
+
+// Example 2: Webhook validation
+import { validateURL } from '@/lib/security/ssrf-protection';
+
+async function registerWebhook(callbackUrl: string): Promise<void> {
+  const validation = await validateURL(callbackUrl, {
+    allowHTTP: false, // Require HTTPS for webhooks
+    useAllowlist: true, // Only allow pre-approved domains
+  });
+
+  if (!validation.safe) {
+    throw new Error(`Invalid webhook URL: ${validation.reason}`);
+  }
+
+  // Store the webhook...
+}
+```
+
+#### 5.6.5 Defense in Depth
+
+```typescript
+// Additional measures for production:
+
+// 1. Network-level isolation (infrastructure)
+// - Run fetches through a proxy in a DMZ
+// - Use network policies to block internal access
+// - Whitelist outbound IPs at firewall level
+
+// 2. Use signed URLs for user-provided content
+import { createHmac } from 'crypto';
+
+export function generateSignedImageUrl(originalUrl: string): string {
+  // Instead of storing user URLs directly,
+  // proxy through your own CDN with signed URLs
+  const signature = createHmac('sha256', process.env.URL_SIGNING_SECRET!)
+    .update(originalUrl)
+    .digest('hex');
+
+  return `${process.env.CDN_URL}/proxy?url=${encodeURIComponent(originalUrl)}&sig=${signature}`;
+}
+
+// 3. Content verification after fetch
+export async function verifyImageContent(buffer: Buffer): Promise<boolean> {
+  // Check magic bytes to verify it's actually an image
+  const magicBytes: Record<string, number[]> = {
+    jpeg: [0xff, 0xd8, 0xff],
+    png: [0x89, 0x50, 0x4e, 0x47],
+    gif: [0x47, 0x49, 0x46],
+    webp: [0x52, 0x49, 0x46, 0x46],
+  };
+
+  for (const [format, bytes] of Object.entries(magicBytes)) {
+    if (bytes.every((byte, i) => buffer[i] === byte)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+```
+
+### 5.7 Authentication Enforcement
 
 ```typescript
 // Create: src/lib/auth/require-auth.ts
@@ -1370,6 +1985,8 @@ When you submit essays for evaluation:
 ### Phase 2: High Priority (Week 2-3)
 
 - [ ] Implement rate limiting middleware (Upstash or similar)
+- [ ] **Implement rate limiting bypass prevention** (composite keys, multi-layer limits)
+- [ ] **Add SSRF protection** (`src/lib/security/ssrf-protection.ts`)
 - [ ] Add security headers to Next.js config
 - [ ] Implement brute force protection for auth
 - [ ] Add AI output validation with strict schema
@@ -1384,6 +2001,8 @@ When you submit essays for evaluation:
 - [ ] Implement data retention policies
 - [ ] Add npm audit to CI/CD pipeline
 - [ ] Configure Content Security Policy
+- [ ] **Add CAPTCHA integration for rate limit soft limits**
+- [ ] **Implement adaptive rate limiting with suspicious activity tracking**
 
 ### Phase 4: Hardening (Week 7-8)
 
@@ -1393,6 +2012,8 @@ When you submit essays for evaluation:
 - [ ] Set up anomaly detection for AI usage
 - [ ] Document incident response procedures
 - [ ] Conduct internal security review
+- [ ] **Add DNS rebinding protection with validation caching**
+- [ ] **Implement global rate limits for DDoS protection**
 
 ### Phase 5: Ongoing
 
@@ -1430,6 +2051,7 @@ npx eslint --config .eslintrc.security.json src/
 | Version | Date       | Author | Changes                                 |
 | ------- | ---------- | ------ | --------------------------------------- |
 | 1.0.0   | 2025-01-20 | Claude | Initial comprehensive security strategy |
+| 1.1.0   | 2025-01-20 | Claude | Added SSRF prevention & Rate Limiting Bypass protection |
 
 ---
 
