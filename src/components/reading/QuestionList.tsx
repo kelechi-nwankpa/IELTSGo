@@ -16,6 +16,10 @@ interface QuestionListProps {
   disabled?: boolean;
   results?: QuestionResult[];
   stickyHeader?: boolean;
+  // For AI explanation feature
+  passageId?: string;
+  passageTitle?: string;
+  passageText?: string;
 }
 
 export function QuestionList({
@@ -25,6 +29,9 @@ export function QuestionList({
   disabled = false,
   results,
   stickyHeader = true,
+  passageId,
+  passageTitle,
+  passageText,
 }: QuestionListProps) {
   const showResults = !!results;
 
@@ -64,6 +71,9 @@ export function QuestionList({
               showResult={showResults}
               isCorrect={result?.isCorrect}
               correctAnswer={result?.correctAnswer}
+              passageId={passageId}
+              passageTitle={passageTitle}
+              passageText={passageText}
             />
           );
         })}

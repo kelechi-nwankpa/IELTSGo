@@ -259,15 +259,46 @@ export default function DashboardContent() {
             <div className="divide-y divide-slate-100">
               {recentSessions.map((session) => {
                 const isReading = session.module === 'READING';
+                const isListening = session.module === 'LISTENING';
+                const moduleStyles = isListening
+                  ? 'bg-purple-100'
+                  : isReading
+                    ? 'bg-green-100'
+                    : 'bg-blue-100';
+                const scoreColor = isListening
+                  ? 'text-purple-600'
+                  : isReading
+                    ? 'text-green-600'
+                    : 'text-blue-600';
+                const tagStyles = isListening
+                  ? 'bg-purple-100 text-purple-700'
+                  : isReading
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-slate-100 text-slate-600';
+
                 return (
                   <div
                     key={session.id}
                     className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50"
                   >
                     <div
-                      className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${isReading ? 'bg-green-100' : 'bg-blue-100'}`}
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${moduleStyles}`}
                     >
-                      {isReading ? (
+                      {isListening ? (
+                        <svg
+                          className="h-5 w-5 text-purple-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                          />
+                        </svg>
+                      ) : isReading ? (
                         <svg
                           className="h-5 w-5 text-green-600"
                           fill="none"
@@ -300,20 +331,16 @@ export default function DashboardContent() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-slate-900">{session.title}</span>
-                        <span
-                          className={`rounded px-2 py-0.5 text-xs ${isReading ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}
-                        >
+                        <span className={`rounded px-2 py-0.5 text-xs ${tagStyles}`}>
                           {formatTaskType(session.type)}
                         </span>
                       </div>
                       <p className="mt-0.5 truncate text-sm text-slate-500">{session.prompt}</p>
                     </div>
-                    <div className="flex flex-shrink-0 items-center gap-4">
+                    <div className="flex shrink-0 items-center gap-4">
                       {session.bandScore !== null && (
                         <div className="text-right">
-                          <div
-                            className={`text-lg font-bold ${isReading ? 'text-green-600' : 'text-blue-600'}`}
-                          >
+                          <div className={`text-lg font-bold ${scoreColor}`}>
                             {session.bandScore}
                           </div>
                           <div className="text-xs text-slate-500">Band Score</div>
@@ -333,7 +360,7 @@ export default function DashboardContent() {
         {/* Practice Modules */}
         <div className="mt-8">
           <h2 className="mb-4 text-lg font-semibold text-slate-900">Practice Modules</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Link
               href="/writing"
               className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-blue-200 hover:shadow-lg"
@@ -405,6 +432,42 @@ export default function DashboardContent() {
                 </span>
               </div>
             </Link>
+
+            <Link
+              href="/listening"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-purple-200 hover:shadow-lg"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-600 transition-colors group-hover:bg-purple-600 group-hover:text-white">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Listening Practice</h3>
+                  <p className="text-sm text-slate-500">Audio sections with auto-scoring</p>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <span className="text-xs text-slate-400">30 min per section</span>
+                <span className="flex items-center gap-1 text-sm font-medium text-purple-600">
+                  Start
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </Link>
           </div>
         </div>
       </main>
@@ -456,6 +519,8 @@ function formatTaskType(type: string): string {
       return 'Task 2';
     case 'READING_PASSAGE':
       return 'Reading';
+    case 'LISTENING_SECTION':
+      return 'Listening';
     default:
       return type;
   }

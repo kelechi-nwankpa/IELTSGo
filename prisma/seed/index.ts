@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { task2Prompts } from './task2-prompts';
 import { readingPassages } from './reading-passages';
+import { listeningSections } from './listening-sections';
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -79,6 +80,44 @@ async function main() {
     console.log(`  ✓ ${passage.title}`);
   }
   console.log(`Seeded ${readingPassages.length} Reading passages`);
+
+  // Seed Listening sections
+  console.log('\nSeeding Listening sections...');
+  for (const section of listeningSections) {
+    const contentData = JSON.parse(
+      JSON.stringify({
+        audioUrl: section.audioUrl,
+        title: section.title,
+        transcript: section.transcript,
+        questions: section.questions,
+        section: section.section,
+      })
+    );
+    const answers = JSON.parse(JSON.stringify(section.answers));
+
+    await prisma.content.upsert({
+      where: { id: section.id },
+      update: {
+        title: section.title,
+        contentData,
+        answers,
+        difficultyBand: section.difficultyBand,
+      },
+      create: {
+        id: section.id,
+        module: 'LISTENING',
+        type: 'LISTENING_SECTION',
+        testType: 'ACADEMIC',
+        title: section.title,
+        contentData,
+        answers,
+        difficultyBand: section.difficultyBand,
+        isPremium: false,
+      },
+    });
+    console.log(`  ✓ ${section.title}`);
+  }
+  console.log(`Seeded ${listeningSections.length} Listening sections`);
 
   console.log('\nSeeding complete!');
 }

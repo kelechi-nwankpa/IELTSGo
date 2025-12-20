@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ReadingPassage, QuestionList, ResultsSummary } from '@/components/reading';
+import { AudioPlayer } from '@/components/listening';
+import { QuestionList, ResultsSummary } from '@/components/reading';
 import { Timer } from '@/components/writing';
 
-interface ReadingQuestion {
+interface ListeningQuestion {
   id: string;
   type: 'multiple_choice' | 'true_false_ng' | 'matching' | 'short_answer';
   text: string;
@@ -28,11 +29,12 @@ interface Score {
   bandEstimate: number;
 }
 
-interface ReadingPracticeProps {
-  passageId: string;
+interface ListeningPracticeProps {
+  sectionId: string;
   title: string;
-  passage: string;
-  questions: ReadingQuestion[];
+  audioUrl: string;
+  transcript?: string;
+  questions: ListeningQuestion[];
 }
 
 interface ErrorState {
@@ -40,7 +42,12 @@ interface ErrorState {
   canRetry: boolean;
 }
 
-export function ReadingPractice({ passageId, title, passage, questions }: ReadingPracticeProps) {
+export function ListeningPractice({
+  sectionId,
+  title,
+  audioUrl,
+  questions,
+}: ListeningPracticeProps) {
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<ErrorState | null>(null);
@@ -61,13 +68,13 @@ export function ReadingPractice({ passageId, title, passage, questions }: Readin
     setError(null);
 
     try {
-      const response = await fetch('/api/reading/submit', {
+      const response = await fetch('/api/listening/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          passageId,
+          sectionId,
           answers,
           timeSpent: 0, // TODO: Track actual time spent
         }),
@@ -101,7 +108,7 @@ export function ReadingPractice({ passageId, title, passage, questions }: Readin
   };
 
   const handleTryAnother = () => {
-    // Reload the page to get a new passage
+    // Reload the page to get a new section
     window.location.reload();
   };
 
@@ -143,18 +150,12 @@ export function ReadingPractice({ passageId, title, passage, questions }: Readin
           {/* Question results breakdown */}
           <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-gray-900">Answer Review</h3>
-            <p className="mb-4 text-sm text-gray-500">
-              Click &ldquo;Explain&rdquo; on any question to get an AI-powered explanation.
-            </p>
             <QuestionList
               questions={questions}
               answers={answers}
               onAnswerChange={() => {}}
               results={results.questionResults}
               stickyHeader={false}
-              passageId={passageId}
-              passageTitle={title}
-              passageText={passage}
             />
           </div>
         </div>
@@ -183,115 +184,110 @@ export function ReadingPractice({ passageId, title, passage, questions }: Readin
               <span className="hidden sm:inline">Dashboard</span>
             </Link>
             <div className="h-6 w-px bg-gray-200" />
-            <h1 className="text-lg font-semibold text-gray-900">Reading Practice</h1>
+            <h1 className="text-lg font-semibold text-gray-900">Listening Practice</h1>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-sm text-gray-500">
               {answeredCount}/{questions.length} answered
             </div>
-            <Timer initialMinutes={60} />
+            <Timer initialMinutes={30} />
           </div>
         </div>
       </div>
 
-      {/* Main content - split view */}
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col lg:flex-row">
-          {/* Passage - left side */}
-          <div className="lg:w-1/2 lg:border-r lg:border-gray-200">
-            <div className="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4 lg:p-6">
-              <ReadingPassage title={title} passage={passage} />
-            </div>
-          </div>
+      {/* Main content */}
+      <div className="mx-auto max-w-4xl px-4 py-6">
+        {/* Audio Player */}
+        <div className="mb-6">
+          <AudioPlayer src={audioUrl} title={title} />
+        </div>
 
-          {/* Questions - right side */}
-          <div className="lg:w-1/2">
-            <div className="p-4 lg:p-6">
-              {error && (
-                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-                  <div className="flex items-start gap-3">
-                    <svg
-                      className="mt-0.5 h-5 w-5 shrink-0 text-red-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <div>
-                      <p className="text-red-700">{error.message}</p>
-                      {error.canRetry && (
-                        <p className="mt-1 text-sm text-red-600">
-                          Click &quot;Submit Answers&quot; to try again.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <QuestionList
-                questions={questions}
-                answers={answers}
-                onAnswerChange={handleAnswerChange}
-              />
-
-              {/* Submit button */}
-              <div className="mt-6 rounded-lg border border-gray-200 bg-white p-4">
-                <div className="mb-3 flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Progress</span>
-                  <span className="font-medium text-gray-700">
-                    {answeredCount} of {questions.length} questions answered
-                  </span>
-                </div>
-                <div className="mb-4 h-2 overflow-hidden rounded-full bg-gray-200">
-                  <div
-                    className="h-full rounded-full bg-blue-500 transition-all"
-                    style={{ width: `${(answeredCount / questions.length) * 100}%` }}
-                  />
-                </div>
-                <button
-                  onClick={handleSubmit}
-                  disabled={isSubmitting || answeredCount === 0}
-                  className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl hover:shadow-blue-500/30 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      Submitting...
-                    </span>
-                  ) : (
-                    'Submit Answers'
-                  )}
-                </button>
-                {answeredCount < questions.length && answeredCount > 0 && (
-                  <p className="mt-2 text-center text-sm text-amber-600">
-                    You have {questions.length - answeredCount} unanswered question
-                    {questions.length - answeredCount > 1 ? 's' : ''}
+        {/* Error message */}
+        {error && (
+          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+            <div className="flex items-start gap-3">
+              <svg
+                className="mt-0.5 h-5 w-5 shrink-0 text-red-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <div>
+                <p className="text-red-700">{error.message}</p>
+                {error.canRetry && (
+                  <p className="mt-1 text-sm text-red-600">
+                    Click &quot;Submit Answers&quot; to try again.
                   </p>
                 )}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Questions */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <QuestionList
+            questions={questions}
+            answers={answers}
+            onAnswerChange={handleAnswerChange}
+          />
+
+          {/* Submit button */}
+          <div className="mt-6 border-t border-gray-100 pt-6">
+            <div className="mb-3 flex items-center justify-between text-sm">
+              <span className="text-gray-500">Progress</span>
+              <span className="font-medium text-gray-700">
+                {answeredCount} of {questions.length} questions answered
+              </span>
+            </div>
+            <div className="mb-4 h-2 overflow-hidden rounded-full bg-gray-200">
+              <div
+                className="h-full rounded-full bg-purple-500 transition-all"
+                style={{ width: `${(answeredCount / questions.length) * 100}%` }}
+              />
+            </div>
+            <button
+              onClick={handleSubmit}
+              disabled={isSubmitting || answeredCount === 0}
+              className="w-full rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-xl hover:shadow-purple-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Submitting...
+                </span>
+              ) : (
+                'Submit Answers'
+              )}
+            </button>
+            {answeredCount < questions.length && answeredCount > 0 && (
+              <p className="mt-2 text-center text-sm text-amber-600">
+                You have {questions.length - answeredCount} unanswered question
+                {questions.length - answeredCount > 1 ? 's' : ''}
+              </p>
+            )}
           </div>
         </div>
       </div>

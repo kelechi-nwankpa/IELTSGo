@@ -2,9 +2,9 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
-import { ReadingPractice } from './ReadingPractice';
+import { ListeningPractice } from './ListeningPractice';
 
-interface ReadingQuestion {
+interface ListeningQuestion {
   id: string;
   type: 'multiple_choice' | 'true_false_ng' | 'matching' | 'short_answer';
   text: string;
@@ -14,21 +14,22 @@ interface ReadingQuestion {
 }
 
 interface ContentData {
-  passage: string;
+  audioUrl: string;
   title: string;
-  questions: ReadingQuestion[];
+  transcript?: string;
+  questions: ListeningQuestion[];
+  section?: number;
 }
 
-export default async function ReadingPage() {
+export default async function ListeningPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
-    redirect('/auth/signin?callbackUrl=/reading');
+    redirect('/auth/signin?callbackUrl=/listening');
   }
 
-  // Fetch a random reading passage using database-level randomization
-  // This is more scalable than fetching all and using Math.random() client-side
-  const passages = await prisma.$queryRaw<
+  // Fetch a random listening section using database-level randomization
+  const sections = await prisma.$queryRaw<
     Array<{
       id: string;
       title: string;
@@ -38,32 +39,33 @@ export default async function ReadingPage() {
   >`
     SELECT id, title, content_data as "contentData", difficulty_band as "difficultyBand"
     FROM content
-    WHERE module = 'READING' AND type = 'READING_PASSAGE'
+    WHERE module = 'LISTENING' AND type = 'LISTENING_SECTION'
     ORDER BY RANDOM()
     LIMIT 1
   `;
 
-  if (passages.length === 0) {
+  if (sections.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">No Passages Available</h1>
+          <h1 className="text-2xl font-bold text-gray-900">No Listening Sections Available</h1>
           <p className="mt-2 text-gray-600">
-            There are no reading passages available at the moment. Please check back later.
+            There are no listening sections available at the moment. Please check back later.
           </p>
         </div>
       </div>
     );
   }
 
-  const selectedPassage = passages[0];
-  const contentData = selectedPassage.contentData;
+  const selectedSection = sections[0];
+  const contentData = selectedSection.contentData;
 
   return (
-    <ReadingPractice
-      passageId={selectedPassage.id}
+    <ListeningPractice
+      sectionId={selectedSection.id}
       title={contentData.title}
-      passage={contentData.passage}
+      audioUrl={contentData.audioUrl}
+      transcript={contentData.transcript}
       questions={contentData.questions}
     />
   );
