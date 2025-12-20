@@ -98,7 +98,8 @@ export async function GET() {
     }
 
     // Get best score
-    const bestScore = totalEvaluations > 0 ? Math.max(...allEvaluations.map((e) => e.bandEstimate)) : null;
+    const bestScore =
+      totalEvaluations > 0 ? Math.max(...allEvaluations.map((e) => e.bandEstimate)) : null;
 
     // Calculate evaluations remaining (free tier = 3)
     const FREE_TIER_LIMIT = 3;
@@ -134,9 +135,13 @@ export async function GET() {
           module: s.module,
           type: s.content.type,
           title: s.content.title || getDefaultTitle(s.content.type, s.module),
-          prompt: isReading ? readingData?.description ?? '' : getPromptPreview(s.content.contentData),
+          prompt: isReading
+            ? (readingData?.description ?? '')
+            : getPromptPreview(s.content.contentData),
           completedAt: s.completedAt,
-          bandScore: isReading ? readingData?.bandEstimate ?? null : s.evaluation?.bandEstimate ?? null,
+          bandScore: isReading
+            ? (readingData?.bandEstimate ?? null)
+            : (s.evaluation?.bandEstimate ?? null),
           criteriaScores: extractCriteriaScores(s.evaluation?.aiResponse),
         };
       }),

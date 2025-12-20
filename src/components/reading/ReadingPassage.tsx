@@ -17,7 +17,7 @@ export function ReadingPassage({ title, passage }: ReadingPassageProps) {
       <div className="px-6 py-4">
         <div className="prose prose-gray max-w-none">
           {paragraphs.map((paragraph, index) => (
-            <p key={index} className="mb-4 text-gray-700 leading-relaxed">
+            <p key={index} className="mb-4 leading-relaxed text-gray-700">
               {paragraph}
             </p>
           ))}

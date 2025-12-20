@@ -36,13 +36,13 @@ export function Question({
 
   const getResultStyles = () => {
     if (!showResult) return '';
-    return isCorrect
-      ? 'border-green-300 bg-green-50'
-      : 'border-red-300 bg-red-50';
+    return isCorrect ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50';
   };
 
   return (
-    <div className={`rounded-lg border p-4 ${showResult ? getResultStyles() : 'border-gray-200 bg-white'}`}>
+    <div
+      className={`rounded-lg border p-4 ${showResult ? getResultStyles() : 'border-gray-200 bg-white'}`}
+    >
       <div className="mb-3 flex items-start gap-2">
         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-700">
           {questionNumber}
@@ -99,16 +99,25 @@ export function Question({
           {isCorrect ? (
             <span className="inline-flex items-center gap-1 text-sm font-medium text-green-700">
               <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
               </svg>
               Correct
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 text-sm font-medium text-red-700">
               <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
               </svg>
-              Incorrect - Answer: {Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer}
+              Incorrect - Answer:{' '}
+              {Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer}
             </span>
           )}
         </div>
@@ -240,7 +249,10 @@ function MatchingInput({
         <p className="mb-2 text-xs font-medium text-gray-500 uppercase">Options:</p>
         <div className="flex flex-wrap gap-2">
           {options.map((opt, i) => (
-            <span key={i} className="rounded bg-white px-2 py-1 text-sm text-gray-700 border border-gray-200">
+            <span
+              key={i}
+              className="rounded border border-gray-200 bg-white px-2 py-1 text-sm text-gray-700"
+            >
               {opt}
             </span>
           ))}
@@ -248,7 +260,7 @@ function MatchingInput({
       </div>
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-3">
-          <span className="text-sm text-gray-600 min-w-[100px]">{item}:</span>
+          <span className="min-w-[100px] text-sm text-gray-600">{item}:</span>
           <select
             value={value?.[index] || ''}
             onChange={(e) => handleItemChange(index, e.target.value)}
@@ -302,7 +314,9 @@ function ShortAnswerInput({
             disabled ? 'cursor-not-allowed bg-gray-50' : 'bg-white'
           } ${wordCount > maxWords ? 'border-red-300' : 'border-gray-300'}`}
         />
-        <span className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${wordCount > maxWords ? 'text-red-500' : 'text-gray-400'}`}>
+        <span
+          className={`absolute top-1/2 right-3 -translate-y-1/2 text-xs ${wordCount > maxWords ? 'text-red-500' : 'text-gray-400'}`}
+        >
           {wordCount}/{maxWords}
         </span>
       </div>

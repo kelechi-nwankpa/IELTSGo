@@ -108,9 +108,7 @@ export function WritingPractice({ promptId, title, prompt, topic }: WritingPract
           {error && (
             <div
               className={`rounded-lg border px-4 py-3 ${
-                error.isQuotaExceeded
-                  ? 'border-amber-200 bg-amber-50'
-                  : 'border-red-200 bg-red-50'
+                error.isQuotaExceeded ? 'border-amber-200 bg-amber-50' : 'border-red-200 bg-red-50'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -140,7 +138,12 @@ export function WritingPractice({ promptId, title, prompt, topic }: WritingPract
                         className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:from-blue-500 hover:to-indigo-500"
                       >
                         Upgrade to Premium
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"

@@ -106,8 +106,10 @@ export function ReadingPractice({ passageId, title, passage, questions }: Readin
   };
 
   const answeredCount = Object.keys(answers).filter(
-    (key) => answers[key] !== undefined && answers[key] !== '' &&
-    (Array.isArray(answers[key]) ? (answers[key] as string[]).some(a => a !== '') : true)
+    (key) =>
+      answers[key] !== undefined &&
+      answers[key] !== '' &&
+      (Array.isArray(answers[key]) ? (answers[key] as string[]).some((a) => a !== '') : true)
   ).length;
 
   // Show results if submitted
@@ -121,7 +123,12 @@ export function ReadingPractice({ passageId, title, passage, questions }: Readin
               className="flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Back to Dashboard
             </Link>
@@ -160,7 +167,12 @@ export function ReadingPractice({ passageId, title, passage, questions }: Readin
               className="flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               <span className="hidden sm:inline">Dashboard</span>
             </Link>

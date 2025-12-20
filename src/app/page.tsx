@@ -8,7 +8,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
       {/* Header */}
-      <header className="fixed left-0 right-0 top-0 z-50 border-b border-slate-100 bg-white/70 backdrop-blur-xl">
+      <header className="fixed top-0 right-0 left-0 z-50 border-b border-slate-100 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25">
@@ -54,10 +54,10 @@ export default async function Home() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative overflow-hidden px-6 pb-20 pt-32">
+        <section className="relative overflow-hidden px-6 pt-32 pb-20">
           {/* Decorative elements */}
-          <div className="pointer-events-none absolute left-1/4 top-20 h-72 w-72 rounded-full bg-blue-400/10 blur-3xl" />
-          <div className="pointer-events-none absolute right-1/4 top-40 h-72 w-72 rounded-full bg-amber-400/10 blur-3xl" />
+          <div className="pointer-events-none absolute top-20 left-1/4 h-72 w-72 rounded-full bg-blue-400/10 blur-3xl" />
+          <div className="pointer-events-none absolute top-40 right-1/4 h-72 w-72 rounded-full bg-amber-400/10 blur-3xl" />
 
           <div className="mx-auto max-w-6xl">
             <div className="flex flex-col items-center text-center">
@@ -254,12 +254,7 @@ export default async function Home() {
               <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-white md:col-span-2">
                 <div className="relative z-10">
                   <div className="mb-4 inline-flex rounded-xl bg-white/20 p-3 backdrop-blur-sm">
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -284,7 +279,7 @@ export default async function Home() {
                     ))}
                   </div>
                 </div>
-                <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-white/10" />
+                <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-white/10" />
                 <div className="absolute -top-10 right-20 h-20 w-20 rounded-full bg-white/10" />
               </div>
 
@@ -400,9 +395,7 @@ export default async function Home() {
               <h2 className="text-3xl font-bold text-white sm:text-4xl">
                 From practice to progress in minutes
               </h2>
-              <p className="mt-4 text-lg text-slate-400">
-                Simple workflow, powerful results
-              </p>
+              <p className="mt-4 text-lg text-slate-400">Simple workflow, powerful results</p>
             </div>
 
             <div className="grid gap-8 md:grid-cols-3">
@@ -416,7 +409,7 @@ export default async function Home() {
                   topics.
                 </p>
                 {/* Connector line */}
-                <div className="absolute right-0 top-6 hidden h-0.5 w-1/3 bg-gradient-to-r from-blue-500/50 to-transparent md:block" />
+                <div className="absolute top-6 right-0 hidden h-0.5 w-1/3 bg-gradient-to-r from-blue-500/50 to-transparent md:block" />
               </div>
 
               <div className="relative">
@@ -428,7 +421,7 @@ export default async function Home() {
                   Use our clean editor with built-in timer and word counter. Just like test day.
                 </p>
                 {/* Connector line */}
-                <div className="absolute right-0 top-6 hidden h-0.5 w-1/3 bg-gradient-to-r from-purple-500/50 to-transparent md:block" />
+                <div className="absolute top-6 right-0 hidden h-0.5 w-1/3 bg-gradient-to-r from-purple-500/50 to-transparent md:block" />
               </div>
 
               <div>
@@ -467,7 +460,9 @@ export default async function Home() {
               </blockquote>
               <figcaption className="mt-6">
                 <div className="font-semibold text-slate-900">Sarah Chen</div>
-                <div className="text-slate-500">Achieved Band 7.5, now studying at Melbourne University</div>
+                <div className="text-slate-500">
+                  Achieved Band 7.5, now studying at Melbourne University
+                </div>
               </figcaption>
             </figure>
           </div>
@@ -478,8 +473,8 @@ export default async function Home() {
           <div className="mx-auto max-w-6xl px-6">
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 px-8 py-16 text-center">
               {/* Decorative elements */}
-              <div className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
-              <div className="absolute -bottom-10 -right-10 h-60 w-60 rounded-full bg-white/10" />
+              <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-white/10" />
+              <div className="absolute -right-10 -bottom-10 h-60 w-60 rounded-full bg-white/10" />
 
               <div className="relative z-10">
                 <h2 className="text-3xl font-bold text-white sm:text-4xl">

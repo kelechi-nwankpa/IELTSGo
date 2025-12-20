@@ -133,7 +133,12 @@ Despite these challenges, investment in vertical farming has surged in recent ye
         id: 'r2-q2',
         type: 'multiple_choice',
         text: 'Which growing system uses fish waste to provide nutrients to plants?',
-        options: ['A) Hydroponics', 'B) Aeroponics', 'C) Aquaponics', 'D) Traditional soil farming'],
+        options: [
+          'A) Hydroponics',
+          'B) Aeroponics',
+          'C) Aquaponics',
+          'D) Traditional soil farming',
+        ],
       },
       {
         id: 'r2-q3',

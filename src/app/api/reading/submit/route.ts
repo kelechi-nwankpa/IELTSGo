@@ -143,7 +143,9 @@ function checkAnswer(
     if (userAnswer.length !== correctAnswer.length) {
       return false;
     }
-    return userAnswer.every((answer, index) => normalizeAnswer(answer) === normalizeAnswer(correctAnswer[index]));
+    return userAnswer.every(
+      (answer, index) => normalizeAnswer(answer) === normalizeAnswer(correctAnswer[index])
+    );
   }
 
   // Handle string answers

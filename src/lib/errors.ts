@@ -81,8 +81,7 @@ const ERROR_MESSAGES: Record<ErrorCode, { userMessage: string; retry: boolean }>
     retry: false,
   },
   [ErrorCode.USER_QUOTA_EXCEEDED]: {
-    userMessage:
-      "You've used all your free evaluations. Upgrade to Premium for unlimited access.",
+    userMessage: "You've used all your free evaluations. Upgrade to Premium for unlimited access.",
     retry: false,
   },
   [ErrorCode.UNAUTHORIZED]: {

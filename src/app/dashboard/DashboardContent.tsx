@@ -134,7 +134,8 @@ export default function DashboardContent() {
           {stats.evaluationsRemaining !== null && (
             <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2">
               <span className="text-sm font-medium text-amber-700">
-                {stats.evaluationsRemaining} free evaluation{stats.evaluationsRemaining !== 1 ? 's' : ''} remaining
+                {stats.evaluationsRemaining} free evaluation
+                {stats.evaluationsRemaining !== 1 ? 's' : ''} remaining
               </span>
             </div>
           )}
@@ -236,14 +237,21 @@ export default function DashboardContent() {
                 </svg>
               </div>
               <h3 className="text-lg font-medium text-slate-900">No practice sessions yet</h3>
-              <p className="mt-1 text-slate-600">Start your first writing practice to see your progress here.</p>
+              <p className="mt-1 text-slate-600">
+                Start your first writing practice to see your progress here.
+              </p>
               <Link
                 href="/writing"
                 className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-500"
               >
                 Start Writing Practice
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </Link>
             </div>
@@ -252,10 +260,20 @@ export default function DashboardContent() {
               {recentSessions.map((session) => {
                 const isReading = session.module === 'READING';
                 return (
-                  <div key={session.id} className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50">
-                    <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${isReading ? 'bg-green-100' : 'bg-blue-100'}`}>
+                  <div
+                    key={session.id}
+                    className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50"
+                  >
+                    <div
+                      className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${isReading ? 'bg-green-100' : 'bg-blue-100'}`}
+                    >
                       {isReading ? (
-                        <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg
+                          className="h-5 w-5 text-green-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -264,7 +282,12 @@ export default function DashboardContent() {
                           />
                         </svg>
                       ) : (
-                        <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg
+                          className="h-5 w-5 text-blue-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -277,7 +300,9 @@ export default function DashboardContent() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-slate-900">{session.title}</span>
-                        <span className={`rounded px-2 py-0.5 text-xs ${isReading ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>
+                        <span
+                          className={`rounded px-2 py-0.5 text-xs ${isReading ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}
+                        >
                           {formatTaskType(session.type)}
                         </span>
                       </div>
@@ -286,7 +311,11 @@ export default function DashboardContent() {
                     <div className="flex flex-shrink-0 items-center gap-4">
                       {session.bandScore !== null && (
                         <div className="text-right">
-                          <div className={`text-lg font-bold ${isReading ? 'text-green-600' : 'text-blue-600'}`}>{session.bandScore}</div>
+                          <div
+                            className={`text-lg font-bold ${isReading ? 'text-green-600' : 'text-blue-600'}`}
+                          >
+                            {session.bandScore}
+                          </div>
                           <div className="text-xs text-slate-500">Band Score</div>
                         </div>
                       )}
@@ -330,7 +359,12 @@ export default function DashboardContent() {
                 <span className="flex items-center gap-1 text-sm font-medium text-blue-600">
                   Start
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </span>
               </div>
@@ -361,7 +395,12 @@ export default function DashboardContent() {
                 <span className="flex items-center gap-1 text-sm font-medium text-green-600">
                   Start
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </span>
               </div>
