@@ -16,7 +16,7 @@ Development phases for IELTSGo, from MVP to v1.0.
 - [x] Development environment setup
 - [x] CI/CD pipeline (GitHub Actions + Vitest)
 - [x] Database schema and migrations
-- [ ] Authentication system
+- [x] Authentication system (NextAuth with Google OAuth + credentials)
 - [x] Basic API structure
 
 ### Definition of Done
@@ -33,14 +33,14 @@ Development phases for IELTSGo, from MVP to v1.0.
 
 ### Deliverables
 
-- [ ] Task 2 essay submission (Academic)
-- [ ] AI evaluation integration
-- [ ] Band score display (4 criteria + overall)
-- [ ] Feedback display with specific suggestions
-- [ ] Basic user dashboard
-- [ ] Usage quota system (3 free evaluations)
-- [ ] Simple landing page
-- [ ] Robust error handling (user-friendly error messages, no raw API errors)
+- [x] Task 2 essay submission (Academic)
+- [x] AI evaluation integration
+- [x] Band score display (4 criteria + overall)
+- [x] Feedback display with specific suggestions
+- [x] Basic user dashboard
+- [x] Usage quota system (3 free evaluations)
+- [x] Simple landing page
+- [x] Robust error handling (user-friendly error messages, no raw API errors)
 
 ### Scope Limits
 
@@ -64,10 +64,10 @@ Development phases for IELTSGo, from MVP to v1.0.
 
 ### Deliverables
 
-- [ ] Reading module
-  - [ ] Passage display with timer
-  - [ ] Question types: multiple choice, T/F/NG, matching, fill-in-blank
-  - [ ] Auto-scoring via answer key
+- [x] Reading module
+  - [x] Passage display with timer
+  - [x] Question types: multiple choice, T/F/NG, matching, short answer
+  - [x] Auto-scoring via answer key
   - [ ] AI explanation on request
 - [ ] Listening module
   - [ ] Audio player with controls
