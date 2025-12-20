@@ -249,13 +249,13 @@ NextAuth uses JWT sessions by default. These require specific security measures.
 
 #### 3.4.1 JWT Security Risks
 
-| Risk | Description | Mitigation |
-| ---- | ----------- | ---------- |
-| Token theft | XSS or network interception | HttpOnly cookies, HTTPS only |
-| Algorithm confusion | Attacker changes alg to "none" | Validate algorithm explicitly |
-| Secret weakness | Weak or leaked signing secret | Use strong secret, rotate regularly |
-| Token replay | Stolen token reused | Short expiration, token binding |
-| Information leakage | Sensitive data in payload | Minimal claims, encrypt if needed |
+| Risk                | Description                    | Mitigation                          |
+| ------------------- | ------------------------------ | ----------------------------------- |
+| Token theft         | XSS or network interception    | HttpOnly cookies, HTTPS only        |
+| Algorithm confusion | Attacker changes alg to "none" | Validate algorithm explicitly       |
+| Secret weakness     | Weak or leaked signing secret  | Use strong secret, rotate regularly |
+| Token replay        | Stolen token reused            | Short expiration, token binding     |
+| Information leakage | Sensitive data in payload      | Minimal claims, encrypt if needed   |
 
 #### 3.4.2 Secure JWT Configuration
 
@@ -324,9 +324,10 @@ export const authConfig: NextAuthOptions = {
 
   cookies: {
     sessionToken: {
-      name: process.env.NODE_ENV === 'production'
-        ? '__Secure-next-auth.session-token'
-        : 'next-auth.session-token',
+      name:
+        process.env.NODE_ENV === 'production'
+          ? '__Secure-next-auth.session-token'
+          : 'next-auth.session-token',
       options: {
         httpOnly: true,
         sameSite: 'lax',
@@ -404,12 +405,12 @@ Race conditions occur when multiple requests try to modify the same resource sim
 
 #### 3.5.1 Common Race Conditions in IELTSGo
 
-| Scenario | Risk | Example |
-| -------- | ---- | ------- |
-| Concurrent quota consumption | Double-spending evaluations | Two requests consume same quota |
-| Subscription updates | Inconsistent tier access | Upgrade/downgrade during request |
-| Account linking | Multiple accounts linked | Parallel OAuth flows |
-| Score updates | Lost updates | Concurrent evaluation saves |
+| Scenario                     | Risk                        | Example                          |
+| ---------------------------- | --------------------------- | -------------------------------- |
+| Concurrent quota consumption | Double-spending evaluations | Two requests consume same quota  |
+| Subscription updates         | Inconsistent tier access    | Upgrade/downgrade during request |
+| Account linking              | Multiple accounts linked    | Parallel OAuth flows             |
+| Score updates                | Lost updates                | Concurrent evaluation saves      |
 
 #### 3.5.2 Distributed Locking with Redis
 
@@ -520,11 +521,7 @@ export async function evaluateEssayWithLock(
     `user-quota:${userId}`,
     async () => {
       // Check quota (now safe from race conditions)
-      const quotaResult = await checkAndConsumeQuota(
-        userId,
-        'daily_evaluations',
-        tier
-      );
+      const quotaResult = await checkAndConsumeQuota(userId, 'daily_evaluations', tier);
 
       if (!quotaResult.allowed) {
         throw new Error(quotaResult.reason);
@@ -917,15 +914,15 @@ User essays may contain personally identifiable information (PII) that should no
 
 #### 4.5.1 Risk Assessment
 
-| PII Type | Risk Level | Example in Essay |
-| -------- | ---------- | ---------------- |
-| Full Names | HIGH | "My name is John Smith and I..." |
-| Email Addresses | HIGH | "Contact me at john@email.com" |
-| Phone Numbers | HIGH | "My number is +1-555-123-4567" |
-| Addresses | MEDIUM | "I live at 123 Main Street, Boston" |
-| ID Numbers | CRITICAL | "My passport number is AB1234567" |
-| Financial Data | CRITICAL | "My credit card is 4111-1111..." |
-| Health Information | HIGH | "I was diagnosed with diabetes" |
+| PII Type           | Risk Level | Example in Essay                    |
+| ------------------ | ---------- | ----------------------------------- |
+| Full Names         | HIGH       | "My name is John Smith and I..."    |
+| Email Addresses    | HIGH       | "Contact me at john@email.com"      |
+| Phone Numbers      | HIGH       | "My number is +1-555-123-4567"      |
+| Addresses          | MEDIUM     | "I live at 123 Main Street, Boston" |
+| ID Numbers         | CRITICAL   | "My passport number is AB1234567"   |
+| Financial Data     | CRITICAL   | "My credit card is 4111-1111..."    |
+| Health Information | HIGH       | "I was diagnosed with diabetes"     |
 
 #### 4.5.2 PII Detection Implementation
 
@@ -987,13 +984,15 @@ const PII_PATTERNS: Record<string, { pattern: RegExp; riskLevel: string }> = {
 
   // Dates of birth (common formats)
   dateOfBirth: {
-    pattern: /\b(?:born|dob|birthday)[:\s]+(?:\d{1,2}[-/]\d{1,2}[-/]\d{2,4}|\d{4}[-/]\d{1,2}[-/]\d{1,2})\b/gi,
+    pattern:
+      /\b(?:born|dob|birthday)[:\s]+(?:\d{1,2}[-/]\d{1,2}[-/]\d{2,4}|\d{4}[-/]\d{1,2}[-/]\d{1,2})\b/gi,
     riskLevel: 'medium',
   },
 
   // Street addresses (basic pattern)
   address: {
-    pattern: /\b\d{1,5}\s+(?:[A-Za-z]+\s+){1,4}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Way|Court|Ct|Place|Pl)\.?\b/gi,
+    pattern:
+      /\b\d{1,5}\s+(?:[A-Za-z]+\s+){1,4}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Way|Court|Ct|Place|Pl)\.?\b/gi,
     riskLevel: 'medium',
   },
 };
@@ -1028,7 +1027,8 @@ export function detectPII(text: string): PIIDetectionResult {
       // Update highest risk level
       if (riskLevel === 'critical') highestRisk = 'critical';
       else if (riskLevel === 'high' && highestRisk !== 'critical') highestRisk = 'high';
-      else if (riskLevel === 'medium' && !['critical', 'high'].includes(highestRisk)) highestRisk = 'medium';
+      else if (riskLevel === 'medium' && !['critical', 'high'].includes(highestRisk))
+        highestRisk = 'medium';
     }
   }
 
@@ -1060,9 +1060,7 @@ export function detectPII(text: string): PIIDetectionResult {
   for (const match of sortedMatches) {
     const redactionLabel = `[${match.type.toUpperCase()}_REDACTED]`;
     redactedText =
-      redactedText.slice(0, match.startIndex) +
-      redactionLabel +
-      redactedText.slice(match.endIndex);
+      redactedText.slice(0, match.startIndex) + redactionLabel + redactedText.slice(match.endIndex);
   }
 
   return {
@@ -1087,18 +1085,14 @@ export function prepareEssayForAI(
   rejected: boolean;
   reason?: string;
 } {
-  const {
-    redactPII = true,
-    rejectOnCriticalPII = true,
-    logPIIDetection = true,
-  } = options;
+  const { redactPII = true, rejectOnCriticalPII = true, logPIIDetection = true } = options;
 
   const detection = detectPII(essay);
 
   if (logPIIDetection && detection.hasPII) {
     // Log without the actual PII values
     console.warn('[PII_DETECTION]', {
-      types: detection.matches.map(m => m.type),
+      types: detection.matches.map((m) => m.type),
       count: detection.matches.length,
       riskLevel: detection.riskLevel,
     });
@@ -1110,7 +1104,8 @@ export function prepareEssayForAI(
       processedEssay: '',
       piiDetected: true,
       rejected: true,
-      reason: 'Essay contains sensitive personal information (credit card, SSN, passport). Please remove this information and resubmit.',
+      reason:
+        'Essay contains sensitive personal information (credit card, SSN, passport). Please remove this information and resubmit.',
     };
   }
 
@@ -1323,14 +1318,14 @@ Basic rate limiting can be bypassed. Here's how to build a fortress:
 
 #### 5.3.1 Common Bypass Techniques
 
-| Bypass Method | Description | Mitigation |
-| ------------- | ----------- | ---------- |
-| IP Rotation | Attacker uses proxies/VPNs/botnets | Composite keys, behavioral analysis |
-| Header Spoofing | Fake `X-Forwarded-For` headers | Validate headers, use real IP |
-| Account Switching | Rotate between multiple accounts | Per-user + per-IP limits combined |
-| Slowloris | Stay just under thresholds | Adaptive rate limiting |
-| Distributed Attacks | Many IPs, few requests each | Global rate limits, anomaly detection |
-| API Key Abuse | Stolen/shared API keys | Key binding, usage patterns |
+| Bypass Method       | Description                        | Mitigation                            |
+| ------------------- | ---------------------------------- | ------------------------------------- |
+| IP Rotation         | Attacker uses proxies/VPNs/botnets | Composite keys, behavioral analysis   |
+| Header Spoofing     | Fake `X-Forwarded-For` headers     | Validate headers, use real IP         |
+| Account Switching   | Rotate between multiple accounts   | Per-user + per-IP limits combined     |
+| Slowloris           | Stay just under thresholds         | Adaptive rate limiting                |
+| Distributed Attacks | Many IPs, few requests each        | Global rate limits, anomaly detection |
+| API Key Abuse       | Stolen/shared API keys             | Key binding, usage patterns           |
 
 #### 5.3.2 Hardened Rate Limiting Implementation
 
@@ -1438,10 +1433,7 @@ export async function checkRateLimits(
     };
     const userLimit = new Ratelimit({
       redis,
-      limiter: Ratelimit.slidingWindow(
-        userLimits[tier].requests,
-        userLimits[tier].window
-      ),
+      limiter: Ratelimit.slidingWindow(userLimits[tier].requests, userLimits[tier].window),
       prefix: 'rl:user',
     });
     const userResult = await userLimit.limit(userId);
@@ -1489,10 +1481,7 @@ export async function checkRateLimits(
 }
 
 // Adaptive rate limiting - tighten limits for suspicious behavior
-export async function recordSuspiciousActivity(
-  ip: string,
-  reason: string
-): Promise<void> {
+export async function recordSuspiciousActivity(ip: string, reason: string): Promise<void> {
   const key = `suspicious:${ip}`;
   const count = await redis.incr(key);
   await redis.expire(key, 3600); // 1 hour TTL
@@ -1522,10 +1511,7 @@ export async function isIPBanned(ip: string): Promise<boolean> {
 ```typescript
 // Create: src/lib/rate-limit/captcha.ts
 
-export async function shouldRequireCaptcha(
-  ip: string,
-  userId?: string
-): Promise<boolean> {
+export async function shouldRequireCaptcha(ip: string, userId?: string): Promise<boolean> {
   // Check if this IP/user has hit soft limits recently
   const softLimitKey = `softlimit:${userId || ip}`;
   const hits = await redis.get(softLimitKey);
@@ -1534,10 +1520,7 @@ export async function shouldRequireCaptcha(
   return parseInt(hits as string) >= 3;
 }
 
-export async function recordSoftLimitHit(
-  ip: string,
-  userId?: string
-): Promise<void> {
+export async function recordSoftLimitHit(ip: string, userId?: string): Promise<void> {
   const key = `softlimit:${userId || ip}`;
   await redis.incr(key);
   await redis.expire(key, 1800); // 30 min TTL
@@ -1669,13 +1652,13 @@ SSRF attacks trick the server into making requests to unintended destinations, p
 
 #### 5.6.1 Attack Vectors in IELTSGo
 
-| Scenario | Risk | Example |
-| -------- | ---- | ------- |
-| Profile image URL | Access internal services | `http://169.254.169.254/latest/meta-data/` |
-| Webhook callbacks | Port scanning, internal access | `http://localhost:5432` |
-| External resource fetch | Data exfiltration | `http://internal-api.company.local/secrets` |
-| Redirect following | Bypass allowlists | `http://safe.com` → redirects to `http://evil.com` |
-| DNS rebinding | Time-of-check attacks | Domain resolves to `127.0.0.1` after validation |
+| Scenario                | Risk                           | Example                                            |
+| ----------------------- | ------------------------------ | -------------------------------------------------- |
+| Profile image URL       | Access internal services       | `http://169.254.169.254/latest/meta-data/`         |
+| Webhook callbacks       | Port scanning, internal access | `http://localhost:5432`                            |
+| External resource fetch | Data exfiltration              | `http://internal-api.company.local/secrets`        |
+| Redirect following      | Bypass allowlists              | `http://safe.com` → redirects to `http://evil.com` |
+| DNS rebinding           | Time-of-check attacks          | Domain resolves to `127.0.0.1` after validation    |
 
 #### 5.6.2 Current Risk Assessment
 
@@ -2064,14 +2047,14 @@ Business logic vulnerabilities are flaws in the design and implementation of an 
 
 ### 6.1 IELTSGo-Specific Business Logic Risks
 
-| Risk | Description | Impact | Priority |
-| ---- | ----------- | ------ | -------- |
-| Quota Bypass | Circumventing AI evaluation limits | Financial loss, service abuse | CRITICAL |
-| Tier Escalation | Free users accessing premium features | Revenue loss | CRITICAL |
-| Score Manipulation | Tampering with band score results | Data integrity, trust | HIGH |
-| Content Theft | Bulk extraction of proprietary prompts | IP theft | HIGH |
-| Referral Abuse | Gaming referral/credit systems | Financial loss | MEDIUM |
-| Practice Farming | Automated bulk practice session creation | Cost inflation | MEDIUM |
+| Risk               | Description                              | Impact                        | Priority |
+| ------------------ | ---------------------------------------- | ----------------------------- | -------- |
+| Quota Bypass       | Circumventing AI evaluation limits       | Financial loss, service abuse | CRITICAL |
+| Tier Escalation    | Free users accessing premium features    | Revenue loss                  | CRITICAL |
+| Score Manipulation | Tampering with band score results        | Data integrity, trust         | HIGH     |
+| Content Theft      | Bulk extraction of proprietary prompts   | IP theft                      | HIGH     |
+| Referral Abuse     | Gaming referral/credit systems           | Financial loss                | MEDIUM   |
+| Practice Farming   | Automated bulk practice session creation | Cost inflation                | MEDIUM   |
 
 ### 6.2 Quota Bypass Prevention
 
@@ -2269,11 +2252,7 @@ export async function POST(request: NextRequest) {
   const tier = (user?.subscriptionTier as 'free' | 'premium') || 'free';
 
   // Reserve quota BEFORE doing expensive AI call
-  const quotaReservation = await reserveQuota(
-    session.user.id,
-    'daily_evaluations',
-    tier
-  );
+  const quotaReservation = await reserveQuota(session.user.id, 'daily_evaluations', tier);
 
   if (!quotaReservation.reserved) {
     return NextResponse.json(
@@ -2292,11 +2271,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     // Release quota on failure so user can retry
-    await releaseQuota(
-      session.user.id,
-      'daily_evaluations',
-      quotaReservation.releaseToken!
-    );
+    await releaseQuota(session.user.id, 'daily_evaluations', quotaReservation.releaseToken!);
 
     throw error;
   }
@@ -2394,10 +2369,7 @@ const FEATURE_ACCESS: Record<string, ('free' | 'premium')[]> = {
   'reading.basic_passages': ['free', 'premium'],
 };
 
-export function canAccessFeature(
-  feature: string,
-  tier: 'free' | 'premium'
-): boolean {
+export function canAccessFeature(feature: string, tier: 'free' | 'premium'): boolean {
   const allowedTiers = FEATURE_ACCESS[feature];
   return allowedTiers?.includes(tier) ?? false;
 }
@@ -2450,9 +2422,7 @@ export function signEvaluationScores(
     timestamp,
   });
 
-  const signature = createHmac('sha256', SCORE_SECRET)
-    .update(payload)
-    .digest('hex');
+  const signature = createHmac('sha256', SCORE_SECRET).update(payload).digest('hex');
 
   return {
     ...scores,
@@ -2466,16 +2436,11 @@ export function verifyScoreIntegrity(signedScore: SignedScore): boolean {
   const { signature, ...scoreData } = signedScore;
   const payload = JSON.stringify(scoreData);
 
-  const expectedSignature = createHmac('sha256', SCORE_SECRET)
-    .update(payload)
-    .digest('hex');
+  const expectedSignature = createHmac('sha256', SCORE_SECRET).update(payload).digest('hex');
 
   // Use timing-safe comparison to prevent timing attacks
   try {
-    return timingSafeEqual(
-      Buffer.from(signature, 'hex'),
-      Buffer.from(expectedSignature, 'hex')
-    );
+    return timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expectedSignature, 'hex'));
   } catch {
     return false;
   }
@@ -3097,10 +3062,7 @@ const ALLOWED_INTERNAL_PATHS = [
   '/auth/signout',
 ];
 
-export function validateRedirectUrl(
-  url: string | null,
-  fallback: string = '/dashboard'
-): string {
+export function validateRedirectUrl(url: string | null, fallback: string = '/dashboard'): string {
   if (!url) return fallback;
 
   try {
@@ -3140,10 +3102,7 @@ export function validateRedirectUrl(
 }
 
 // Safe redirect response
-export function safeRedirect(
-  url: string | null,
-  fallback: string = '/dashboard'
-): NextResponse {
+export function safeRedirect(url: string | null, fallback: string = '/dashboard'): NextResponse {
   const safeUrl = validateRedirectUrl(url, fallback);
   return NextResponse.redirect(new URL(safeUrl, process.env.NEXTAUTH_URL!));
 }
@@ -3252,9 +3211,7 @@ const cacheHeaders = [
   },
   {
     source: '/dashboard/:path*',
-    headers: [
-      { key: 'Cache-Control', value: 'private, no-cache' },
-    ],
+    headers: [{ key: 'Cache-Control', value: 'private, no-cache' }],
   },
 ];
 
@@ -3265,11 +3222,7 @@ export function addVaryHeader(response: NextResponse): NextResponse {
 }
 
 // 3. Cache key isolation for multi-tenant
-export function generateCacheKey(
-  resource: string,
-  userId: string,
-  tier: string
-): string {
+export function generateCacheKey(resource: string, userId: string, tier: string): string {
   // Include user-specific info in cache key to prevent cross-user leakage
   return `cache:${tier}:${userId}:${resource}`;
 }
@@ -3302,13 +3255,7 @@ const userCache = new LRUCache<string, unknown>({
 });
 
 // Never cache: passwords, tokens, PII, evaluations with PII
-const NEVER_CACHE_PATTERNS = [
-  /password/i,
-  /token/i,
-  /secret/i,
-  /apikey/i,
-  /email/i,
-];
+const NEVER_CACHE_PATTERNS = [/password/i, /token/i, /secret/i, /apikey/i, /email/i];
 
 export function isCacheable(key: string): boolean {
   return !NEVER_CACHE_PATTERNS.some((pattern) => pattern.test(key));
@@ -3339,11 +3286,7 @@ const SENSITIVE_FIELDS = [
 ];
 
 // Fields that should be partially masked
-const MASK_FIELDS = [
-  'email',
-  'phone',
-  'ipAddress',
-];
+const MASK_FIELDS = ['email', 'phone', 'ipAddress'];
 
 export function sanitizeForLogging(obj: unknown): unknown {
   if (obj === null || obj === undefined) return obj;
@@ -3394,11 +3337,7 @@ export function sanitizeLogMessage(message: string): string {
 }
 
 // Safe logging wrapper
-export function secureLog(
-  level: 'info' | 'warn' | 'error',
-  message: string,
-  data?: unknown
-): void {
+export function secureLog(level: 'info' | 'warn' | 'error', message: string, data?: unknown): void {
   const safeMessage = sanitizeLogMessage(message);
   const safeData = data ? sanitizeForLogging(data) : undefined;
 
@@ -3543,11 +3482,11 @@ A comprehensive disaster recovery plan ensures business continuity when security
 
 ### 13.1 Recovery Objectives
 
-| Metric | Target | Description |
-| ------ | ------ | ----------- |
-| **RTO** (Recovery Time Objective) | < 4 hours | Maximum acceptable downtime |
-| **RPO** (Recovery Point Objective) | < 1 hour | Maximum acceptable data loss |
-| **MTTR** (Mean Time to Recovery) | < 2 hours | Average recovery time |
+| Metric                             | Target    | Description                  |
+| ---------------------------------- | --------- | ---------------------------- |
+| **RTO** (Recovery Time Objective)  | < 4 hours | Maximum acceptable downtime  |
+| **RPO** (Recovery Point Objective) | < 1 hour  | Maximum acceptable data loss |
+| **MTTR** (Mean Time to Recovery)   | < 2 hours | Average recovery time        |
 
 ### 13.2 Backup Strategy
 
@@ -3636,12 +3575,7 @@ export async function encryptBackup(
   const output = createWriteStream(outputPath);
   output.write(iv);
 
-  await pipeline(
-    createReadStream(inputPath),
-    createGzip(),
-    cipher,
-    output
-  );
+  await pipeline(createReadStream(inputPath), createGzip(), cipher, output);
 
   // Calculate checksum of encrypted file
   // ... implementation
@@ -3664,10 +3598,11 @@ export async function encryptBackup(
 
 #### 13.3.1 Database Recovery
 
-```markdown
+````markdown
 ## Database Recovery Runbook
 
 ### Prerequisites
+
 - Access to backup storage
 - Database admin credentials
 - Clean PostgreSQL instance
@@ -3679,30 +3614,36 @@ export async function encryptBackup(
    # Prevent writes during recovery
    kubectl scale deployment ieltsgo-api --replicas=0
    ```
+````
 
 2. **Identify Latest Valid Backup**
+
    ```bash
    aws s3 ls s3://ieltsgo-backups/daily/ --recursive | tail -5
    ```
 
 3. **Download & Decrypt Backup**
+
    ```bash
    aws s3 cp s3://ieltsgo-backups/daily/latest.dump.enc ./
    ./decrypt-backup.sh latest.dump.enc latest.dump
    ```
 
 4. **Restore Database**
+
    ```bash
    pg_restore --clean --if-exists -d ieltsgo_prod latest.dump
    ```
 
 5. **Verify Data Integrity**
+
    ```bash
    psql ieltsgo_prod -c "SELECT COUNT(*) FROM users;"
    psql ieltsgo_prod -c "SELECT COUNT(*) FROM evaluations;"
    ```
 
 6. **Restart Application**
+
    ```bash
    kubectl scale deployment ieltsgo-api --replicas=3
    ```
@@ -3711,7 +3652,8 @@ export async function encryptBackup(
    - Check error rates
    - Verify user login works
    - Test AI evaluation endpoint
-```
+
+````
 
 #### 13.3.2 Secret Recovery
 
@@ -3763,7 +3705,7 @@ const SECRET_RECOVERY_PLANS: SecretRecoveryPlan[] = [
     rollbackPlan: 'Keep old credentials valid during transition',
   },
 ];
-```
+````
 
 ### 13.4 Business Continuity
 
@@ -3791,11 +3733,7 @@ export function getDegradedModeCapabilities(status: ServiceStatus): {
 
   // Database down: read-only mode from cache
   if (status.database === 'down') {
-    capabilities.unavailableFeatures.push(
-      'new-evaluations',
-      'save-progress',
-      'account-changes'
-    );
+    capabilities.unavailableFeatures.push('new-evaluations', 'save-progress', 'account-changes');
     capabilities.availableFeatures.push('view-cached-content', 'read-prompts');
     capabilities.userMessage =
       'We are experiencing database issues. Your progress cannot be saved temporarily.';
@@ -3804,11 +3742,7 @@ export function getDegradedModeCapabilities(status: ServiceStatus): {
   // AI service down: disable evaluations
   if (status.ai === 'down') {
     capabilities.unavailableFeatures.push('writing-evaluation', 'speaking-evaluation');
-    capabilities.availableFeatures.push(
-      'reading-practice',
-      'listening-practice',
-      'view-history'
-    );
+    capabilities.availableFeatures.push('reading-practice', 'listening-practice', 'view-history');
     capabilities.userMessage =
       'AI evaluation is temporarily unavailable. Other features remain accessible.';
   }
@@ -3834,12 +3768,12 @@ export async function checkSystemHealth(): Promise<ServiceStatus> {
 
 ### 13.5 DR Testing Schedule
 
-| Test Type | Frequency | Duration | Scope |
-| --------- | --------- | -------- | ----- |
-| Backup verification | Daily (automated) | 5 min | Verify backup integrity |
-| Backup restoration | Monthly | 2 hours | Full restore to test env |
-| Failover test | Quarterly | 4 hours | Test region failover |
-| Full DR simulation | Annually | 8 hours | Complete disaster scenario |
+| Test Type           | Frequency         | Duration | Scope                      |
+| ------------------- | ----------------- | -------- | -------------------------- |
+| Backup verification | Daily (automated) | 5 min    | Verify backup integrity    |
+| Backup restoration  | Monthly           | 2 hours  | Full restore to test env   |
+| Failover test       | Quarterly         | 4 hours  | Test region failover       |
+| Full DR simulation  | Annually          | 8 hours  | Complete disaster scenario |
 
 ---
 
@@ -4024,22 +3958,22 @@ npx eslint --config .eslintrc.security.json src/
 
 This document aligns with and provides coverage for the following security frameworks:
 
-| Framework | Coverage | Key Sections |
-| --------- | -------- | ------------ |
-| OWASP Top 10 (2021) | ~95% | Sections 3-11 |
-| OWASP API Security Top 10 (2023) | ~95% | Sections 5, 6 |
-| OWASP LLM Top 10 | ~90% | Section 4 |
-| CWE/SANS Top 25 | ~85% | All sections |
-| NIST CSF | ~80% | Sections 12, 13, 14 |
+| Framework                        | Coverage | Key Sections        |
+| -------------------------------- | -------- | ------------------- |
+| OWASP Top 10 (2021)              | ~95%     | Sections 3-11       |
+| OWASP API Security Top 10 (2023) | ~95%     | Sections 5, 6       |
+| OWASP LLM Top 10                 | ~90%     | Section 4           |
+| CWE/SANS Top 25                  | ~85%     | All sections        |
+| NIST CSF                         | ~80%     | Sections 12, 13, 14 |
 
 ---
 
 ## Document History
 
-| Version | Date       | Author | Changes                                 |
-| ------- | ---------- | ------ | --------------------------------------- |
-| 1.0.0   | 2025-01-20 | Claude | Initial comprehensive security strategy |
-| 1.1.0   | 2025-01-20 | Claude | Added SSRF prevention & Rate Limiting Bypass protection |
+| Version | Date       | Author | Changes                                                                                                                                                                                                                                                  |
+| ------- | ---------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.0.0   | 2025-01-20 | Claude | Initial comprehensive security strategy                                                                                                                                                                                                                  |
+| 1.1.0   | 2025-01-20 | Claude | Added SSRF prevention & Rate Limiting Bypass protection                                                                                                                                                                                                  |
 | 2.0.0   | 2025-12-20 | Claude | Major update: Added PII detection, business logic security, JWT/OAuth hardening, race condition prevention, disaster recovery, operational security (open redirects, timing attacks, cache security, logging security), updated implementation checklist |
 
 ---
@@ -4049,6 +3983,7 @@ This document aligns with and provides coverage for the following security frame
 **How to Use It**
 
 When you're ready, just say things like:
+
 - "Implement Phase 1 critical security fixes"
 - "Add PII detection to the writing evaluation flow"
 - "Set up distributed locking for quota management"
