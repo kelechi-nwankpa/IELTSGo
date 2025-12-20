@@ -26,19 +26,22 @@ export default async function ReadingPage() {
     redirect('/auth/signin?callbackUrl=/reading');
   }
 
-  // Fetch a random reading passage
-  const passages = await prisma.content.findMany({
-    where: {
-      module: 'READING',
-      type: 'READING_PASSAGE',
-    },
-    select: {
-      id: true,
-      title: true,
-      contentData: true,
-      difficultyBand: true,
-    },
-  });
+  // Fetch a random reading passage using database-level randomization
+  // This is more scalable than fetching all and using Math.random() client-side
+  const passages = await prisma.$queryRaw<
+    Array<{
+      id: string;
+      title: string;
+      contentData: ContentData;
+      difficultyBand: number | null;
+    }>
+  >`
+    SELECT id, title, "contentData", "difficultyBand"
+    FROM "Content"
+    WHERE module = 'READING' AND type = 'READING_PASSAGE'
+    ORDER BY RANDOM()
+    LIMIT 1
+  `;
 
   if (passages.length === 0) {
     return (
@@ -53,10 +56,8 @@ export default async function ReadingPage() {
     );
   }
 
-  // Select a random passage
-  const randomIndex = Math.floor(Math.random() * passages.length);
-  const selectedPassage = passages[randomIndex];
-  const contentData = selectedPassage.contentData as unknown as ContentData;
+  const selectedPassage = passages[0];
+  const contentData = selectedPassage.contentData;
 
   return (
     <ReadingPractice
