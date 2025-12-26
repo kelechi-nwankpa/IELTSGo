@@ -2,6 +2,9 @@ import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { task2Prompts } from './task2-prompts';
+import { task1AcademicPrompts } from './task1-academic-prompts';
+import { task1GTPrompts } from './task1-gt-prompts';
+import { task2GTPrompts } from './task2-gt-prompts';
 import { readingPassages } from './reading-passages';
 import { listeningSections } from './listening-sections';
 import {
@@ -48,7 +51,108 @@ async function main() {
     });
     console.log(`  ✓ ${prompt.title}`);
   }
-  console.log(`Seeded ${task2Prompts.length} Task 2 prompts`);
+  console.log(`Seeded ${task2Prompts.length} Task 2 Academic prompts`);
+
+  // Seed Task 1 Academic prompts
+  console.log('\nSeeding Task 1 Academic prompts...');
+  for (const prompt of task1AcademicPrompts) {
+    await prisma.content.upsert({
+      where: { id: prompt.id },
+      update: {
+        title: prompt.title,
+        contentData: {
+          prompt: prompt.prompt,
+          topic: prompt.topic,
+          visualType: prompt.visualType,
+          imageUrl: prompt.imageUrl,
+          imageDescription: prompt.imageDescription,
+        },
+        difficultyBand: prompt.difficultyBand,
+      },
+      create: {
+        id: prompt.id,
+        module: 'WRITING',
+        type: 'TASK1_ACADEMIC',
+        testType: 'ACADEMIC',
+        title: prompt.title,
+        contentData: {
+          prompt: prompt.prompt,
+          topic: prompt.topic,
+          visualType: prompt.visualType,
+          imageUrl: prompt.imageUrl,
+          imageDescription: prompt.imageDescription,
+        },
+        difficultyBand: prompt.difficultyBand,
+        isPremium: false,
+      },
+    });
+    console.log(`  ✓ ${prompt.title}`);
+  }
+  console.log(`Seeded ${task1AcademicPrompts.length} Task 1 Academic prompts`);
+
+  // Seed Task 1 GT prompts (Letters)
+  console.log('\nSeeding Task 1 GT prompts...');
+  for (const prompt of task1GTPrompts) {
+    await prisma.content.upsert({
+      where: { id: prompt.id },
+      update: {
+        title: prompt.title,
+        contentData: {
+          prompt: prompt.prompt,
+          topic: prompt.topic,
+          letterType: prompt.letterType,
+        },
+        difficultyBand: prompt.difficultyBand,
+      },
+      create: {
+        id: prompt.id,
+        module: 'WRITING',
+        type: 'TASK1_GENERAL',
+        testType: 'GENERAL',
+        title: prompt.title,
+        contentData: {
+          prompt: prompt.prompt,
+          topic: prompt.topic,
+          letterType: prompt.letterType,
+        },
+        difficultyBand: prompt.difficultyBand,
+        isPremium: false,
+      },
+    });
+    console.log(`  ✓ ${prompt.title}`);
+  }
+  console.log(`Seeded ${task1GTPrompts.length} Task 1 GT prompts`);
+
+  // Seed Task 2 GT prompts
+  console.log('\nSeeding Task 2 GT prompts...');
+  for (const prompt of task2GTPrompts) {
+    await prisma.content.upsert({
+      where: { id: prompt.id },
+      update: {
+        title: prompt.title,
+        contentData: {
+          prompt: prompt.prompt,
+          topic: prompt.topic,
+        },
+        difficultyBand: prompt.difficultyBand,
+      },
+      create: {
+        id: prompt.id,
+        module: 'WRITING',
+        type: 'TASK2',
+        testType: 'GENERAL',
+        title: prompt.title,
+        contentData: {
+          prompt: prompt.prompt,
+          topic: prompt.topic,
+        },
+        difficultyBand: prompt.difficultyBand,
+        isPremium: false,
+      },
+    });
+    console.log(`  ✓ ${prompt.title}`);
+  }
+  console.log(`Seeded ${task2GTPrompts.length} Task 2 GT prompts`);
 
   // Seed Reading passages
   console.log('\nSeeding Reading passages...');

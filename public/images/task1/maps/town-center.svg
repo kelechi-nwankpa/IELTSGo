@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#f8fafc"/>
+
+  <!-- Title -->
+  <text x="300" y="25" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
+    Town Center: 1980 vs Present
+  </text>
+
+  <!-- 1980 Map -->
+  <g transform="translate(25, 45)">
+    <text x="130" y="15" text-anchor="middle" fill="#475569" font-size="12" font-weight="500" font-family="system-ui">1980</text>
+    <rect x="5" y="25" width="250" height="280" fill="#e7f5e7" stroke="#94a3b8" stroke-width="2" rx="4"/>
+
+    <!-- Main road -->
+    <rect x="110" y="25" width="40" height="280" fill="#d1d5db"/>
+
+    <!-- Market -->
+    <rect x="30" y="60" width="60" height="50" fill="#fcd34d" stroke="#b45309"/>
+    <text x="60" y="90" text-anchor="middle" fill="#78350f" font-size="9" font-family="system-ui">Market</text>
+
+    <!-- Small shops -->
+    <rect x="30" y="130" width="60" height="30" fill="#fed7aa" stroke="#c2410c"/>
+    <text x="60" y="150" text-anchor="middle" fill="#7c2d12" font-size="8" font-family="system-ui">Shops</text>
+
+    <!-- Residential -->
+    <rect x="30" y="180" width="60" height="80" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="60" y="225" text-anchor="middle" fill="#1e40af" font-size="8" font-family="system-ui">Residential</text>
+
+    <!-- Church -->
+    <rect x="170" y="60" width="50" height="40" fill="#e9d5ff" stroke="#7c3aed"/>
+    <text x="195" y="85" text-anchor="middle" fill="#5b21b6" font-size="8" font-family="system-ui">Church</text>
+
+    <!-- Park -->
+    <ellipse cx="195" cy="160" rx="40" ry="35" fill="#86efac" stroke="#16a34a"/>
+    <text x="195" y="165" text-anchor="middle" fill="#166534" font-size="8" font-family="system-ui">Park</text>
+
+    <!-- Houses -->
+    <rect x="165" y="220" width="60" height="60" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="195" y="255" text-anchor="middle" fill="#1e40af" font-size="8" font-family="system-ui">Houses</text>
+  </g>
+
+  <!-- Present Map -->
+  <g transform="translate(315, 45)">
+    <text x="130" y="15" text-anchor="middle" fill="#475569" font-size="12" font-weight="500" font-family="system-ui">Present</text>
+    <rect x="5" y="25" width="250" height="280" fill="#e7f5e7" stroke="#94a3b8" stroke-width="2" rx="4"/>
+
+    <!-- Pedestrian zone -->
+    <rect x="80" y="25" width="100" height="280" fill="#f0fdf4"/>
+    <line x1="80" y1="25" x2="80" y2="305" stroke="#22c55e" stroke-width="2" stroke-dasharray="4"/>
+    <line x1="180" y1="25" x2="180" y2="305" stroke="#22c55e" stroke-width="2" stroke-dasharray="4"/>
+
+    <!-- Ring road -->
+    <path d="M30,25 Q5,150 30,305" fill="none" stroke="#9ca3af" stroke-width="20"/>
+    <path d="M230,25 Q255,150 230,305" fill="none" stroke="#9ca3af" stroke-width="20"/>
+
+    <!-- Supermarket (replaced market) -->
+    <rect x="100" y="50" width="60" height="60" fill="#fcd34d" stroke="#b45309"/>
+    <text x="130" y="85" text-anchor="middle" fill="#78350f" font-size="8" font-family="system-ui">Super-</text>
+    <text x="130" y="95" text-anchor="middle" fill="#78350f" font-size="8" font-family="system-ui">market</text>
+
+    <!-- Shopping area -->
+    <rect x="100" y="125" width="60" height="40" fill="#fed7aa" stroke="#c2410c"/>
+    <text x="130" y="150" text-anchor="middle" fill="#7c2d12" font-size="8" font-family="system-ui">Shopping</text>
+
+    <!-- Multi-story car park -->
+    <rect x="50" y="180" width="40" height="50" fill="#d1d5db" stroke="#475569"/>
+    <text x="70" y="205" text-anchor="middle" fill="#1e293b" font-size="7" font-family="system-ui">Car</text>
+    <text x="70" y="215" text-anchor="middle" fill="#1e293b" font-size="7" font-family="system-ui">Park</text>
+
+    <!-- Bus station -->
+    <rect x="100" y="180" width="40" height="30" fill="#bfdbfe" stroke="#2563eb"/>
+    <text x="120" y="200" text-anchor="middle" fill="#1e40af" font-size="7" font-family="system-ui">Bus Stn</text>
+
+    <!-- Offices -->
+    <rect x="165" y="125" width="50" height="85" fill="#e0e7ff" stroke="#4f46e5"/>
+    <text x="190" y="175" text-anchor="middle" fill="#3730a3" font-size="8" font-family="system-ui">Offices</text>
+
+    <!-- Small park -->
+    <ellipse cx="190" cy="260" rx="25" ry="20" fill="#86efac" stroke="#16a34a"/>
+    <text x="190" y="263" text-anchor="middle" fill="#166534" font-size="7" font-family="system-ui">Park</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(80, 370)" font-size="9" font-family="system-ui">
+    <rect x="0" y="0" width="10" height="10" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="14" y="9" fill="#475569">Residential</text>
+
+    <rect x="80" y="0" width="10" height="10" fill="#fcd34d" stroke="#b45309"/>
+    <text x="94" y="9" fill="#475569">Commercial</text>
+
+    <rect x="175" y="0" width="10" height="10" fill="#86efac" stroke="#16a34a"/>
+    <text x="189" y="9" fill="#475569">Green space</text>
+
+    <rect x="260" y="0" width="10" height="10" fill="#d1d5db"/>
+    <text x="274" y="9" fill="#475569">Roads</text>
+
+    <rect x="320" y="0" width="10" height="10" fill="#e0e7ff" stroke="#4f46e5"/>
+    <text x="334" y="9" fill="#475569">Offices</text>
+  </g>
+</svg>

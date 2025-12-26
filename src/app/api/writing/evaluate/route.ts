@@ -9,6 +9,27 @@ import { canUseWritingEvaluation, incrementWritingEvaluation, getQuotaStatus } f
 interface ContentData {
   prompt: string;
   topic: string;
+  visualType?: string;
+  imageUrl?: string;
+  imageDescription?: string;
+  letterType?: string;
+}
+
+type TaskType = 'task1_academic' | 'task1_general' | 'task2';
+
+/**
+ * Map content type to AI evaluator task type
+ */
+function getTaskType(contentType: string): TaskType {
+  switch (contentType) {
+    case 'TASK1_ACADEMIC':
+      return 'task1_academic';
+    case 'TASK1_GENERAL':
+      return 'task1_general';
+    case 'TASK2':
+    default:
+      return 'task2';
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -61,9 +82,12 @@ export async function POST(request: NextRequest) {
 
     const contentData = content.contentData as unknown as ContentData;
 
+    // Determine task type from content
+    const taskType = getTaskType(content.type);
+
     // Evaluate with AI
     const { evaluation, tokensUsed } = await evaluateWriting({
-      taskType: 'task2',
+      taskType,
       testType: content.testType === 'GENERAL' ? 'general' : 'academic',
       questionPrompt: contentData.prompt,
       userResponse: essay,

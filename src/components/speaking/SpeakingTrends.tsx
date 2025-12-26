@@ -242,10 +242,8 @@ export function SpeakingTrends() {
                   color="#10b981"
                   minY={0}
                   maxY={200}
+                  avgLabel={`Avg: ${summary.averageWPM} WPM (ideal: 120-150)`}
                 />
-                <p className="mt-2 text-xs text-gray-500">
-                  Avg: {summary.averageWPM} WPM (ideal: 120-150)
-                </p>
               </div>
               <div>
                 <h4 className="mb-2 text-sm font-medium text-gray-700">Filler Words</h4>
@@ -255,10 +253,8 @@ export function SpeakingTrends() {
                   color="#f59e0b"
                   minY={0}
                   maxY={Math.max(...trends.map((t) => t.fillerWordCount)) + 5}
+                  avgLabel={`Avg: ${summary.averageFillerWords} per response (lower is better)`}
                 />
-                <p className="mt-2 text-xs text-gray-500">
-                  Avg: {summary.averageFillerWords} per response (lower is better)
-                </p>
               </div>
             </div>
           </>
@@ -335,12 +331,14 @@ function SimpleLineChart({
   color,
   minY,
   maxY,
+  avgLabel,
 }: {
   data: TrendDataPoint[];
   dataKey: keyof TrendDataPoint;
   color: string;
   minY: number;
   maxY: number;
+  avgLabel?: string;
 }) {
   if (data.length === 0) return null;
 
@@ -359,8 +357,8 @@ function SimpleLineChart({
   const pathD = `M ${points.join(' L ')}`;
 
   return (
-    <div className="h-20">
-      <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full" preserveAspectRatio="none">
+    <div className="h-24">
+      <svg viewBox={`0 0 ${width} ${height}`} className="h-16 w-full" preserveAspectRatio="none">
         {/* Grid lines */}
         <line
           x1="0"
@@ -388,11 +386,11 @@ function SimpleLineChart({
           return <circle key={i} cx={x} cy={y} r="2" fill={color} />;
         })}
       </svg>
-      <div className="mt-1 flex justify-between text-xs text-gray-400">
-        <span>
-          {new Date(data[0].date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+      <div className="mt-1 flex items-start justify-between text-xs">
+        <span className="text-gray-500">
+          {avgLabel || ''}
         </span>
-        <span>
+        <span className="text-gray-400">
           {new Date(data[data.length - 1].date).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
