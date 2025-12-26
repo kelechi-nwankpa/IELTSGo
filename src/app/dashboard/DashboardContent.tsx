@@ -11,8 +11,17 @@ interface DashboardData {
     image: string | null;
     targetBand: number | null;
     testDate: string | null;
+    role: string;
     subscriptionTier: string;
     memberSince: string;
+  };
+  subscription: {
+    tier: string;
+    status: string;
+    plan: string | null;
+    currentPeriodEnd: string | null;
+    cancelAtPeriodEnd: boolean;
+    hasStripeAccount: boolean;
   };
   stats: {
     totalEvaluations: number;
@@ -92,7 +101,8 @@ export default function DashboardContent() {
     );
   }
 
-  const { user, stats, recentSessions } = data;
+  const { user, subscription, stats, recentSessions } = data;
+  const isPremium = subscription?.tier === 'PREMIUM' && subscription?.status === 'ACTIVE';
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -106,6 +116,14 @@ export default function DashboardContent() {
             <span className="text-xl font-bold text-slate-900">IELTSGo</span>
           </Link>
           <div className="flex items-center gap-4">
+            {user.role === 'ADMIN' && (
+              <Link
+                href="/admin"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-amber-600 transition-colors hover:bg-amber-50"
+              >
+                Admin
+              </Link>
+            )}
             <Link
               href="/history"
               className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
@@ -137,14 +155,41 @@ export default function DashboardContent() {
             </h1>
             <p className="mt-1 text-slate-600">Track your progress and keep practicing.</p>
           </div>
-          {stats.evaluationsRemaining !== null && (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2">
-              <span className="text-sm font-medium text-amber-700">
-                {stats.evaluationsRemaining} free evaluation
-                {stats.evaluationsRemaining !== 1 ? 's' : ''} remaining
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            {isPremium ? (
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-2">
+                  <div className="flex items-center gap-2">
+                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-sm font-medium text-green-700">Premium</span>
+                  </div>
+                  {subscription.cancelAtPeriodEnd && subscription.currentPeriodEnd && (
+                    <p className="mt-1 text-xs text-green-600">
+                      Ends {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+                <ManageBillingButton />
+              </div>
+            ) : stats.evaluationsRemaining !== null ? (
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2">
+                  <span className="text-sm font-medium text-amber-700">
+                    {stats.evaluationsRemaining} free evaluation
+                    {stats.evaluationsRemaining !== 1 ? 's' : ''} remaining
+                  </span>
+                </div>
+                <Link
+                  href="/pricing"
+                  className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-blue-500/25 hover:shadow-xl"
+                >
+                  Upgrade
+                </Link>
+              </div>
+            ) : null}
+          </div>
         </div>
 
         {/* Stats Grid */}
@@ -624,4 +669,35 @@ function formatDate(dateString: string): string {
   } else {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
+}
+
+function ManageBillingButton() {
+  const [loading, setLoading] = useState(false);
+
+  async function handleClick() {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' });
+      if (!res.ok) {
+        throw new Error('Failed to open billing portal');
+      }
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (error) {
+      console.error('Error opening billing portal:', error);
+      alert('Failed to open billing portal. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
+    >
+      {loading ? 'Loading...' : 'Manage Billing'}
+    </button>
+  );
 }

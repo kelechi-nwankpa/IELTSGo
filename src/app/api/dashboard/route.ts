@@ -15,7 +15,7 @@ export async function GET() {
 
     const userId = session.user.id;
 
-    // Get user with quota
+    // Get user with quota and subscription details
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -24,7 +24,13 @@ export async function GET() {
         image: true,
         targetBand: true,
         testDate: true,
+        role: true,
         subscriptionTier: true,
+        subscriptionStatus: true,
+        subscriptionPlan: true,
+        currentPeriodEnd: true,
+        cancelAtPeriodEnd: true,
+        stripeCustomerId: true,
         createdAt: true,
         quota: {
           select: {
@@ -114,8 +120,17 @@ export async function GET() {
         image: user.image,
         targetBand: user.targetBand,
         testDate: user.testDate,
+        role: user.role,
         subscriptionTier: user.subscriptionTier,
         memberSince: user.createdAt,
+      },
+      subscription: {
+        tier: user.subscriptionTier,
+        status: user.subscriptionStatus,
+        plan: user.subscriptionPlan,
+        currentPeriodEnd: user.currentPeriodEnd,
+        cancelAtPeriodEnd: user.cancelAtPeriodEnd,
+        hasStripeAccount: !!user.stripeCustomerId,
       },
       stats: {
         totalEvaluations,

@@ -53,6 +53,19 @@ enum UserRole {
   ADMIN
 }
 
+enum SubscriptionStatus {
+  INACTIVE
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  TRIALING
+}
+
+enum SubscriptionPlan {
+  MONTHLY
+  ANNUAL
+}
+
 // ============================================
 // MODELS
 // ============================================
@@ -72,12 +85,22 @@ model User {
   createdAt        DateTime         @default(now()) @map("created_at")
   updatedAt        DateTime         @updatedAt @map("updated_at")
 
+  // Stripe subscription fields
+  stripeCustomerId     String?            @unique @map("stripe_customer_id")
+  stripeSubscriptionId String?            @unique @map("stripe_subscription_id")
+  subscriptionStatus   SubscriptionStatus @default(INACTIVE) @map("subscription_status")
+  subscriptionPlan     SubscriptionPlan?  @map("subscription_plan")
+  currentPeriodStart   DateTime?          @map("current_period_start")
+  currentPeriodEnd     DateTime?          @map("current_period_end")
+  cancelAtPeriodEnd    Boolean            @default(false) @map("cancel_at_period_end")
+
   // Relations
-  accounts    Account[]
+  accounts     Account[]
   authSessions AuthSession[]
-  sessions    PracticeSession[]
-  evaluations Evaluation[]
-  quota       UsageQuota?
+  sessions     PracticeSession[]
+  evaluations  Evaluation[]
+  quota        UsageQuota?
+  invoices     Invoice[]
 
   @@map("users")
 }
@@ -204,4 +227,20 @@ model ExplanationCache {
 
   @@unique([contentId, questionId])
   @@map("explanation_cache")
+}
+
+// Stripe invoice history
+model Invoice {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  stripeInvoiceId String   @unique @map("stripe_invoice_id")
+  amountPaid      Int      @map("amount_paid") // in cents
+  currency        String   @default("usd")
+  status          String   // paid, open, void, etc.
+  invoicePdf      String?  @map("invoice_pdf")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("invoices")
 }

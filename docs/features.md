@@ -4,7 +4,7 @@ This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
 **Last updated:** 2025-12-26
-**Current phase:** 3 (Speaking Module) - Complete
+**Current phase:** 4 (Payment & Premium) - Complete
 
 Legend:
 
@@ -94,7 +94,7 @@ Legend:
 - [x] Writing evaluation prompt integrated
 - [x] Structured JSON response parsing
 - [x] Error handling for AI failures
-- [ ] Evaluation storage in database
+- [x] Evaluation storage in database
 
 ### Feedback Display
 
@@ -102,18 +102,18 @@ Legend:
 - [x] Criterion breakdown UI
 - [x] Specific feedback with essay references
 - [x] Improvement suggestions display
-- [ ] Evaluation history view
+- [x] Evaluation history view
 - [ ] Error highlighting
 - [ ] Band 8/9 model answers
-- [ ] Rewrite & resubmit
+- [x] Rewrite & resubmit
 - [ ] Historical comparison
 
 ### Quota System
 
-- [ ] Free tier: 3 evaluations/month
-- [ ] Quota tracking in database
-- [ ] Quota check before evaluation
-- [ ] Quota display in UI
+- [x] Free tier: 3 evaluations/month
+- [x] Quota tracking in database
+- [x] Quota check before evaluation
+- [x] Quota display in UI
 - [ ] Quota reset logic (monthly)
 - [ ] Admin overrides
 
@@ -121,16 +121,16 @@ Legend:
 
 - [x] Basic dashboard layout
 - [x] Recent evaluations list
-- [ ] Quota usage display
+- [x] Quota usage display
 - [x] Quick start writing button
 
 ### Landing Page
 
-- [ ] Hero section with value prop
-- [ ] Feature highlights
+- [x] Hero section with value prop
+- [x] Feature highlights
 - [ ] Pricing preview
-- [ ] CTA to sign up
-- [ ] Sample feedback demo
+- [x] CTA to sign up
+- [x] Sample feedback demo
 
 ---
 
@@ -241,35 +241,35 @@ Legend:
 
 ### Stripe Integration
 
-- [ ] Stripe account connected
-- [ ] Product/price configuration
-- [ ] Checkout session creation
-- [ ] Webhook handling
-- [ ] Payment success/failure handling
+- [x] Stripe account connected
+- [x] Product/price configuration
+- [x] Checkout session creation
+- [x] Webhook handling
+- [x] Payment success/failure handling
 
 ### Subscription Plans
 
-- [ ] Free tier defined
-- [ ] Monthly premium plan
-- [ ] Annual premium plan (discounted)
-- [ ] Plan comparison UI
-- [ ] Grace periods
+- [x] Free tier defined
+- [x] Monthly premium plan
+- [x] Annual premium plan (discounted)
+- [x] Plan comparison UI
+- [x] Grace periods
 
 ### Billing Management
 
-- [ ] Customer portal integration
-- [ ] Plan upgrade flow
-- [ ] Plan downgrade flow
-- [ ] Cancellation flow
-- [ ] Cancel / resume subscription
-- [ ] Invoice history
+- [x] Customer portal integration
+- [x] Plan upgrade flow
+- [x] Plan downgrade flow
+- [x] Cancellation flow
+- [x] Cancel / resume subscription
+- [x] Invoice history
 
 ### Feature Gating
 
-- [ ] Premium content locked for free users
-- [ ] Evaluation limits enforced by tier
-- [ ] Upgrade prompts at limit
-- [ ] Subscription status in user context
+- [x] Premium content locked for free users
+- [x] Evaluation limits enforced by tier
+- [x] Upgrade prompts at limit
+- [x] Subscription status in user context
 
 ---
 
@@ -473,16 +473,16 @@ Legend:
 | Phase     | Name                   | Features | Completed | Progress |
 | --------- | ---------------------- | -------- | --------- | -------- |
 | 0         | Foundation             | 30       | 16        | 53%      |
-| 1         | MVP — Writing          | 35       | 15        | 43%      |
+| 1         | MVP — Writing          | 35       | 27        | 77%      |
 | 2         | Reading & Listening    | 27       | 27        | 100%     |
 | 3         | Speaking               | 30       | 30        | 100%     |
-| 4         | Payment & Premium      | 18       | 0         | 0%       |
+| 4         | Payment & Premium      | 18       | 18        | 100%     |
 | 5         | Task 1 & GT            | 18       | 0         | 0%       |
 | 6         | Study Plans & Progress | 24       | 0         | 0%       |
 | 7         | Test Simulation        | 9        | 0         | 0%       |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **235**  | **88**    | **37%**  |
+| **Total** |                        | **235**  | **118**   | **50%**  |
 
 ---
 

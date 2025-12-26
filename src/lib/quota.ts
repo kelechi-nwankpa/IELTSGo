@@ -1,10 +1,11 @@
 /**
  * Usage quota management for IELTSGo
  * Enforces evaluation limits for free tier users
+ * Premium users have unlimited access while their subscription is active
  */
 
 import { prisma } from '@/lib/prisma';
-import { SubscriptionTier } from '@prisma/client';
+import { SubscriptionTier, SubscriptionStatus } from '@prisma/client';
 
 // Quota limits by tier
 const QUOTA_LIMITS = {
@@ -63,26 +64,64 @@ async function getOrCreateQuota(userId: string) {
 }
 
 /**
+ * Determine effective subscription tier based on status and period
+ * Premium is only active if subscription is ACTIVE and within period
+ */
+function getEffectiveTier(
+  tier: SubscriptionTier,
+  status: SubscriptionStatus,
+  periodEnd: Date | null
+): SubscriptionTier {
+  // If not premium, always free
+  if (tier !== 'PREMIUM') {
+    return 'FREE';
+  }
+
+  // Premium requires active subscription
+  if (status !== 'ACTIVE' && status !== 'TRIALING' && status !== 'PAST_DUE') {
+    return 'FREE';
+  }
+
+  // Check if subscription period has expired
+  if (periodEnd && periodEnd < new Date()) {
+    return 'FREE';
+  }
+
+  return 'PREMIUM';
+}
+
+/**
  * Get the current quota status for a user
  */
 export async function getQuotaStatus(userId: string): Promise<QuotaStatus> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { subscriptionTier: true },
+    select: {
+      subscriptionTier: true,
+      subscriptionStatus: true,
+      currentPeriodEnd: true,
+    },
   });
 
   if (!user) {
     throw new Error('User not found');
   }
 
+  // Determine effective tier based on subscription validity
+  const effectiveTier = getEffectiveTier(
+    user.subscriptionTier,
+    user.subscriptionStatus,
+    user.currentPeriodEnd
+  );
+
   const quota = await getOrCreateQuota(userId);
-  const limits = QUOTA_LIMITS[user.subscriptionTier];
+  const limits = QUOTA_LIMITS[effectiveTier];
 
   const getRemaining = (used: number, limit: number) =>
     limit === Infinity ? null : Math.max(0, limit - used);
 
   return {
-    tier: user.subscriptionTier,
+    tier: effectiveTier,
     writing: {
       used: quota.writingEvaluationsUsed,
       limit: limits.writingEvaluations === Infinity ? null : limits.writingEvaluations,
