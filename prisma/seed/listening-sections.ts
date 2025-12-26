@@ -565,7 +565,7 @@ Dr. Walsh: I'd recommend it. It would make your findings more relevant to indust
       {
         id: 'l6-q1',
         type: 'short_answer',
-        text: 'What is the main focus of Emma and Liam\'s research project?',
+        text: "What is the main focus of Emma and Liam's research project?",
         maxWords: 3,
       },
       {
@@ -823,7 +823,7 @@ Receptionist: Thank you, Mrs. Brooks. Your reservation is confirmed. You'll rece
       {
         id: 'l8-q5',
         type: 'short_answer',
-        text: 'What allergy does the caller\'s husband have?',
+        text: "What allergy does the caller's husband have?",
         maxWords: 1,
       },
       {
@@ -908,7 +908,7 @@ For more information, visit our website at hartfieldfestival.co.uk, or pick up a
         options: [
           'A) Near the east entrance',
           'B) Near the lake',
-          'C) In the children\'s zone',
+          "C) In the children's zone",
           'D) At the recreation ground',
         ],
       },
@@ -997,7 +997,7 @@ Sophie: Will do. Thanks so much, Dr. Chen.`,
       {
         id: 'l10-q1',
         type: 'short_answer',
-        text: 'What is the topic of Sophie\'s thesis?',
+        text: "What is the topic of Sophie's thesis?",
         maxWords: 5,
       },
       {
@@ -1015,8 +1015,13 @@ Sophie: Will do. Thanks so much, Dr. Chen.`,
       {
         id: 'l10-q4',
         type: 'multiple_choice',
-        text: 'According to Sophie\'s findings, what is the main barrier to solar panel adoption?',
-        options: ['A) Cost', 'B) Lack of information', 'C) Technical difficulties', 'D) Aesthetic concerns'],
+        text: "According to Sophie's findings, what is the main barrier to solar panel adoption?",
+        options: [
+          'A) Cost',
+          'B) Lack of information',
+          'C) Technical difficulties',
+          'D) Aesthetic concerns',
+        ],
       },
       {
         id: 'l10-q5',

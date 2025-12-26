@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -62,11 +62,7 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
   const [contentDataJson, setContentDataJson] = useState('{}');
   const [answersJson, setAnswersJson] = useState('{}');
 
-  useEffect(() => {
-    fetchContent();
-  }, [id]);
-
-  const fetchContent = async () => {
+  const fetchContent = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/content/${id}`);
       if (!response.ok) {
@@ -92,7 +88,11 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchContent();
+  }, [fetchContent]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,9 +210,7 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      {error && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-700">{error}</div>
-      )}
+      {error && <div className="rounded-lg bg-red-50 p-4 text-red-700">{error}</div>}
 
       {success && (
         <div className="rounded-lg bg-green-50 p-4 text-green-700">
@@ -233,7 +231,7 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
                 id="module"
                 value={module}
                 onChange={(e) => setModule(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               >
                 {MODULE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -251,7 +249,7 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
                 id="type"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               >
                 {(TYPE_OPTIONS[module] || []).map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -271,7 +269,7 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., The History of Timekeeping"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               />
             </div>
 
@@ -283,7 +281,7 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
                 id="difficulty"
                 value={difficultyBand}
                 onChange={(e) => setDifficultyBand(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               >
                 <option value="">No difficulty set</option>
                 <option value="5.0">Band 5.0</option>
@@ -317,7 +315,7 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
             value={contentDataJson}
             onChange={(e) => setContentDataJson(e.target.value)}
             rows={16}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
           />
         </div>
 
@@ -328,7 +326,7 @@ export default function EditContentPage({ params }: { params: Promise<{ id: stri
               value={answersJson}
               onChange={(e) => setAnswersJson(e.target.value)}
               rows={10}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
             />
           </div>
         )}

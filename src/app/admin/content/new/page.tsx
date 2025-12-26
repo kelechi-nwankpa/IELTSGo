@@ -117,11 +117,7 @@ function NewContentForm() {
         </Link>
       </div>
 
-      {error && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-700">
-          {error}
-        </div>
-      )}
+      {error && <div className="rounded-lg bg-red-50 p-4 text-red-700">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="rounded-lg border border-gray-200 bg-white p-6">
@@ -136,7 +132,7 @@ function NewContentForm() {
                 id="module"
                 value={module}
                 onChange={(e) => setModule(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               >
                 {MODULE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -154,7 +150,7 @@ function NewContentForm() {
                 id="type"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               >
                 {(TYPE_OPTIONS[module] || []).map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -174,7 +170,7 @@ function NewContentForm() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., The History of Timekeeping"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               />
             </div>
 
@@ -186,7 +182,7 @@ function NewContentForm() {
                 id="difficulty"
                 value={difficultyBand}
                 onChange={(e) => setDifficultyBand(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               >
                 <option value="">No difficulty set</option>
                 <option value="5.0">Band 5.0</option>
@@ -218,14 +214,15 @@ function NewContentForm() {
           <h2 className="mb-4 text-lg font-semibold text-gray-900">Content Data (JSON)</h2>
           <p className="mb-2 text-sm text-gray-500">
             {module === 'READING' && 'Include: passage (text), title, questions array'}
-            {module === 'LISTENING' && 'Include: audioUrl, title, transcript, questions array, accent'}
+            {module === 'LISTENING' &&
+              'Include: audioUrl, title, transcript, questions array, accent'}
             {module === 'WRITING' && 'Include: prompt (text), topic'}
           </p>
           <textarea
             value={contentDataJson}
             onChange={(e) => setContentDataJson(e.target.value)}
             rows={12}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
             placeholder='{\n  "passage": "...",\n  "questions": []\n}'
           />
         </div>
@@ -240,7 +237,7 @@ function NewContentForm() {
               value={answersJson}
               onChange={(e) => setAnswersJson(e.target.value)}
               rows={8}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
               placeholder='{\n  "q1": "B",\n  "q2": "TRUE"\n}'
             />
           </div>

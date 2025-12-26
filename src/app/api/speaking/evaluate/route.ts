@@ -9,10 +9,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
     const formData = await request.formData();
@@ -42,10 +39,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!promptContent) {
-      return NextResponse.json(
-        { error: 'Prompt not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Prompt not found' }, { status: 404 });
     }
 
     const contentData = promptContent.contentData as Record<string, unknown>;
@@ -119,9 +113,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(
-      { error: 'Failed to evaluate speaking response' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to evaluate speaking response' }, { status: 500 });
   }
 }

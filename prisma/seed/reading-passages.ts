@@ -292,12 +292,7 @@ Modern lifestyles present numerous challenges to healthy sleep. Artificial light
         id: 'r4-q1',
         type: 'multiple_choice',
         text: 'How long does a complete sleep cycle typically last?',
-        options: [
-          'A) 45 minutes',
-          'B) 60 minutes',
-          'C) 90 minutes',
-          'D) 120 minutes',
-        ],
+        options: ['A) 45 minutes', 'B) 60 minutes', 'C) 90 minutes', 'D) 120 minutes'],
       },
       {
         id: 'r4-q2',
@@ -328,7 +323,7 @@ Modern lifestyles present numerous challenges to healthy sleep. Artificial light
       {
         id: 'r4-q6',
         type: 'short_answer',
-        text: 'What toxic protein associated with Alzheimer\'s is cleared from the brain during sleep?',
+        text: "What toxic protein associated with Alzheimer's is cleared from the brain during sleep?",
         maxWords: 2,
       },
       {
@@ -417,7 +412,7 @@ Despite challenges, the growth of renewable energy has exceeded most predictions
       {
         id: 'r5-q7',
         type: 'short_answer',
-        text: 'How long can the blades of the world\'s largest offshore wind turbines span?',
+        text: "How long can the blades of the world's largest offshore wind turbines span?",
         maxWords: 3,
       },
       {
@@ -469,12 +464,7 @@ Technology is both threatening and preserving linguistic diversity. While global
         id: 'r6-q2',
         type: 'multiple_choice',
         text: 'When did the Great Vowel Shift occur?',
-        options: [
-          'A) 1000-1200',
-          'B) 1200-1400',
-          'C) 1400-1700',
-          'D) 1700-1900',
-        ],
+        options: ['A) 1000-1200', 'B) 1200-1400', 'C) 1400-1700', 'D) 1700-1900'],
       },
       {
         id: 'r6-q3',
@@ -552,12 +542,7 @@ Conservation efforts are underway worldwide. Marine protected areas, coral nurse
         id: 'r7-q2',
         type: 'multiple_choice',
         text: 'What is the name of the microscopic algae living within coral tissue?',
-        options: [
-          'A) Zooplankton',
-          'B) Phytoplankton',
-          'C) Zooxanthellae',
-          'D) Cyanobacteria',
-        ],
+        options: ['A) Zooplankton', 'B) Phytoplankton', 'C) Zooxanthellae', 'D) Cyanobacteria'],
       },
       {
         id: 'r7-q3',
@@ -624,12 +609,7 @@ The future likely involves AI working alongside human clinicians rather than rep
         id: 'r8-q1',
         type: 'multiple_choice',
         text: 'How long does traditional drug discovery typically take?',
-        options: [
-          'A) 2-5 years',
-          'B) 5-10 years',
-          'C) 10-15 years',
-          'D) 15-20 years',
-        ],
+        options: ['A) 2-5 years', 'B) 5-10 years', 'C) 10-15 years', 'D) 15-20 years'],
       },
       {
         id: 'r8-q2',
@@ -650,7 +630,7 @@ The future likely involves AI working alongside human clinicians rather than rep
       {
         id: 'r8-q4',
         type: 'true_false_ng',
-        text: 'Google Health\'s AI system detected breast cancer more accurately than expert radiologists.',
+        text: "Google Health's AI system detected breast cancer more accurately than expert radiologists.",
       },
       {
         id: 'r8-q5',
@@ -743,13 +723,13 @@ The legacy of ancient trade routes persists today. China's Belt and Road Initiat
       {
         id: 'r9-q6',
         type: 'short_answer',
-        text: 'What percentage of Europe\'s population is estimated to have died from the Black Death?',
+        text: "What percentage of Europe's population is estimated to have died from the Black Death?",
         maxWords: 3,
       },
       {
         id: 'r9-q7',
         type: 'short_answer',
-        text: 'When was China\'s Belt and Road Initiative announced?',
+        text: "When was China's Belt and Road Initiative announced?",
         maxWords: 1,
       },
       {
@@ -821,7 +801,7 @@ Understanding these biases has practical implications. Behavioral insights are n
       {
         id: 'r10-q5',
         type: 'true_false_ng',
-        text: 'Nudge interventions restrict people\'s freedom of choice.',
+        text: "Nudge interventions restrict people's freedom of choice.",
       },
       {
         id: 'r10-q6',

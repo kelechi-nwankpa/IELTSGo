@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 interface Content {
@@ -36,11 +36,7 @@ export default function ContentListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    fetchContent();
-  }, [moduleFilter, currentPage]);
-
-  const fetchContent = async () => {
+  const fetchContent = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -64,7 +60,11 @@ export default function ContentListPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [moduleFilter, searchQuery, currentPage]);
+
+  useEffect(() => {
+    fetchContent();
+  }, [fetchContent]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,7 +124,7 @@ export default function ContentListPage() {
               setModuleFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
           >
             <option value="">All Modules</option>
             <option value="READING">Reading</option>
@@ -140,7 +140,7 @@ export default function ContentListPage() {
             placeholder="Search by title..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
           />
           <button
             type="submit"
@@ -191,9 +191,7 @@ export default function ContentListPage() {
               {content.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-gray-900">
-                      {item.title || 'Untitled'}
-                    </div>
+                    <div className="font-medium text-gray-900">{item.title || 'Untitled'}</div>
                     <div className="text-xs text-gray-500">{item.id.slice(0, 8)}...</div>
                   </td>
                   <td className="px-4 py-3">

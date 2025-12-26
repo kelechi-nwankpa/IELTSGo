@@ -4,7 +4,11 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { task2Prompts } from './task2-prompts';
 import { readingPassages } from './reading-passages';
 import { listeningSections } from './listening-sections';
-import { speakingPart1Prompts, speakingPart2Prompts, speakingPart3Prompts } from './speaking-prompts';
+import {
+  speakingPart1Prompts,
+  speakingPart2Prompts,
+  speakingPart3Prompts,
+} from './speaking-prompts';
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,

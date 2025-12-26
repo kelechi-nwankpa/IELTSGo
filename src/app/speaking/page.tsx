@@ -49,11 +49,17 @@ export default function SpeakingPage() {
     {
       part: 1,
       title: 'Part 1: Introduction & Interview',
-      description: 'Answer questions about yourself, your home, work, studies, and other familiar topics.',
+      description:
+        'Answer questions about yourself, your home, work, studies, and other familiar topics.',
       duration: '4-5 minutes',
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
         </svg>
       ),
       color: 'blue',
@@ -62,11 +68,17 @@ export default function SpeakingPage() {
     {
       part: 2,
       title: 'Part 2: Long Turn',
-      description: 'Speak for 1-2 minutes on a topic given on a cue card. You have 1 minute to prepare.',
+      description:
+        'Speak for 1-2 minutes on a topic given on a cue card. You have 1 minute to prepare.',
       duration: '3-4 minutes (including prep)',
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
         </svg>
       ),
       color: 'indigo',
@@ -79,7 +91,12 @@ export default function SpeakingPage() {
       duration: '4-5 minutes',
       icon: (
         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+          />
         </svg>
       ),
       color: 'purple',
@@ -134,9 +151,7 @@ export default function SpeakingPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">IELTS Speaking Practice</h1>
-              <p className="text-gray-600">
-                Practice all three parts of the IELTS Speaking test
-              </p>
+              <p className="text-gray-600">Practice all three parts of the IELTS Speaking test</p>
             </div>
           </div>
         </div>
@@ -144,15 +159,25 @@ export default function SpeakingPage() {
         {/* Info Banner */}
         <div className="mb-8 rounded-xl border border-amber-200 bg-amber-50 p-4">
           <div className="flex items-start gap-3">
-            <svg className="mt-0.5 h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="mt-0.5 h-5 w-5 text-amber-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <div>
               <h3 className="font-medium text-amber-800">How it works</h3>
               <p className="mt-1 text-sm text-amber-700">
-                Record your spoken response using your microphone. Your audio will be transcribed using AI,
-                then evaluated against IELTS Speaking criteria. You&apos;ll receive detailed feedback on fluency,
-                vocabulary, grammar, and pronunciation.
+                Record your spoken response using your microphone. Your audio will be transcribed
+                using AI, then evaluated against IELTS Speaking criteria. You&apos;ll receive
+                detailed feedback on fluency, vocabulary, grammar, and pronunciation.
               </p>
             </div>
           </div>
@@ -179,14 +204,26 @@ export default function SpeakingPage() {
                   <p className="mb-4 text-sm text-gray-600">{part.description}</p>
 
                   <div className="mb-4 flex items-center gap-2">
-                    <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="h-4 w-4 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     <span className="text-sm text-gray-500">{part.duration}</span>
                   </div>
 
                   <div className="mb-4">
-                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${colors.badge}`}>
+                    <span
+                      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${colors.badge}`}
+                    >
                       {part.prompts.length} topics available
                     </span>
                   </div>
@@ -246,9 +283,7 @@ export default function SpeakingPage() {
               </div>
               <div>
                 <h3 className="font-medium text-gray-900">Stay calm</h3>
-                <p className="text-sm text-gray-600">
-                  It&apos;s okay to pause briefly to think.
-                </p>
+                <p className="text-sm text-gray-600">It&apos;s okay to pause briefly to think.</p>
               </div>
             </div>
           </div>

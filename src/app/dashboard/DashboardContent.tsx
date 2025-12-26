@@ -107,6 +107,12 @@ export default function DashboardContent() {
           </Link>
           <div className="flex items-center gap-4">
             <Link
+              href="/history"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              History
+            </Link>
+            <Link
               href="/writing"
               className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl"
             >
@@ -213,10 +219,24 @@ export default function DashboardContent() {
           />
         </div>
 
-        {/* Recent Essays */}
+        {/* Recent Practice */}
         <div className="rounded-2xl border border-slate-200 bg-white">
-          <div className="border-b border-slate-100 px-6 py-4">
+          <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
             <h2 className="text-lg font-semibold text-slate-900">Recent Practice</h2>
+            <Link
+              href="/history"
+              className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-500"
+            >
+              View All
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </Link>
           </div>
 
           {recentSessions.length === 0 ? (
@@ -260,21 +280,28 @@ export default function DashboardContent() {
               {recentSessions.map((session) => {
                 const isReading = session.module === 'READING';
                 const isListening = session.module === 'LISTENING';
-                const moduleStyles = isListening
-                  ? 'bg-purple-100'
-                  : isReading
-                    ? 'bg-green-100'
-                    : 'bg-blue-100';
-                const scoreColor = isListening
-                  ? 'text-purple-600'
-                  : isReading
-                    ? 'text-green-600'
-                    : 'text-blue-600';
-                const tagStyles = isListening
-                  ? 'bg-purple-100 text-purple-700'
-                  : isReading
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-slate-100 text-slate-600';
+                const isSpeaking = session.module === 'SPEAKING';
+                const moduleStyles = isSpeaking
+                  ? 'bg-indigo-100'
+                  : isListening
+                    ? 'bg-purple-100'
+                    : isReading
+                      ? 'bg-green-100'
+                      : 'bg-blue-100';
+                const scoreColor = isSpeaking
+                  ? 'text-indigo-600'
+                  : isListening
+                    ? 'text-purple-600'
+                    : isReading
+                      ? 'text-green-600'
+                      : 'text-blue-600';
+                const tagStyles = isSpeaking
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : isListening
+                    ? 'bg-purple-100 text-purple-700'
+                    : isReading
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-slate-100 text-slate-600';
 
                 return (
                   <div
@@ -284,7 +311,21 @@ export default function DashboardContent() {
                     <div
                       className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${moduleStyles}`}
                     >
-                      {isListening ? (
+                      {isSpeaking ? (
+                        <svg
+                          className="h-5 w-5 text-indigo-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                          />
+                        </svg>
+                      ) : isListening ? (
                         <svg
                           className="h-5 w-5 text-purple-600"
                           fill="none"
@@ -360,7 +401,7 @@ export default function DashboardContent() {
         {/* Practice Modules */}
         <div className="mt-8">
           <h2 className="mb-4 text-lg font-semibold text-slate-900">Practice Modules</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Link
               href="/writing"
               className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-blue-200 hover:shadow-lg"
@@ -468,6 +509,42 @@ export default function DashboardContent() {
                 </span>
               </div>
             </Link>
+
+            <Link
+              href="/speaking"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-indigo-200 hover:shadow-lg"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">Speaking Practice</h3>
+                  <p className="text-sm text-slate-500">Record & get AI feedback</p>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <span className="text-xs text-slate-400">15 min per session</span>
+                <span className="flex items-center gap-1 text-sm font-medium text-indigo-600">
+                  Start
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </Link>
           </div>
         </div>
       </main>
@@ -521,6 +598,12 @@ function formatTaskType(type: string): string {
       return 'Reading';
     case 'LISTENING_SECTION':
       return 'Listening';
+    case 'SPEAKING_PART1':
+      return 'Part 1';
+    case 'SPEAKING_PART2':
+      return 'Part 2';
+    case 'SPEAKING_PART3':
+      return 'Part 3';
     default:
       return type;
   }

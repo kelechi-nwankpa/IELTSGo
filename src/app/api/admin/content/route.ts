@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     // Parse query parameters
     const { searchParams } = new URL(request.url);
-    const module = searchParams.get('module') as Module | null;
+    const moduleFilter = searchParams.get('module') as Module | null;
     const type = searchParams.get('type') as ContentType | null;
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '20', 10);
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       title?: { contains: string; mode: 'insensitive' };
     } = {};
 
-    if (module) where.module = module;
+    if (moduleFilter) where.module = moduleFilter;
     if (type) where.type = type;
     if (search) where.title = { contains: search, mode: 'insensitive' };
 

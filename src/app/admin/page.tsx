@@ -99,9 +99,7 @@ export default async function AdminDashboard() {
                         {session.module}
                       </span>
                     </td>
-                    <td className="py-2 text-gray-700">
-                      {session.content.title || 'Untitled'}
-                    </td>
+                    <td className="py-2 text-gray-700">{session.content.title || 'Untitled'}</td>
                     <td className="py-2 text-gray-700">
                       {session.score !== null ? `${(session.score * 100).toFixed(0)}%` : '-'}
                     </td>

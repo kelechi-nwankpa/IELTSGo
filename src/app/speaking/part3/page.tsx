@@ -27,9 +27,24 @@ interface EvaluationResult {
   evaluation: {
     overall_band: number;
     criteria: {
-      fluency_coherence: { band: number; summary: string; strengths: string[]; improvements: string[] };
-      lexical_resource: { band: number; summary: string; strengths: string[]; improvements: string[] };
-      grammatical_range: { band: number; summary: string; strengths: string[]; improvements: string[] };
+      fluency_coherence: {
+        band: number;
+        summary: string;
+        strengths: string[];
+        improvements: string[];
+      };
+      lexical_resource: {
+        band: number;
+        summary: string;
+        strengths: string[];
+        improvements: string[];
+      };
+      grammatical_range: {
+        band: number;
+        summary: string;
+        strengths: string[];
+        improvements: string[];
+      };
       pronunciation: { band: number; summary: string; strengths: string[]; improvements: string[] };
     };
     metrics: {
@@ -177,9 +192,17 @@ export default function SpeakingPart3Page() {
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/speaking" className="mb-4 inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
+          <Link
+            href="/speaking"
+            className="mb-4 inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+          >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Back to Speaking
           </Link>
@@ -202,7 +225,9 @@ export default function SpeakingPart3Page() {
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <h3 className="font-medium text-gray-900">{prompt.contentData.topic}</h3>
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${getDifficultyColor(prompt.difficultyBand)}`}>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${getDifficultyColor(prompt.difficultyBand)}`}
+                    >
                       {getDifficultyLabel(prompt.difficultyBand)}
                     </span>
                   </div>
@@ -225,7 +250,8 @@ export default function SpeakingPart3Page() {
                   Topic: {selectedPrompt.contentData.topic}
                 </span>
                 <span className="text-gray-500">
-                  Question {currentQuestionIndex + 1} of {selectedPrompt.contentData.questions.length}
+                  Question {currentQuestionIndex + 1} of{' '}
+                  {selectedPrompt.contentData.questions.length}
                 </span>
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-gray-100">
@@ -239,7 +265,9 @@ export default function SpeakingPart3Page() {
             </div>
 
             {/* Current Question */}
-            <div className={`rounded-xl border-2 p-6 ${showFollowUp ? 'border-amber-300 bg-amber-50' : 'border-purple-300 bg-purple-50'}`}>
+            <div
+              className={`rounded-xl border-2 p-6 ${showFollowUp ? 'border-amber-300 bg-amber-50' : 'border-purple-300 bg-purple-50'}`}
+            >
               {!showFollowUp ? (
                 <>
                   <div className="mb-2 text-sm font-medium text-purple-600">
@@ -251,9 +279,7 @@ export default function SpeakingPart3Page() {
                 </>
               ) : (
                 <>
-                  <div className="mb-2 text-sm font-medium text-amber-600">
-                    Follow-up Question
-                  </div>
+                  <div className="mb-2 text-sm font-medium text-amber-600">Follow-up Question</div>
                   <p className="text-lg font-medium text-gray-900">
                     {selectedPrompt.contentData.questions[currentQuestionIndex].followUp}
                   </p>
@@ -280,47 +306,50 @@ export default function SpeakingPart3Page() {
                 className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 disabled:opacity-50"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
                 Previous
               </button>
 
-              {selectedPrompt.contentData.questions[currentQuestionIndex].followUp && !showFollowUp && (
-                <span className="text-xs text-gray-500">Follow-up available</span>
-              )}
+              {selectedPrompt.contentData.questions[currentQuestionIndex].followUp &&
+                !showFollowUp && <span className="text-xs text-gray-500">Follow-up available</span>}
 
               <button
                 onClick={handleNextQuestion}
                 disabled={
                   currentQuestionIndex === selectedPrompt.contentData.questions.length - 1 &&
-                  (showFollowUp || !selectedPrompt.contentData.questions[currentQuestionIndex].followUp)
+                  (showFollowUp ||
+                    !selectedPrompt.contentData.questions[currentQuestionIndex].followUp)
                 }
                 className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 disabled:opacity-50"
               >
-                {showFollowUp || !selectedPrompt.contentData.questions[currentQuestionIndex].followUp ? 'Next Question' : 'Show Follow-up'}
+                {showFollowUp ||
+                !selectedPrompt.contentData.questions[currentQuestionIndex].followUp
+                  ? 'Next Question'
+                  : 'Show Follow-up'}
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </div>
 
-            {error && (
-              <div className="rounded-lg bg-red-50 p-4 text-red-700">
-                {error}
-              </div>
-            )}
+            {error && <div className="rounded-lg bg-red-50 p-4 text-red-700">{error}</div>}
 
             {/* Audio Recorder */}
-            <AudioRecorder
-              maxDuration={300}
-              onRecordingComplete={handleRecordingComplete}
-            />
+            <AudioRecorder maxDuration={300} onRecordingComplete={handleRecordingComplete} />
 
             <div className="flex justify-center">
-              <button
-                onClick={handleReset}
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
+              <button onClick={handleReset} className="text-sm text-gray-500 hover:text-gray-700">
                 Choose different topic
               </button>
             </div>
@@ -332,9 +361,7 @@ export default function SpeakingPart3Page() {
           <div className="rounded-xl border border-gray-200 bg-white p-12 text-center">
             <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-purple-600 border-t-transparent" />
             <h2 className="text-lg font-semibold text-gray-900">Evaluating your response...</h2>
-            <p className="mt-2 text-gray-600">
-              Transcribing audio and analyzing your speaking
-            </p>
+            <p className="mt-2 text-gray-600">Transcribing audio and analyzing your speaking</p>
           </div>
         )}
 
@@ -367,7 +394,9 @@ export default function SpeakingPart3Page() {
                   <div key={key} className="rounded-xl border border-gray-200 bg-white p-4">
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-medium text-gray-900">{labels[key]}</span>
-                      <span className="text-lg font-semibold text-purple-600">{criterion.band.toFixed(1)}</span>
+                      <span className="text-lg font-semibold text-purple-600">
+                        {criterion.band.toFixed(1)}
+                      </span>
                     </div>
                     <p className="mb-3 text-sm text-gray-600">{criterion.summary}</p>
                     {criterion.strengths.length > 0 && (
@@ -375,7 +404,9 @@ export default function SpeakingPart3Page() {
                         <span className="text-xs font-medium text-green-600">Strengths:</span>
                         <ul className="mt-1 space-y-1">
                           {criterion.strengths.slice(0, 2).map((s, i) => (
-                            <li key={i} className="text-xs text-gray-600">• {s}</li>
+                            <li key={i} className="text-xs text-gray-600">
+                              • {s}
+                            </li>
                           ))}
                         </ul>
                       </div>
@@ -385,7 +416,9 @@ export default function SpeakingPart3Page() {
                         <span className="text-xs font-medium text-amber-600">To improve:</span>
                         <ul className="mt-1 space-y-1">
                           {criterion.improvements.slice(0, 2).map((s, i) => (
-                            <li key={i} className="text-xs text-gray-600">• {s}</li>
+                            <li key={i} className="text-xs text-gray-600">
+                              • {s}
+                            </li>
                           ))}
                         </ul>
                       </div>

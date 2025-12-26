@@ -13,7 +13,7 @@ type RecordingState = 'idle' | 'recording' | 'paused' | 'stopped';
 export function AudioRecorder({
   maxDuration = 120,
   onRecordingComplete,
-  disabled = false
+  disabled = false,
 }: AudioRecorderProps) {
   const [recordingState, setRecordingState] = useState<RecordingState>('idle');
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -22,6 +22,10 @@ export function AudioRecorder({
   const [error, setError] = useState<string | null>(null);
   const [audioLevels, setAudioLevels] = useState<number[]>(new Array(50).fill(0));
   const [permissionGranted, setPermissionGranted] = useState<boolean | null>(null);
+  // Custom player state
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackTime, setPlaybackTime] = useState(0);
+  const [recordedDuration, setRecordedDuration] = useState(0);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -30,14 +34,8 @@ export function AudioRecorder({
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const isRecordingRef = useRef<boolean>(false);
   const playbackRef = useRef<HTMLAudioElement | null>(null);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      cleanup();
-    };
-  }, []);
 
   const cleanup = useCallback(() => {
     if (timerRef.current) {
@@ -49,7 +47,7 @@ export function AudioRecorder({
       animationFrameRef.current = null;
     }
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
     if (audioContextRef.current?.state !== 'closed') {
@@ -61,18 +59,12 @@ export function AudioRecorder({
     }
   }, [audioUrl]);
 
-  const checkPermission = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(track => track.stop());
-      setPermissionGranted(true);
-      return true;
-    } catch {
-      setPermissionGranted(false);
-      setError('Microphone access denied. Please enable microphone permission in your browser settings.');
-      return false;
-    }
-  };
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cleanup();
+    };
+  }, [cleanup]);
 
   const startRecording = async () => {
     setError(null);
@@ -84,7 +76,7 @@ export function AudioRecorder({
           echoCancellation: true,
           noiseSuppression: true,
           sampleRate: 44100,
-        }
+        },
       });
       streamRef.current = stream;
       setPermissionGranted(true);
@@ -113,7 +105,7 @@ export function AudioRecorder({
 
       mediaRecorder.onstop = () => {
         const blob = new Blob(chunksRef.current, {
-          type: mediaRecorder.mimeType
+          type: mediaRecorder.mimeType,
         });
         setAudioBlob(blob);
         const url = URL.createObjectURL(blob);
@@ -122,12 +114,13 @@ export function AudioRecorder({
       };
 
       mediaRecorder.start(100); // Collect data every 100ms
+      isRecordingRef.current = true;
       setRecordingState('recording');
       setElapsedTime(0);
 
       // Start timer
       timerRef.current = setInterval(() => {
-        setElapsedTime(prev => {
+        setElapsedTime((prev) => {
           const newTime = prev + 1;
           if (newTime >= maxDuration) {
             stopRecording();
@@ -139,7 +132,6 @@ export function AudioRecorder({
 
       // Start visualization
       visualize();
-
     } catch (err) {
       setPermissionGranted(false);
       if (err instanceof Error) {
@@ -162,7 +154,8 @@ export function AudioRecorder({
     const dataArray = new Uint8Array(bufferLength);
 
     const draw = () => {
-      if (recordingState !== 'recording' || !analyserRef.current) return;
+      // Use ref instead of state to avoid stale closure
+      if (!isRecordingRef.current || !analyserRef.current) return;
 
       animationFrameRef.current = requestAnimationFrame(draw);
       analyser.getByteFrequencyData(dataArray);
@@ -189,6 +182,9 @@ export function AudioRecorder({
 
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && recordingState === 'recording') {
+      // Save the duration before stopping
+      setRecordedDuration(elapsedTime);
+      isRecordingRef.current = false;
       mediaRecorderRef.current.stop();
 
       if (timerRef.current) {
@@ -200,12 +196,12 @@ export function AudioRecorder({
         animationFrameRef.current = null;
       }
       if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current.getTracks().forEach((track) => track.stop());
       }
 
       setAudioLevels(new Array(50).fill(0));
     }
-  }, [recordingState]);
+  }, [recordingState, elapsedTime]);
 
   // Auto-stop at max duration
   useEffect(() => {
@@ -215,12 +211,20 @@ export function AudioRecorder({
   }, [elapsedTime, maxDuration, recordingState, stopRecording]);
 
   const resetRecording = () => {
+    if (playbackRef.current) {
+      playbackRef.current.pause();
+      playbackRef.current.currentTime = 0;
+    }
+    isRecordingRef.current = false;
     cleanup();
     setRecordingState('idle');
     setElapsedTime(0);
     setAudioBlob(null);
     setAudioUrl(null);
     setAudioLevels(new Array(50).fill(0));
+    setRecordedDuration(0);
+    setIsPlaying(false);
+    setPlaybackTime(0);
   };
 
   const submitRecording = () => {
@@ -228,6 +232,49 @@ export function AudioRecorder({
       onRecordingComplete(audioBlob);
     }
   };
+
+  const togglePlayback = () => {
+    if (!playbackRef.current) return;
+
+    if (isPlaying) {
+      playbackRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      playbackRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!playbackRef.current) return;
+    const newTime = parseFloat(e.target.value);
+    playbackRef.current.currentTime = newTime;
+    setPlaybackTime(newTime);
+  };
+
+  // Update playback time as audio plays
+  useEffect(() => {
+    const audio = playbackRef.current;
+    if (!audio) return;
+
+    const updateTime = () => {
+      setPlaybackTime(audio.currentTime);
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setPlaybackTime(0);
+      audio.currentTime = 0;
+    };
+
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateTime);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [audioUrl]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -237,23 +284,43 @@ export function AudioRecorder({
 
   // Permission check on mount
   useEffect(() => {
-    if (permissionGranted === null) {
-      checkPermission();
-    }
-  }, [permissionGranted]);
+    let mounted = true;
+
+    const doCheck = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach((track) => track.stop());
+        if (mounted) {
+          setPermissionGranted(true);
+        }
+      } catch {
+        if (mounted) {
+          setPermissionGranted(false);
+        }
+      }
+    };
+
+    doCheck();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-            recordingState === 'recording'
-              ? 'bg-red-100'
-              : recordingState === 'stopped'
-                ? 'bg-green-100'
-                : 'bg-indigo-100'
-          }`}>
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+              recordingState === 'recording'
+                ? 'bg-red-100'
+                : recordingState === 'stopped'
+                  ? 'bg-green-100'
+                  : 'bg-indigo-100'
+            }`}
+          >
             {recordingState === 'recording' ? (
               <div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
             ) : (
@@ -289,13 +356,15 @@ export function AudioRecorder({
         </div>
 
         {/* Timer */}
-        <div className={`rounded-lg px-4 py-2 font-mono text-lg font-semibold ${
-          recordingState === 'recording'
-            ? elapsedTime >= maxDuration - 30
-              ? 'bg-red-100 text-red-700'
-              : 'bg-red-50 text-red-600'
-            : 'bg-gray-100 text-gray-600'
-        }`}>
+        <div
+          className={`rounded-lg px-4 py-2 font-mono text-lg font-semibold ${
+            recordingState === 'recording'
+              ? elapsedTime >= maxDuration - 30
+                ? 'bg-red-100 text-red-700'
+                : 'bg-red-50 text-red-600'
+              : 'bg-gray-100 text-gray-600'
+          }`}
+        >
           {formatTime(elapsedTime)} / {formatTime(maxDuration)}
         </div>
       </div>
@@ -323,9 +392,7 @@ export function AudioRecorder({
           <div
             key={index}
             className={`w-1 rounded-full transition-all duration-75 ${
-              recordingState === 'recording'
-                ? 'bg-red-400'
-                : 'bg-gray-300'
+              recordingState === 'recording' ? 'bg-red-400' : 'bg-gray-300'
             }`}
             style={{
               height: `${Math.max(8, level * 80)}%`,
@@ -334,15 +401,54 @@ export function AudioRecorder({
         ))}
       </div>
 
-      {/* Playback (when stopped) */}
+      {/* Custom Audio Player (when stopped) */}
       {recordingState === 'stopped' && audioUrl && (
         <div className="mb-6">
-          <audio
-            ref={playbackRef}
-            src={audioUrl}
-            controls
-            className="w-full"
-          />
+          {/* Hidden audio element */}
+          <audio ref={playbackRef} src={audioUrl} preload="auto" />
+
+          {/* Custom player UI */}
+          <div className="flex items-center gap-4 rounded-lg bg-gray-100 p-4">
+            {/* Play/Pause button */}
+            <button
+              onClick={togglePlayback}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-white transition-colors hover:bg-indigo-500"
+            >
+              {isPlaying ? (
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                </svg>
+              ) : (
+                <svg className="ml-0.5 h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              )}
+            </button>
+
+            {/* Time display */}
+            <span className="min-w-[45px] font-mono text-sm text-gray-600">
+              {formatTime(Math.floor(playbackTime))}
+            </span>
+
+            {/* Progress bar */}
+            <div className="relative flex-1">
+              <input
+                type="range"
+                min="0"
+                max={recordedDuration || 1}
+                step="0.1"
+                value={playbackTime}
+                onChange={handleSeek}
+                className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-300 accent-indigo-600 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-indigo-600"
+              />
+            </div>
+
+            {/* Duration display */}
+            <span className="min-w-[45px] font-mono text-sm text-gray-600">
+              {formatTime(recordedDuration)}
+            </span>
+          </div>
         </div>
       )}
 
@@ -423,7 +529,8 @@ export function AudioRecorder({
             <div>
               <p className="font-medium">Microphone access required</p>
               <p className="mt-1 text-sm">
-                Please allow microphone access in your browser settings to record your speaking response.
+                Please allow microphone access in your browser settings to record your speaking
+                response.
               </p>
             </div>
           </div>

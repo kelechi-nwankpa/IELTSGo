@@ -36,9 +36,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ prompts });
   } catch (error) {
     console.error('Error fetching speaking prompts:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch speaking prompts' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch speaking prompts' }, { status: 500 });
   }
 }

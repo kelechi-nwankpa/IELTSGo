@@ -165,11 +165,12 @@ export async function evaluateSpeaking(input: SpeakingEvaluationInput): Promise<
   evaluation: SpeakingEvaluation;
   tokensUsed: number;
 }> {
-  const promptContext = input.part === 2
-    ? `Cue Card:\n${input.prompt.cueCard?.mainTask}\n- ${input.prompt.cueCard?.bulletPoints.join('\n- ')}`
-    : input.prompt.questions
-      ? `Questions:\n${input.prompt.questions.join('\n')}`
-      : `Topic: ${input.prompt.topic}`;
+  const promptContext =
+    input.part === 2
+      ? `Cue Card:\n${input.prompt.cueCard?.mainTask}\n- ${input.prompt.cueCard?.bulletPoints.join('\n- ')}`
+      : input.prompt.questions
+        ? `Questions:\n${input.prompt.questions.join('\n')}`
+        : `Topic: ${input.prompt.topic}`;
 
   const userMessage = `## Speaking Part ${input.part}
 
@@ -179,7 +180,7 @@ ${input.prompt.topic}
 ${promptContext}
 
 ## Response Duration
-${input.duration} seconds (${Math.round(input.duration / 60 * 10) / 10} minutes)
+${input.duration} seconds (${Math.round((input.duration / 60) * 10) / 10} minutes)
 
 ## Transcription
 
