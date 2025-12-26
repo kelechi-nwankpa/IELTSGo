@@ -3,7 +3,7 @@
 This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
-**Last updated:** 2025-12-20
+**Last updated:** 2025-12-26
 **Current phase:** 2 (Reading & Listening) - Complete
 
 Legend:
@@ -163,20 +163,20 @@ Legend:
 - [x] AI explanation on request
 - [x] Explanation caching
 - [x] Transcript reveal
-- [ ] Accent variation
+- [x] Accent variation (metadata)
 
 ### Content Management
 
-- [ ] Admin content upload interface
-- [ ] Reading passage management
-- [ ] Listening audio management
-- [ ] Answer key management
-- [ ] Content tagging (difficulty, type)
+- [x] Admin content upload interface
+- [x] Reading passage management
+- [x] Listening audio management
+- [x] Answer key management
+- [x] Content tagging (difficulty, type)
 
 ### Content Library
 
-- [ ] 10 reading passages (initial)
-- [ ] 10 listening exercises (initial)
+- [x] 10 reading passages (initial)
+- [x] 10 listening exercises (initial)
 - [x] Mix of difficulty levels
 
 ---
@@ -474,7 +474,7 @@ Legend:
 | --------- | ---------------------- | -------- | --------- | -------- |
 | 0         | Foundation             | 30       | 16        | 53%      |
 | 1         | MVP — Writing          | 35       | 15        | 43%      |
-| 2         | Reading & Listening    | 27       | 23        | 85%      |
+| 2         | Reading & Listening    | 27       | 27        | 100%     |
 | 3         | Speaking               | 30       | 0         | 0%       |
 | 4         | Payment & Premium      | 18       | 0         | 0%       |
 | 5         | Task 1 & GT            | 18       | 0         | 0%       |
@@ -482,7 +482,7 @@ Legend:
 | 7         | Test Simulation        | 9        | 0         | 0%       |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **235**  | **54**    | **23%**  |
+| **Total** |                        | **235**  | **58**    | **25%**  |
 
 ---
 

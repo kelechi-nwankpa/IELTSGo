@@ -273,4 +273,585 @@ The commercial application of color psychology is a multi-billion dollar industr
     },
     difficultyBand: 6.5,
   },
+  {
+    id: 'reading-004',
+    title: 'The Science of Sleep',
+    passage: `Sleep is a fundamental biological process that remains partially mysterious to scientists. While we spend roughly one-third of our lives sleeping, researchers are still uncovering the mechanisms and purposes behind this essential activity.
+
+The sleep cycle consists of two main types: rapid eye movement (REM) sleep and non-REM sleep, which is further divided into three stages. Non-REM sleep begins with light sleep in stage one, progresses to deeper sleep in stage two, and reaches its deepest point in stage three, also known as slow-wave sleep. A complete sleep cycle lasts approximately 90 minutes, and most adults experience four to six cycles per night.
+
+During REM sleep, the brain becomes highly active, exhibiting patterns similar to wakefulness. This is when most vivid dreaming occurs. Interestingly, the body becomes temporarily paralyzed during REM sleep, a phenomenon called atonia, which prevents us from acting out our dreams. This paralysis affects most voluntary muscles but spares the diaphragm, allowing breathing to continue.
+
+Sleep serves multiple crucial functions. The glymphatic system, discovered in 2012, becomes highly active during sleep, clearing toxic waste products from the brain, including beta-amyloid proteins associated with Alzheimer's disease. Sleep also plays a vital role in memory consolidation, transferring information from short-term to long-term storage and strengthening neural connections.
+
+The consequences of sleep deprivation are severe and far-reaching. Studies show that going without sleep for 17 hours impairs cognitive function as much as having a blood alcohol level of 0.05%. Chronic sleep deprivation has been linked to increased risks of obesity, diabetes, cardiovascular disease, and weakened immune function.
+
+Modern lifestyles present numerous challenges to healthy sleep. Artificial lighting, particularly blue light from screens, can suppress melatonin production and delay sleep onset. The average adult now sleeps approximately one hour less per night than people did a century ago, raising concerns about long-term public health implications.`,
+    questions: [
+      {
+        id: 'r4-q1',
+        type: 'multiple_choice',
+        text: 'How long does a complete sleep cycle typically last?',
+        options: [
+          'A) 45 minutes',
+          'B) 60 minutes',
+          'C) 90 minutes',
+          'D) 120 minutes',
+        ],
+      },
+      {
+        id: 'r4-q2',
+        type: 'multiple_choice',
+        text: 'What prevents people from acting out their dreams during REM sleep?',
+        options: [
+          'A) Deep unconsciousness',
+          'B) Temporary muscle paralysis called atonia',
+          'C) Reduced brain activity',
+          'D) Slow breathing patterns',
+        ],
+      },
+      {
+        id: 'r4-q3',
+        type: 'true_false_ng',
+        text: 'The glymphatic system was discovered in the early 2000s.',
+      },
+      {
+        id: 'r4-q4',
+        type: 'true_false_ng',
+        text: 'Sleep helps transfer information from short-term to long-term memory.',
+      },
+      {
+        id: 'r4-q5',
+        type: 'true_false_ng',
+        text: 'Modern adults sleep more than people did a century ago.',
+      },
+      {
+        id: 'r4-q6',
+        type: 'short_answer',
+        text: 'What toxic protein associated with Alzheimer\'s is cleared from the brain during sleep?',
+        maxWords: 2,
+      },
+      {
+        id: 'r4-q7',
+        type: 'short_answer',
+        text: 'How many sleep cycles do most adults experience per night?',
+        maxWords: 3,
+      },
+      {
+        id: 'r4-q8',
+        type: 'short_answer',
+        text: 'What type of light from screens can suppress melatonin production?',
+        maxWords: 2,
+      },
+    ],
+    answers: {
+      'r4-q1': 'C',
+      'r4-q2': 'B',
+      'r4-q3': 'FALSE',
+      'r4-q4': 'TRUE',
+      'r4-q5': 'FALSE',
+      'r4-q6': 'beta-amyloid',
+      'r4-q7': 'four to six',
+      'r4-q8': 'blue light',
+    },
+    difficultyBand: 6.5,
+  },
+  {
+    id: 'reading-005',
+    title: 'Renewable Energy Innovations',
+    passage: `The transition to renewable energy sources represents one of the most significant technological and economic shifts in human history. As concerns about climate change intensify and fossil fuel reserves diminish, innovations in solar, wind, and other renewable technologies are accelerating at an unprecedented pace.
+
+Solar photovoltaic technology has experienced remarkable cost reductions over the past decade. The price of solar panels has fallen by approximately 90% since 2010, making solar power cost-competitive with traditional energy sources in many regions. Advances in perovskite solar cells, which can be manufactured at lower temperatures and potentially achieve higher efficiencies than silicon cells, promise to further reduce costs.
+
+Wind power has similarly transformed. Modern wind turbines are significantly larger and more efficient than their predecessors. Offshore wind farms, which can harness stronger and more consistent winds over the ocean, are expanding rapidly. The world's largest offshore wind turbines now feature blades spanning over 100 meters, capable of generating enough electricity to power thousands of homes.
+
+Energy storage remains a critical challenge for renewable energy adoption. Lithium-ion batteries have dominated the market, but their cost and limited lifespan present obstacles. Emerging technologies such as solid-state batteries, flow batteries, and hydrogen storage systems offer potential solutions. Some researchers are exploring gravity-based storage systems that lift heavy weights when energy is abundant and lower them to generate electricity when needed.
+
+Grid integration presents another significant hurdle. Renewable energy sources are inherently variable—the sun does not always shine, and the wind does not always blow. Smart grid technologies that can balance supply and demand in real-time are essential for managing this variability. Artificial intelligence and machine learning are increasingly being deployed to predict renewable energy production and optimize grid operations.
+
+Despite challenges, the growth of renewable energy has exceeded most predictions. In 2020, renewables accounted for approximately 90% of new electricity generation capacity worldwide, signaling a fundamental shift in how humanity produces energy.`,
+    questions: [
+      {
+        id: 'r5-q1',
+        type: 'multiple_choice',
+        text: 'By how much have solar panel prices fallen since 2010?',
+        options: [
+          'A) Approximately 50%',
+          'B) Approximately 70%',
+          'C) Approximately 90%',
+          'D) Approximately 95%',
+        ],
+      },
+      {
+        id: 'r5-q2',
+        type: 'multiple_choice',
+        text: 'What technology is being used to predict renewable energy production?',
+        options: [
+          'A) Quantum computing',
+          'B) Artificial intelligence and machine learning',
+          'C) Blockchain',
+          'D) Nuclear fusion',
+        ],
+      },
+      {
+        id: 'r5-q3',
+        type: 'true_false_ng',
+        text: 'Perovskite solar cells require higher manufacturing temperatures than silicon cells.',
+      },
+      {
+        id: 'r5-q4',
+        type: 'true_false_ng',
+        text: 'Offshore wind farms can access stronger and more consistent winds.',
+      },
+      {
+        id: 'r5-q5',
+        type: 'true_false_ng',
+        text: 'Lithium-ion batteries have no limitations for renewable energy storage.',
+      },
+      {
+        id: 'r5-q6',
+        type: 'short_answer',
+        text: 'What percentage of new electricity generation capacity was renewable in 2020?',
+        maxWords: 3,
+      },
+      {
+        id: 'r5-q7',
+        type: 'short_answer',
+        text: 'How long can the blades of the world\'s largest offshore wind turbines span?',
+        maxWords: 3,
+      },
+      {
+        id: 'r5-q8',
+        type: 'short_answer',
+        text: 'What type of storage system lifts heavy weights when energy is abundant?',
+        maxWords: 3,
+      },
+    ],
+    answers: {
+      'r5-q1': 'C',
+      'r5-q2': 'B',
+      'r5-q3': 'FALSE',
+      'r5-q4': 'TRUE',
+      'r5-q5': 'FALSE',
+      'r5-q6': 'approximately 90%',
+      'r5-q7': 'over 100 meters',
+      'r5-q8': 'gravity-based storage',
+    },
+    difficultyBand: 7.0,
+  },
+  {
+    id: 'reading-006',
+    title: 'The Evolution of Language',
+    passage: `Human language stands as one of evolution's most remarkable achievements. Unlike the communication systems of other species, human language possesses unique properties that enable infinite expressiveness from a finite set of elements—a quality linguists call "discrete infinity."
+
+The origins of human language remain hotly debated among scientists. Some researchers argue for a gradual evolution stretching back millions of years, while others propose that language emerged relatively suddenly, perhaps as recently as 100,000 years ago. The discovery of the FOXP2 gene, sometimes called the "language gene," has provided insights, though its role in language development is now understood to be more complex than initially thought.
+
+All human languages share fundamental structural properties, leading linguist Noam Chomsky to propose the existence of a "Universal Grammar"—an innate biological capacity for language that all humans possess. This theory suggests that children are born with an unconscious knowledge of the basic principles underlying all languages, which explains the remarkable speed and uniformity with which children acquire language.
+
+Languages are not static entities but evolve continuously. Sound changes, grammatical shifts, and vocabulary expansion occur across generations. English, for instance, has transformed dramatically from its Old English origins, when it more closely resembled modern German. The Great Vowel Shift, occurring between roughly 1400 and 1700, fundamentally altered English pronunciation and explains many of the irregularities in modern English spelling.
+
+Language death represents a significant concern for linguists. It is estimated that of the approximately 7,000 languages currently spoken worldwide, nearly half may disappear by the end of this century. When a language dies, humanity loses not just a means of communication but also unique perspectives on human experience encoded in that language's structure and vocabulary.
+
+Technology is both threatening and preserving linguistic diversity. While global communication platforms tend to favor dominant languages like English and Mandarin, digital tools are also being developed to document and teach endangered languages, potentially slowing or even reversing their decline.`,
+    questions: [
+      {
+        id: 'r6-q1',
+        type: 'multiple_choice',
+        text: 'What term describes the ability to create infinite expressions from finite elements?',
+        options: [
+          'A) Universal Grammar',
+          'B) Discrete infinity',
+          'C) Language acquisition',
+          'D) Structural linguistics',
+        ],
+      },
+      {
+        id: 'r6-q2',
+        type: 'multiple_choice',
+        text: 'When did the Great Vowel Shift occur?',
+        options: [
+          'A) 1000-1200',
+          'B) 1200-1400',
+          'C) 1400-1700',
+          'D) 1700-1900',
+        ],
+      },
+      {
+        id: 'r6-q3',
+        type: 'true_false_ng',
+        text: 'All scientists agree that language evolved gradually over millions of years.',
+      },
+      {
+        id: 'r6-q4',
+        type: 'true_false_ng',
+        text: 'Noam Chomsky proposed the theory of Universal Grammar.',
+      },
+      {
+        id: 'r6-q5',
+        type: 'true_false_ng',
+        text: 'Technology can only accelerate the decline of endangered languages.',
+      },
+      {
+        id: 'r6-q6',
+        type: 'short_answer',
+        text: 'What gene is sometimes called the "language gene"?',
+        maxWords: 1,
+      },
+      {
+        id: 'r6-q7',
+        type: 'short_answer',
+        text: 'How many languages are currently spoken worldwide?',
+        maxWords: 3,
+      },
+      {
+        id: 'r6-q8',
+        type: 'short_answer',
+        text: 'What language did Old English more closely resemble?',
+        maxWords: 2,
+      },
+    ],
+    answers: {
+      'r6-q1': 'B',
+      'r6-q2': 'C',
+      'r6-q3': 'FALSE',
+      'r6-q4': 'TRUE',
+      'r6-q5': 'FALSE',
+      'r6-q6': 'FOXP2',
+      'r6-q7': 'approximately 7,000',
+      'r6-q8': 'modern German',
+    },
+    difficultyBand: 7.0,
+  },
+  {
+    id: 'reading-007',
+    title: 'Coral Reef Ecosystems',
+    passage: `Coral reefs are among the most biodiverse ecosystems on Earth, often called the "rainforests of the sea." Although they cover less than one percent of the ocean floor, coral reefs support an estimated 25 percent of all marine species, making them crucial to the health of our oceans.
+
+Coral reefs are built by tiny animals called coral polyps, which secrete calcium carbonate to form hard external skeletons. These polyps have a symbiotic relationship with microscopic algae called zooxanthellae, which live within the coral tissue. The algae provide the coral with food through photosynthesis and give reefs their vibrant colors, while the coral provides the algae with shelter and access to sunlight.
+
+The economic value of coral reefs is substantial. They provide food security for approximately 500 million people worldwide who depend on reef fish for protein. Coral reefs also protect coastlines from storms and erosion, a service valued at billions of dollars annually. Additionally, many pharmaceutical compounds have been developed from reef organisms, including treatments for cancer, HIV, and cardiovascular disease.
+
+Climate change poses the greatest threat to coral reefs. Rising ocean temperatures cause coral bleaching, a stress response in which corals expel their symbiotic algae. Without the algae, corals turn white and can die if temperatures remain elevated. The Great Barrier Reef has experienced several mass bleaching events in recent years, with the 2016 and 2017 events affecting approximately 50 percent of the reef.
+
+Ocean acidification, caused by the absorption of carbon dioxide from the atmosphere, further threatens coral survival. As seawater becomes more acidic, it becomes harder for corals to build and maintain their calcium carbonate skeletons. Scientists predict that by 2050, most coral reefs will experience severe annual bleaching under current emission trajectories.
+
+Conservation efforts are underway worldwide. Marine protected areas, coral nurseries, and assisted gene flow programs aim to enhance coral resilience. Some researchers are exploring "super corals" that can withstand higher temperatures, while others are developing techniques to restore damaged reefs through coral transplantation.`,
+    questions: [
+      {
+        id: 'r7-q1',
+        type: 'multiple_choice',
+        text: 'What percentage of marine species do coral reefs support?',
+        options: [
+          'A) Approximately 10%',
+          'B) Approximately 25%',
+          'C) Approximately 40%',
+          'D) Approximately 50%',
+        ],
+      },
+      {
+        id: 'r7-q2',
+        type: 'multiple_choice',
+        text: 'What is the name of the microscopic algae living within coral tissue?',
+        options: [
+          'A) Zooplankton',
+          'B) Phytoplankton',
+          'C) Zooxanthellae',
+          'D) Cyanobacteria',
+        ],
+      },
+      {
+        id: 'r7-q3',
+        type: 'true_false_ng',
+        text: 'Coral reefs cover approximately 10% of the ocean floor.',
+      },
+      {
+        id: 'r7-q4',
+        type: 'true_false_ng',
+        text: 'Coral bleaching occurs when corals expel their symbiotic algae.',
+      },
+      {
+        id: 'r7-q5',
+        type: 'true_false_ng',
+        text: 'Ocean acidification makes it easier for corals to build their skeletons.',
+      },
+      {
+        id: 'r7-q6',
+        type: 'short_answer',
+        text: 'How many people depend on reef fish for protein?',
+        maxWords: 4,
+      },
+      {
+        id: 'r7-q7',
+        type: 'short_answer',
+        text: 'What substance do coral polyps secrete to build their skeletons?',
+        maxWords: 2,
+      },
+      {
+        id: 'r7-q8',
+        type: 'short_answer',
+        text: 'What percentage of the Great Barrier Reef was affected by bleaching in 2016-2017?',
+        maxWords: 3,
+      },
+    ],
+    answers: {
+      'r7-q1': 'B',
+      'r7-q2': 'C',
+      'r7-q3': 'FALSE',
+      'r7-q4': 'TRUE',
+      'r7-q5': 'FALSE',
+      'r7-q6': 'approximately 500 million',
+      'r7-q7': 'calcium carbonate',
+      'r7-q8': 'approximately 50 percent',
+    },
+    difficultyBand: 6.5,
+  },
+  {
+    id: 'reading-008',
+    title: 'Artificial Intelligence in Medicine',
+    passage: `Artificial intelligence is transforming healthcare in ways that seemed like science fiction just a decade ago. From diagnosing diseases to developing new drugs, AI systems are increasingly augmenting—and in some cases outperforming—human medical expertise.
+
+Medical imaging represents one of AI's most successful healthcare applications. Deep learning algorithms can now detect certain cancers, eye diseases, and cardiovascular conditions from medical images with accuracy matching or exceeding that of specialist physicians. In 2020, an AI system developed by Google Health demonstrated the ability to detect breast cancer from mammograms more accurately than expert radiologists, reducing both false positives and false negatives.
+
+Drug discovery, traditionally a process lasting 10-15 years and costing billions of dollars, is being accelerated by AI. Machine learning algorithms can analyze vast databases of molecular structures and biological data to identify promising drug candidates. In 2020, an AI system called AlphaFold, developed by DeepMind, solved a 50-year-old problem in biology by accurately predicting protein structures, a breakthrough with enormous implications for drug development.
+
+Personalized medicine is another frontier where AI shows promise. By analyzing an individual's genetic data, medical history, and lifestyle factors, AI systems can help predict disease risk and recommend tailored prevention strategies. Some hospitals now use AI to predict which patients in emergency departments are most likely to deteriorate, enabling earlier intervention.
+
+However, the integration of AI into healthcare faces significant challenges. Questions about data privacy, algorithmic bias, and medical liability remain unresolved. AI systems trained predominantly on data from certain populations may perform less accurately for underrepresented groups. Additionally, the "black box" nature of some AI algorithms makes it difficult for physicians to understand and explain their recommendations.
+
+The future likely involves AI working alongside human clinicians rather than replacing them entirely. While AI excels at pattern recognition and processing large datasets, human physicians bring empathy, ethical judgment, and the ability to consider contextual factors that may not be captured in data.`,
+    questions: [
+      {
+        id: 'r8-q1',
+        type: 'multiple_choice',
+        text: 'How long does traditional drug discovery typically take?',
+        options: [
+          'A) 2-5 years',
+          'B) 5-10 years',
+          'C) 10-15 years',
+          'D) 15-20 years',
+        ],
+      },
+      {
+        id: 'r8-q2',
+        type: 'multiple_choice',
+        text: 'What problem did AlphaFold solve in 2020?',
+        options: [
+          'A) Gene sequencing',
+          'B) Protein structure prediction',
+          'C) Cancer detection',
+          'D) Drug interaction analysis',
+        ],
+      },
+      {
+        id: 'r8-q3',
+        type: 'true_false_ng',
+        text: 'AI systems always perform equally well across all population groups.',
+      },
+      {
+        id: 'r8-q4',
+        type: 'true_false_ng',
+        text: 'Google Health\'s AI system detected breast cancer more accurately than expert radiologists.',
+      },
+      {
+        id: 'r8-q5',
+        type: 'true_false_ng',
+        text: 'AI is expected to completely replace human physicians in the near future.',
+      },
+      {
+        id: 'r8-q6',
+        type: 'short_answer',
+        text: 'What company developed AlphaFold?',
+        maxWords: 1,
+      },
+      {
+        id: 'r8-q7',
+        type: 'short_answer',
+        text: 'What type of medical imaging technology is mentioned in relation to breast cancer detection?',
+        maxWords: 1,
+      },
+      {
+        id: 'r8-q8',
+        type: 'short_answer',
+        text: 'What term describes the difficulty of understanding how some AI algorithms reach their conclusions?',
+        maxWords: 2,
+      },
+    ],
+    answers: {
+      'r8-q1': 'C',
+      'r8-q2': 'B',
+      'r8-q3': 'FALSE',
+      'r8-q4': 'TRUE',
+      'r8-q5': 'FALSE',
+      'r8-q6': 'DeepMind',
+      'r8-q7': 'mammograms',
+      'r8-q8': 'black box',
+    },
+    difficultyBand: 7.5,
+  },
+  {
+    id: 'reading-009',
+    title: 'Ancient Trade Routes',
+    passage: `The ancient trade routes that crisscrossed continents were far more than commercial arteries—they were conduits for cultural exchange, technological transfer, and the spread of ideas that shaped civilizations. The most famous of these, the Silk Road, connected East and West for nearly two millennia.
+
+The Silk Road was not a single route but a complex network of land and sea passages linking China to the Mediterranean. Named by German geographer Ferdinand von Richthofen in 1877, these routes carried not only silk but also spices, precious metals, glassware, and countless other goods. Perhaps more importantly, they facilitated the exchange of religions, languages, and knowledge.
+
+Buddhism spread from India to China along these routes, while Islam later traveled in both directions. Paper-making technology, invented in China around 105 CE, reached the Arab world by the 8th century and Europe by the 11th century, revolutionizing knowledge preservation and dissemination. Gunpowder, the compass, and printing technology similarly traveled westward along these ancient highways.
+
+The maritime equivalent of the Silk Road was equally significant. The Indian Ocean trade network connected East Africa, the Arabian Peninsula, the Indian subcontinent, and Southeast Asia. Monsoon winds enabled predictable sailing patterns, and port cities like Kilwa, Aden, Calicut, and Malacca became wealthy centers of commerce and cultural fusion.
+
+These trade routes also had darker consequences. The Black Death, which killed an estimated 30-60 percent of Europe's population in the 14th century, is believed to have traveled along Silk Road trade routes from Central Asia. Disease exchange would later become even more devastating when European colonization connected the Eastern and Western hemispheres.
+
+The legacy of ancient trade routes persists today. China's Belt and Road Initiative, announced in 2013, explicitly evokes the Silk Road in its name and ambition, seeking to recreate these ancient connections through modern infrastructure. The patterns of cultural exchange established millennia ago continue to influence our interconnected world.`,
+    questions: [
+      {
+        id: 'r9-q1',
+        type: 'multiple_choice',
+        text: 'Who coined the term "Silk Road"?',
+        options: [
+          'A) Marco Polo',
+          'B) Ferdinand von Richthofen',
+          'C) A Chinese emperor',
+          'D) An Arab merchant',
+        ],
+      },
+      {
+        id: 'r9-q2',
+        type: 'multiple_choice',
+        text: 'When did paper-making technology reach Europe?',
+        options: [
+          'A) The 8th century',
+          'B) The 9th century',
+          'C) The 10th century',
+          'D) The 11th century',
+        ],
+      },
+      {
+        id: 'r9-q3',
+        type: 'true_false_ng',
+        text: 'The Silk Road was a single, well-defined route.',
+      },
+      {
+        id: 'r9-q4',
+        type: 'true_false_ng',
+        text: 'Buddhism spread from India to China along the Silk Road.',
+      },
+      {
+        id: 'r9-q5',
+        type: 'true_false_ng',
+        text: 'The Black Death originated in Europe.',
+      },
+      {
+        id: 'r9-q6',
+        type: 'short_answer',
+        text: 'What percentage of Europe\'s population is estimated to have died from the Black Death?',
+        maxWords: 3,
+      },
+      {
+        id: 'r9-q7',
+        type: 'short_answer',
+        text: 'When was China\'s Belt and Road Initiative announced?',
+        maxWords: 1,
+      },
+      {
+        id: 'r9-q8',
+        type: 'short_answer',
+        text: 'What natural phenomenon enabled predictable sailing patterns in the Indian Ocean?',
+        maxWords: 2,
+      },
+    ],
+    answers: {
+      'r9-q1': 'B',
+      'r9-q2': 'D',
+      'r9-q3': 'FALSE',
+      'r9-q4': 'TRUE',
+      'r9-q5': 'FALSE',
+      'r9-q6': '30-60 percent',
+      'r9-q7': '2013',
+      'r9-q8': 'monsoon winds',
+    },
+    difficultyBand: 6.5,
+  },
+  {
+    id: 'reading-010',
+    title: 'The Psychology of Decision Making',
+    passage: `Human decision-making is far less rational than we often assume. Decades of research in behavioral economics and cognitive psychology have revealed systematic biases and shortcuts that influence our choices, frequently leading us away from optimal outcomes.
+
+Daniel Kahneman and Amos Tversky pioneered much of this research, introducing the concept of cognitive heuristics—mental shortcuts that help us make quick decisions but can lead to predictable errors. Their work, which earned Kahneman a Nobel Prize in 2002, fundamentally changed our understanding of human judgment and choice.
+
+One of the most influential findings is the distinction between two modes of thinking: System 1 and System 2. System 1 operates automatically and quickly, with little effort and no sense of voluntary control. System 2 allocates attention to effortful mental activities, including complex computations. While System 2 is capable of logical reasoning, it is also lazy and often accepts the intuitive suggestions of System 1 without careful scrutiny.
+
+Loss aversion represents another crucial discovery. Research consistently shows that losses feel approximately twice as powerful as equivalent gains. This asymmetry explains why people often reject favorable gambles and why the threat of losing something motivates behavior more strongly than the prospect of gaining something of equal value.
+
+The framing effect demonstrates how the presentation of information influences decisions. People react differently to identical choices depending on whether they are framed as gains or losses. Medical treatments with a "90 percent survival rate" are more favorably viewed than those with a "10 percent mortality rate," despite describing the same outcome.
+
+Understanding these biases has practical implications. Behavioral insights are now used in public policy through "nudge" interventions that structure choices to guide people toward better outcomes without restricting their freedom. Businesses apply these principles to marketing and product design, while individuals can use awareness of their biases to make more deliberate decisions.`,
+    questions: [
+      {
+        id: 'r10-q1',
+        type: 'multiple_choice',
+        text: 'Who won a Nobel Prize for work on cognitive biases in 2002?',
+        options: [
+          'A) Amos Tversky',
+          'B) Daniel Kahneman',
+          'C) Both Kahneman and Tversky',
+          'D) Richard Thaler',
+        ],
+      },
+      {
+        id: 'r10-q2',
+        type: 'multiple_choice',
+        text: 'According to the passage, how powerful do losses feel compared to equivalent gains?',
+        options: [
+          'A) Equally powerful',
+          'B) 1.5 times as powerful',
+          'C) Approximately twice as powerful',
+          'D) Three times as powerful',
+        ],
+      },
+      {
+        id: 'r10-q3',
+        type: 'true_false_ng',
+        text: 'System 2 thinking operates automatically with little effort.',
+      },
+      {
+        id: 'r10-q4',
+        type: 'true_false_ng',
+        text: 'The framing effect shows that presentation of information can influence decisions.',
+      },
+      {
+        id: 'r10-q5',
+        type: 'true_false_ng',
+        text: 'Nudge interventions restrict people\'s freedom of choice.',
+      },
+      {
+        id: 'r10-q6',
+        type: 'short_answer',
+        text: 'What term describes the mental shortcuts that help us make quick decisions?',
+        maxWords: 2,
+      },
+      {
+        id: 'r10-q7',
+        type: 'short_answer',
+        text: 'Which system of thinking is described as "lazy" in the passage?',
+        maxWords: 2,
+      },
+      {
+        id: 'r10-q8',
+        type: 'short_answer',
+        text: 'What field of study is mentioned alongside cognitive psychology in the first paragraph?',
+        maxWords: 2,
+      },
+    ],
+    answers: {
+      'r10-q1': 'B',
+      'r10-q2': 'C',
+      'r10-q3': 'FALSE',
+      'r10-q4': 'TRUE',
+      'r10-q5': 'FALSE',
+      'r10-q6': 'cognitive heuristics',
+      'r10-q7': 'System 2',
+      'r10-q8': 'behavioral economics',
+    },
+    difficultyBand: 7.0,
+  },
 ];
