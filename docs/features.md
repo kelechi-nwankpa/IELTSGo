@@ -3,8 +3,8 @@
 This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
-**Last updated:** 2025-01-19
-**Current phase:** 0 (Foundation)
+**Last updated:** 2025-12-20
+**Current phase:** 2 (Reading & Listening) - Complete
 
 Legend:
 
@@ -42,22 +42,22 @@ Legend:
 
 ### Authentication
 
-- [ ] Auth provider integrated (NextAuth/Clerk/etc.)
-- [ ] Email/password registration
+- [x] Auth provider integrated (NextAuth/Clerk/etc.)
+- [x] Email/password registration
 - [ ] Email verification flow
 - [ ] Password reset flow
-- [ ] Social login (Google)
-- [ ] JWT session management
-- [ ] Protected route middleware
+- [x] Social login (Google)
+- [x] JWT session management
+- [x] Protected route middleware
 - [ ] Account deletion (GDPR)
 
 ### API Structure
 
-- [ ] API route structure established
-- [ ] Error handling middleware
+- [x] API route structure established
+- [x] Error handling middleware
 - [ ] Request validation (Zod)
 - [ ] Rate limiting setup
-- [ ] API response formatting
+- [x] API response formatting
 
 ### DevOps
 
@@ -119,10 +119,10 @@ Legend:
 
 ### User Dashboard
 
-- [ ] Basic dashboard layout
-- [ ] Recent evaluations list
+- [x] Basic dashboard layout
+- [x] Recent evaluations list
 - [ ] Quota usage display
-- [ ] Quick start writing button
+- [x] Quick start writing button
 
 ### Landing Page
 
@@ -138,31 +138,31 @@ Legend:
 
 ### Reading Module
 
-- [ ] Passage display component
-- [ ] Timer component
-- [ ] Question type: Multiple choice
-- [ ] Question type: True/False/Not Given
-- [ ] Question type: Matching headings
-- [ ] Question type: Fill-in-the-blank
-- [ ] Answer submission
-- [ ] Auto-scoring via answer key
-- [ ] Score display
-- [ ] AI explanation on request
-- [ ] Explanation caching
-- [ ] Review incorrect answers
+- [x] Passage display component
+- [x] Timer component
+- [x] Question type: Multiple choice
+- [x] Question type: True/False/Not Given
+- [x] Question type: Matching headings
+- [x] Question type: Fill-in-the-blank
+- [x] Answer submission
+- [x] Auto-scoring via answer key
+- [x] Score display
+- [x] AI explanation on request
+- [x] Explanation caching
+- [x] Review incorrect answers
 
 ### Listening Module
 
-- [ ] Audio player component
-- [ ] Playback controls (play, pause, seek)
-- [ ] Volume control
-- [ ] Question display synced with audio
-- [ ] Answer submission
-- [ ] Auto-scoring
-- [ ] Score display
-- [ ] AI explanation on request
-- [ ] Explanation caching
-- [ ] Transcript reveal
+- [x] Audio player component
+- [x] Playback controls (play, pause, seek)
+- [x] Volume control
+- [x] Question display synced with audio
+- [x] Answer submission
+- [x] Auto-scoring
+- [x] Score display
+- [x] AI explanation on request
+- [x] Explanation caching
+- [x] Transcript reveal
 - [ ] Accent variation
 
 ### Content Management
@@ -177,7 +177,7 @@ Legend:
 
 - [ ] 10 reading passages (initial)
 - [ ] 10 listening exercises (initial)
-- [ ] Mix of difficulty levels
+- [x] Mix of difficulty levels
 
 ---
 
@@ -472,9 +472,9 @@ Legend:
 
 | Phase     | Name                   | Features | Completed | Progress |
 | --------- | ---------------------- | -------- | --------- | -------- |
-| 0         | Foundation             | 30       | 0         | 0%       |
-| 1         | MVP — Writing          | 35       | 0         | 0%       |
-| 2         | Reading & Listening    | 27       | 0         | 0%       |
+| 0         | Foundation             | 30       | 16        | 53%      |
+| 1         | MVP — Writing          | 35       | 15        | 43%      |
+| 2         | Reading & Listening    | 27       | 23        | 85%      |
 | 3         | Speaking               | 30       | 0         | 0%       |
 | 4         | Payment & Premium      | 18       | 0         | 0%       |
 | 5         | Task 1 & GT            | 18       | 0         | 0%       |
@@ -482,7 +482,7 @@ Legend:
 | 7         | Test Simulation        | 9        | 0         | 0%       |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **235**  | **0**     | **0%**   |
+| **Total** |                        | **235**  | **54**    | **23%**  |
 
 ---
 

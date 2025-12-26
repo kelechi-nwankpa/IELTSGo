@@ -139,11 +139,13 @@ AI usage must be economically sustainable. See `/docs/ai-cost-strategy.md` for d
 When working in this repository, Claude should:
 
 1. **Respect this constitution.** All suggestions must align with stated goals and constraints.
-2. **Refer to `/ai/prompts/`** for current prompt implementations.
-3. **Check `/docs/roadmap.md`** before proposing new features.
-4. **Enforce cost rules** when designing AI features.
-5. **Maintain structured outputs.** All AI responses must be parseable JSON where specified.
-6. **Flag scope creep.** If a request contradicts non-goals, say so.
+2. **ALWAYS read `/docs/features.md` first.** This is the authoritative feature tracker with all phases (0-9). Before starting any work, read this file to understand what's built, what's in progress, and what's next. Update checkboxes as features are completed.
+3. **Refer to `/ai/prompts/`** for current prompt implementations.
+4. **Check `/docs/roadmap.md`** before proposing new features.
+5. **Enforce cost rules** when designing AI features.
+6. **Maintain structured outputs.** All AI responses must be parseable JSON where specified.
+7. **Flag scope creep.** If a request contradicts non-goals, say so.
+8. **Update `/docs/features.md`** when completing features. Mark items `[x]` when done, `[~]` when in progress.
 
 ---
 
