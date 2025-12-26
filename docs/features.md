@@ -4,7 +4,7 @@ This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
 **Last updated:** 2025-12-26
-**Current phase:** 4 (Payment & Premium) - Complete
+**Current phase:** 5 (Task 1 & General Training) - In Progress
 
 Legend:
 
@@ -277,33 +277,41 @@ Legend:
 
 ### Task 1 Academic
 
-- [ ] Chart/graph description prompts
-- [ ] Process diagram prompts
-- [ ] Map prompts
-- [ ] Multiple data set prompts
-- [ ] Task 1 Academic evaluation prompt
-- [ ] Minimum 20 Task 1 Academic items
-- [ ] Visual prompt handling (graphs)
+- [x] Chart/graph description prompts (10 line graphs, 8 bar charts)
+- [x] Process diagram prompts (4 process diagrams)
+- [x] Map prompts (3 maps)
+- [x] Multiple data set prompts (5 pie charts, 4 tables, 2 mixed)
+- [x] Task 1 Academic evaluation prompt
+- [x] Minimum 20 Task 1 Academic items (36 total)
+- [~] Visual prompt handling (SVG placeholders created, needs full set)
 
 ### Task 1 General Training
 
-- [ ] Formal letter prompts
-- [ ] Semi-formal letter prompts
-- [ ] Informal letter prompts
-- [ ] Task 1 GT evaluation prompt
-- [ ] Minimum 20 Task 1 GT items
+- [x] Formal letter prompts (11 prompts)
+- [x] Semi-formal letter prompts (11 prompts)
+- [x] Informal letter prompts (10 prompts)
+- [x] Task 1 GT evaluation prompt
+- [x] Minimum 20 Task 1 GT items (32 total)
 
 ### Task 2 General Training
 
-- [ ] GT-specific essay prompts
-- [ ] Prompt calibration for GT
-- [ ] Minimum 20 Task 2 GT items
+- [x] GT-specific essay prompts (34 prompts)
+- [x] Prompt calibration for GT
+- [x] Minimum 20 Task 2 GT items (34 total)
 
 ### UI Updates
 
-- [ ] Task type selector (Task 1 vs Task 2)
-- [ ] Test type selector (Academic vs GT)
-- [ ] Appropriate prompt display per type
+- [x] Task type selector (Task 1 vs Task 2)
+- [x] Test type selector (Academic vs GT)
+- [x] Appropriate prompt display per type
+- [x] Back to Dashboard navigation on Writing page
+- [x] Back to Dashboard navigation on Speaking page
+
+### Pending
+
+- [ ] Create remaining SVG images for Task 1 Academic visuals
+- [ ] Run database seed to populate new prompts
+- [ ] Update dashboard to show Task 1 writing history
 
 ---
 
@@ -477,12 +485,12 @@ Legend:
 | 2         | Reading & Listening    | 27       | 27        | 100%     |
 | 3         | Speaking               | 30       | 30        | 100%     |
 | 4         | Payment & Premium      | 18       | 18        | 100%     |
-| 5         | Task 1 & GT            | 18       | 0         | 0%       |
+| 5         | Task 1 & GT            | 21       | 18        | 86%      |
 | 6         | Study Plans & Progress | 24       | 0         | 0%       |
 | 7         | Test Simulation        | 9        | 0         | 0%       |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **235**  | **118**   | **50%**  |
+| **Total** |                        | **238**  | **136**   | **57%**  |
 
 ---
 
