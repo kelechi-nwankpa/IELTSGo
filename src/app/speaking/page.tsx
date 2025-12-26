@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { SpeakingTrends } from '@/components/speaking/SpeakingTrends';
 
 interface SpeakingPrompt {
   id: string;
@@ -287,6 +288,12 @@ export default function SpeakingPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Progress Trends */}
+        <div className="mt-8">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Your Speaking Progress</h2>
+          <SpeakingTrends />
         </div>
       </div>
     </div>

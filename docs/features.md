@@ -4,7 +4,7 @@ This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
 **Last updated:** 2025-12-26
-**Current phase:** 3 (Speaking Module) - In Progress
+**Current phase:** 3 (Speaking Module) - Complete
 
 Legend:
 
@@ -198,7 +198,7 @@ Legend:
 - [x] Audio upload handling
 - [x] Transcription processing
 - [x] Transcription display
-- [ ] Transcription editing (optional)
+- [x] Transcription editing (optional)
 
 ### AI Evaluation
 
@@ -215,10 +215,10 @@ Legend:
 
 - [x] Words per minute
 - [x] Filler word detection
-- [ ] Repeated word detection
-- [ ] Pause inference
-- [ ] Sentence variety scoring
-- [ ] Trend tracking
+- [x] Repeated word detection
+- [x] Pause inference
+- [x] Sentence variety scoring
+- [x] Trend tracking
 
 ### Speaking Parts
 
@@ -475,14 +475,14 @@ Legend:
 | 0         | Foundation             | 30       | 16        | 53%      |
 | 1         | MVP — Writing          | 35       | 15        | 43%      |
 | 2         | Reading & Listening    | 27       | 27        | 100%     |
-| 3         | Speaking               | 30       | 25        | 83%      |
+| 3         | Speaking               | 30       | 30        | 100%     |
 | 4         | Payment & Premium      | 18       | 0         | 0%       |
 | 5         | Task 1 & GT            | 18       | 0         | 0%       |
 | 6         | Study Plans & Progress | 24       | 0         | 0%       |
 | 7         | Test Simulation        | 9        | 0         | 0%       |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **235**  | **83**    | **35%**  |
+| **Total** |                        | **235**  | **88**    | **37%**  |
 
 ---
 

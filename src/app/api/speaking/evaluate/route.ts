@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { transcribeAudio } from '@/lib/ai/transcription';
 import { evaluateSpeaking } from '@/lib/ai/speaking-evaluator';
+import { analyzeSpeech } from '@/lib/ai/speech-analysis';
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,7 +55,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Step 2: Evaluate the speaking response
+    // Step 2: Run local speech analysis for enhanced metrics
+    const speechAnalysis = analyzeSpeech(transcription.text);
+
+    // Step 3: Evaluate the speaking response with AI
     const { evaluation, tokensUsed } = await evaluateSpeaking({
       part: partNumber as 1 | 2 | 3,
       prompt: {
@@ -66,7 +70,12 @@ export async function POST(request: NextRequest) {
       duration: parseFloat(duration),
     });
 
-    // Step 3: Create practice session
+    // Enhance metrics with local analysis
+    evaluation.metrics.repeatedWords = speechAnalysis.repeatedWords;
+    evaluation.metrics.sentenceVarietyScore = speechAnalysis.sentenceVariety.score;
+    evaluation.metrics.overusedWords = speechAnalysis.overusedWords;
+
+    // Step 4: Create practice session
     const practiceSession = await prisma.practiceSession.create({
       data: {
         userId: session.user.id,
@@ -81,7 +90,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Step 4: Store evaluation
+    // Step 5: Store evaluation
     await prisma.evaluation.create({
       data: {
         userId: session.user.id,

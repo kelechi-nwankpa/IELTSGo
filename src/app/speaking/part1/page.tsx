@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AudioRecorder } from '@/components/speaking/AudioRecorder';
+import { TranscriptionEditor } from '@/components/speaking/TranscriptionEditor';
+import { EnhancedMetrics } from '@/components/speaking/EnhancedMetrics';
 
 interface Part1Prompt {
   id: string;
@@ -14,10 +16,11 @@ interface Part1Prompt {
   };
 }
 
-type SessionState = 'select' | 'practice' | 'evaluating' | 'results';
+type SessionState = 'select' | 'practice' | 'evaluating' | 'results' | 'editing';
 
 interface EvaluationResult {
   transcription: string;
+  sessionId?: string;
   evaluation: {
     overall_band: number;
     criteria: {
@@ -48,6 +51,10 @@ interface EvaluationResult {
       fillerWords: { word: string; count: number }[];
       uniqueVocabularyRatio: number;
       averageSentenceLength: number;
+      longPausesInferred?: number;
+      repeatedWords?: { word: string; count: number; percentage: number }[];
+      sentenceVarietyScore?: number;
+      overusedWords?: string[];
     };
     overall_feedback: string;
     sample_improvements: { original: string; improved: string; explanation: string }[];
@@ -62,6 +69,7 @@ export default function SpeakingPart1Page() {
   const [sessionState, setSessionState] = useState<SessionState>('select');
   const [evaluationResult, setEvaluationResult] = useState<EvaluationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isReEvaluating, setIsReEvaluating] = useState(false);
 
   useEffect(() => {
     async function fetchPrompts() {
@@ -139,6 +147,52 @@ export default function SpeakingPart1Page() {
     setSessionState('select');
     setEvaluationResult(null);
     setError(null);
+  };
+
+  const handleEditTranscription = () => {
+    setSessionState('editing');
+  };
+
+  const handleCancelEdit = () => {
+    setSessionState('results');
+  };
+
+  const handleSaveTranscription = async (editedTranscription: string) => {
+    if (!evaluationResult?.sessionId) {
+      setError('Session ID not found. Please try again.');
+      setSessionState('results');
+      return;
+    }
+
+    setIsReEvaluating(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/speaking/re-evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: evaluationResult.sessionId,
+          editedTranscription,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to re-evaluate');
+      }
+
+      const result = await response.json();
+      setEvaluationResult({
+        ...result,
+        sessionId: evaluationResult.sessionId,
+      });
+      setSessionState('results');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to re-evaluate');
+    } finally {
+      setIsReEvaluating(false);
+    }
   };
 
   if (loading) {
@@ -348,40 +402,28 @@ export default function SpeakingPart1Page() {
               })}
             </div>
 
-            {/* Metrics */}
-            <div className="rounded-xl border border-gray-200 bg-white p-6">
-              <h3 className="mb-4 font-semibold text-gray-900">Speaking Metrics</h3>
-              <div className="grid gap-4 sm:grid-cols-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">
-                    {evaluationResult.evaluation.metrics.wordsPerMinute}
-                  </div>
-                  <div className="text-sm text-gray-500">Words/minute</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">
-                    {evaluationResult.evaluation.metrics.totalWords}
-                  </div>
-                  <div className="text-sm text-gray-500">Total words</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">
-                    {evaluationResult.evaluation.metrics.fillerWordCount}
-                  </div>
-                  <div className="text-sm text-gray-500">Filler words</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">
-                    {Math.round(evaluationResult.evaluation.metrics.uniqueVocabularyRatio * 100)}%
-                  </div>
-                  <div className="text-sm text-gray-500">Unique vocabulary</div>
-                </div>
-              </div>
-            </div>
+            {/* Enhanced Metrics */}
+            <EnhancedMetrics metrics={evaluationResult.evaluation.metrics} />
 
-            {/* Transcription */}
+            {/* Transcription with Edit Button */}
             <div className="rounded-xl border border-gray-200 bg-white p-6">
-              <h3 className="mb-4 font-semibold text-gray-900">Your Transcription</h3>
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="font-semibold text-gray-900">Your Transcription</h3>
+                <button
+                  onClick={handleEditTranscription}
+                  className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-500"
+                >
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                  Edit & Re-evaluate
+                </button>
+              </div>
               <p className="whitespace-pre-wrap text-gray-700">{evaluationResult.transcription}</p>
             </div>
 
@@ -428,6 +470,28 @@ export default function SpeakingPart1Page() {
                 Back to Speaking
               </Link>
             </div>
+          </div>
+        )}
+
+        {/* Editing State */}
+        {sessionState === 'editing' && evaluationResult && (
+          <div className="space-y-6">
+            <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+              <h2 className="font-semibold text-blue-900">Edit Your Transcription</h2>
+              <p className="mt-1 text-sm text-blue-700">
+                Correct any transcription errors and click &quot;Save & Re-evaluate&quot; to get
+                updated feedback based on your corrections.
+              </p>
+            </div>
+
+            {error && <div className="rounded-lg bg-red-50 p-4 text-red-700">{error}</div>}
+
+            <TranscriptionEditor
+              transcription={evaluationResult.transcription}
+              onSave={handleSaveTranscription}
+              onCancel={handleCancelEdit}
+              isSubmitting={isReEvaluating}
+            />
           </div>
         )}
       </div>

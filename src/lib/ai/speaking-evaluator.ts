@@ -47,6 +47,10 @@ export interface SpeakingMetrics {
   uniqueVocabularyRatio: number;
   averageSentenceLength: number;
   longPausesInferred: number;
+  // Enhanced metrics
+  repeatedWords?: { word: string; count: number; percentage: number }[];
+  sentenceVarietyScore?: number;
+  overusedWords?: string[];
 }
 
 export interface SpeakingEvaluation {
