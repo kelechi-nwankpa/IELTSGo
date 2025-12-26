@@ -58,8 +58,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get the price ID for the selected plan
-    const priceId =
-      plan === 'annual' ? STRIPE_CONFIG.prices.annual : STRIPE_CONFIG.prices.monthly;
+    const priceId = plan === 'annual' ? STRIPE_CONFIG.prices.annual : STRIPE_CONFIG.prices.monthly;
 
     if (!priceId) {
       return NextResponse.json(
@@ -98,9 +97,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: checkoutSession.url });
   } catch (error) {
     console.error('Checkout session error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create checkout session' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
   }
 }

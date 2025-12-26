@@ -26,10 +26,5 @@ export default async function PricingPage() {
     currentSubscription = user;
   }
 
-  return (
-    <PricingContent
-      isLoggedIn={!!session}
-      currentSubscription={currentSubscription}
-    />
-  );
+  return <PricingContent isLoggedIn={!!session} currentSubscription={currentSubscription} />;
 }

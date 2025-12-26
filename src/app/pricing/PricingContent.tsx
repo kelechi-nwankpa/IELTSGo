@@ -99,9 +99,7 @@ export function PricingContent({ isLoggedIn, currentSubscription }: PricingConte
         {/* Cancelled notice */}
         {cancelled && (
           <div className="mx-auto mt-8 max-w-md rounded-lg border border-amber-200 bg-amber-50 p-4 text-center">
-            <p className="text-amber-800">
-              Checkout was cancelled. No charges were made.
-            </p>
+            <p className="text-amber-800">Checkout was cancelled. No charges were made.</p>
           </div>
         )}
 
@@ -340,9 +338,7 @@ export function PricingContent({ isLoggedIn, currentSubscription }: PricingConte
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-900">
-                    Feature
-                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-medium text-gray-900">Feature</th>
                   <th className="px-6 py-4 text-center text-sm font-medium text-gray-900">Free</th>
                   <th className="px-6 py-4 text-center text-sm font-medium text-blue-600">
                     Premium

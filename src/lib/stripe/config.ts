@@ -17,10 +17,7 @@ export const STRIPE_CONFIG = {
         'Basic progress tracking',
         'Access to sample content',
       ],
-      limitations: [
-        'No speaking evaluations',
-        'Limited content library',
-      ],
+      limitations: ['No speaking evaluations', 'Limited content library'],
     },
     monthly: {
       name: 'Premium Monthly',

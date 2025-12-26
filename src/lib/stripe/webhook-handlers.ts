@@ -93,9 +93,7 @@ async function updateUserSubscription(
 
   // Determine subscription tier based on status
   const tier: SubscriptionTier =
-    status === 'ACTIVE' || status === 'TRIALING' || status === 'PAST_DUE'
-      ? 'PREMIUM'
-      : 'FREE';
+    status === 'ACTIVE' || status === 'TRIALING' || status === 'PAST_DUE' ? 'PREMIUM' : 'FREE';
 
   await prisma.user.update({
     where: { id: userId },
