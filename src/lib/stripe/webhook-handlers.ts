@@ -2,6 +2,13 @@ import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
 import { SubscriptionStatus, SubscriptionTier, SubscriptionPlan } from '@prisma/client';
 
+// Extended subscription type to include fields that may be present in webhook events
+// but are not in the SDK type definitions for newer API versions
+interface SubscriptionWithPeriod extends Stripe.Subscription {
+  current_period_start?: number;
+  current_period_end?: number;
+}
+
 /**
  * Handle incoming Stripe webhook events
  */
@@ -13,11 +20,11 @@ export async function handleWebhookEvent(event: Stripe.Event): Promise<void> {
 
     case 'customer.subscription.created':
     case 'customer.subscription.updated':
-      await handleSubscriptionUpdate(event.data.object as Stripe.Subscription);
+      await handleSubscriptionUpdate(event.data.object as SubscriptionWithPeriod);
       break;
 
     case 'customer.subscription.deleted':
-      await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+      await handleSubscriptionDeleted(event.data.object as SubscriptionWithPeriod);
       break;
 
     case 'invoice.paid':
@@ -62,7 +69,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
 /**
  * Handle subscription updates (created, updated)
  */
-async function handleSubscriptionUpdate(subscription: Stripe.Subscription): Promise<void> {
+async function handleSubscriptionUpdate(subscription: SubscriptionWithPeriod): Promise<void> {
   const userId = subscription.metadata?.userId;
   if (!userId) {
     // Try to find user by customer ID
@@ -84,7 +91,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription): Prom
  */
 async function updateUserSubscription(
   userId: string,
-  subscription: Stripe.Subscription
+  subscription: SubscriptionWithPeriod
 ): Promise<void> {
   const status = mapStripeStatus(subscription.status);
   const priceItem = subscription.items.data[0];
@@ -102,8 +109,12 @@ async function updateUserSubscription(
       subscriptionStatus: status,
       subscriptionTier: tier,
       subscriptionPlan: plan,
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      currentPeriodStart: subscription.current_period_start
+        ? new Date(subscription.current_period_start * 1000)
+        : new Date(),
+      currentPeriodEnd: subscription.current_period_end
+        ? new Date(subscription.current_period_end * 1000)
+        : null,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     },
   });
@@ -114,7 +125,7 @@ async function updateUserSubscription(
 /**
  * Handle subscription deletion/cancellation
  */
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
+async function handleSubscriptionDeleted(subscription: SubscriptionWithPeriod): Promise<void> {
   const userId = subscription.metadata?.userId;
 
   // Find user by subscription ID or customer ID
