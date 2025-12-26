@@ -4,7 +4,7 @@ This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
 **Last updated:** 2025-12-26
-**Current phase:** 2 (Reading & Listening) - Complete
+**Current phase:** 3 (Speaking Module) - In Progress
 
 Legend:
 
@@ -185,36 +185,36 @@ Legend:
 
 ### Recording
 
-- [ ] Audio recording interface
-- [ ] Browser microphone access
-- [ ] Recording timer
-- [ ] Waveform visualization
-- [ ] Recording playback
-- [ ] Recording retry option
+- [x] Audio recording interface
+- [x] Browser microphone access
+- [x] Recording timer
+- [x] Waveform visualization
+- [x] Recording playback
+- [x] Recording retry option
 
 ### Speech-to-Text
 
-- [ ] Whisper API integration
-- [ ] Audio upload handling
-- [ ] Transcription processing
-- [ ] Transcription display
+- [x] Whisper API integration
+- [x] Audio upload handling
+- [x] Transcription processing
+- [x] Transcription display
 - [ ] Transcription editing (optional)
 
 ### AI Evaluation
 
-- [ ] Speaking evaluation prompt integrated
-- [ ] Fluency & Coherence scoring
-- [ ] Lexical Resource scoring
-- [ ] Grammar scoring
-- [ ] Pronunciation feedback (approximate)
-- [ ] Band estimate
-- [ ] Strengths & weaknesses summary
-- [ ] Practice advice
+- [x] Speaking evaluation prompt integrated
+- [x] Fluency & Coherence scoring
+- [x] Lexical Resource scoring
+- [x] Grammar scoring
+- [x] Pronunciation feedback (approximate)
+- [x] Band estimate
+- [x] Strengths & weaknesses summary
+- [x] Practice advice
 
 ### Speaking Metrics & Insights
 
-- [ ] Words per minute
-- [ ] Filler word detection
+- [x] Words per minute
+- [x] Filler word detection
 - [ ] Repeated word detection
 - [ ] Pause inference
 - [ ] Sentence variety scoring
@@ -222,18 +222,18 @@ Legend:
 
 ### Speaking Parts
 
-- [ ] Part 1: Introduction questions
-- [ ] Part 2: Cue card with prep time
-- [ ] Part 3: Discussion questions
-- [ ] Content library for each part
+- [x] Part 1: Introduction questions
+- [x] Part 2: Cue card with prep time
+- [x] Part 3: Discussion questions
+- [x] Content library for each part
 
 ### Feedback Display
 
-- [ ] Band score display
-- [ ] Criterion breakdown
-- [ ] Transcript with annotations
-- [ ] Metrics visualization
-- [ ] Improvement suggestions
+- [x] Band score display
+- [x] Criterion breakdown
+- [x] Transcript with annotations
+- [x] Metrics visualization
+- [x] Improvement suggestions
 
 ---
 
@@ -475,14 +475,14 @@ Legend:
 | 0         | Foundation             | 30       | 16        | 53%      |
 | 1         | MVP — Writing          | 35       | 15        | 43%      |
 | 2         | Reading & Listening    | 27       | 27        | 100%     |
-| 3         | Speaking               | 30       | 0         | 0%       |
+| 3         | Speaking               | 30       | 25        | 83%      |
 | 4         | Payment & Premium      | 18       | 0         | 0%       |
 | 5         | Task 1 & GT            | 18       | 0         | 0%       |
 | 6         | Study Plans & Progress | 24       | 0         | 0%       |
 | 7         | Test Simulation        | 9        | 0         | 0%       |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **235**  | **58**    | **25%**  |
+| **Total** |                        | **235**  | **83**    | **35%**  |
 
 ---
 

@@ -4,6 +4,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { task2Prompts } from './task2-prompts';
 import { readingPassages } from './reading-passages';
 import { listeningSections } from './listening-sections';
+import { speakingPart1Prompts, speakingPart2Prompts, speakingPart3Prompts } from './speaking-prompts';
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -118,6 +119,102 @@ async function main() {
     console.log(`  ✓ ${section.title}`);
   }
   console.log(`Seeded ${listeningSections.length} Listening sections`);
+
+  // Seed Speaking Part 1 prompts
+  console.log('\nSeeding Speaking Part 1 prompts...');
+  for (const prompt of speakingPart1Prompts) {
+    const contentData = JSON.parse(
+      JSON.stringify({
+        topic: prompt.topic,
+        questions: prompt.questions,
+        suggestedTime: prompt.suggestedTime,
+      })
+    );
+
+    await prisma.content.upsert({
+      where: { id: prompt.id },
+      update: {
+        title: prompt.topic,
+        contentData,
+      },
+      create: {
+        id: prompt.id,
+        module: 'SPEAKING',
+        type: 'SPEAKING_PART1',
+        title: prompt.topic,
+        contentData,
+        difficultyBand: 5.5, // Part 1 is generally easier
+        isPremium: false,
+      },
+    });
+    console.log(`  ✓ Part 1: ${prompt.topic}`);
+  }
+  console.log(`Seeded ${speakingPart1Prompts.length} Speaking Part 1 prompts`);
+
+  // Seed Speaking Part 2 prompts (Cue Cards)
+  console.log('\nSeeding Speaking Part 2 prompts...');
+  for (const prompt of speakingPart2Prompts) {
+    const contentData = JSON.parse(
+      JSON.stringify({
+        topic: prompt.topic,
+        cueCard: prompt.cueCard,
+        prepTime: prompt.prepTime,
+        speakingTime: prompt.speakingTime,
+        followUpQuestion: prompt.followUpQuestion,
+      })
+    );
+
+    await prisma.content.upsert({
+      where: { id: prompt.id },
+      update: {
+        title: prompt.topic,
+        contentData,
+      },
+      create: {
+        id: prompt.id,
+        module: 'SPEAKING',
+        type: 'SPEAKING_PART2',
+        title: prompt.topic,
+        contentData,
+        difficultyBand: 6.5, // Part 2 is moderate difficulty
+        isPremium: false,
+      },
+    });
+    console.log(`  ✓ Part 2: ${prompt.topic}`);
+  }
+  console.log(`Seeded ${speakingPart2Prompts.length} Speaking Part 2 prompts`);
+
+  // Seed Speaking Part 3 prompts (Discussion)
+  console.log('\nSeeding Speaking Part 3 prompts...');
+  for (const prompt of speakingPart3Prompts) {
+    const contentData = JSON.parse(
+      JSON.stringify({
+        topic: prompt.topic,
+        relatedPart2Id: prompt.relatedPart2Id,
+        questions: prompt.questions,
+      })
+    );
+
+    await prisma.content.upsert({
+      where: { id: prompt.id },
+      update: {
+        title: prompt.topic,
+        contentData,
+        difficultyBand: prompt.difficultyBand,
+      },
+      create: {
+        id: prompt.id,
+        module: 'SPEAKING',
+        type: 'SPEAKING_PART3',
+        title: prompt.topic,
+        contentData,
+        difficultyBand: prompt.difficultyBand,
+        isPremium: false,
+      },
+    });
+    console.log(`  ✓ Part 3: ${prompt.topic}`);
+  }
+  console.log(`Seeded ${speakingPart3Prompts.length} Speaking Part 3 prompts`);
 
   console.log('\nSeeding complete!');
 }

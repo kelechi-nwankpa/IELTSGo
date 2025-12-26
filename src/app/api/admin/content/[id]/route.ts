@@ -3,14 +3,14 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { isAdmin } from '@/lib/auth/admin';
 import { prisma } from '@/lib/prisma';
-import { Module, ContentType, TestType } from '@prisma/client';
+import { Module, ContentType, TestType, Prisma } from '@prisma/client';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 // GET /api/admin/content/[id] - Get single content item
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(_request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
@@ -83,24 +83,17 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Invalid testType value' }, { status: 400 });
     }
 
-    // Build update data
-    const updateData: {
-      module?: Module;
-      type?: ContentType;
-      testType?: TestType | null;
-      title?: string | null;
-      contentData?: object;
-      answers?: object | null;
-      difficultyBand?: number | null;
-      isPremium?: boolean;
-    } = {};
+    // Build update data using Prisma's ContentUpdateInput type
+    const updateData: Prisma.ContentUpdateInput = {};
 
     if (module !== undefined) updateData.module = module;
     if (type !== undefined) updateData.type = type;
     if (testType !== undefined) updateData.testType = testType || null;
     if (title !== undefined) updateData.title = title || null;
     if (contentData !== undefined) updateData.contentData = contentData;
-    if (answers !== undefined) updateData.answers = answers || null;
+    if (answers !== undefined) {
+      updateData.answers = answers === null ? Prisma.DbNull : answers;
+    }
     if (difficultyBand !== undefined)
       updateData.difficultyBand = difficultyBand ? parseFloat(difficultyBand) : null;
     if (isPremium !== undefined) updateData.isPremium = isPremium;
