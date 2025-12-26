@@ -50,7 +50,7 @@ export function WritingPrompt({
           {taskType}
         </span>
         {topic && (
-          <span className="rounded bg-gray-100 px-2 py-1 text-xs font-medium capitalize text-gray-600">
+          <span className="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 capitalize">
             {topic}
           </span>
         )}
@@ -83,7 +83,7 @@ export function WritingPrompt({
       )}
 
       <div className="prose prose-sm max-w-none">
-        <p className="whitespace-pre-line leading-relaxed text-gray-700">{prompt}</p>
+        <p className="leading-relaxed whitespace-pre-line text-gray-700">{prompt}</p>
       </div>
     </div>
   );

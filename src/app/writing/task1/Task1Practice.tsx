@@ -9,7 +9,6 @@ interface Task1PracticeProps {
   title: string;
   prompt: string;
   topic: string;
-  testType: 'academic' | 'general';
   isAcademic: boolean;
   imageUrl?: string;
   imageDescription?: string;
@@ -52,7 +51,6 @@ export function Task1Practice({
   title,
   prompt,
   topic,
-  testType,
   isAcademic,
   imageUrl,
   imageDescription,
@@ -346,14 +344,14 @@ function EvaluationDisplay({
             <div className="mb-4 grid gap-4 md:grid-cols-2">
               <div className="rounded-lg border border-red-100 bg-red-50 p-4">
                 <p className="mb-2 text-xs font-medium text-red-700">Original:</p>
-                <p className="text-sm italic text-gray-700">
+                <p className="text-sm text-gray-700 italic">
                   &quot;{evaluation.rewritten_excerpt.original}&quot;
                 </p>
               </div>
 
               <div className="rounded-lg border border-green-100 bg-green-50 p-4">
                 <p className="mb-2 text-xs font-medium text-green-700">Improved:</p>
-                <p className="text-sm italic text-gray-700">
+                <p className="text-sm text-gray-700 italic">
                   &quot;{evaluation.rewritten_excerpt.improved}&quot;
                 </p>
               </div>

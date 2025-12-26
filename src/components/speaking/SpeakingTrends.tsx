@@ -387,9 +387,7 @@ function SimpleLineChart({
         })}
       </svg>
       <div className="mt-1 flex items-start justify-between text-xs">
-        <span className="text-gray-500">
-          {avgLabel || ''}
-        </span>
+        <span className="text-gray-500">{avgLabel || ''}</span>
         <span className="text-gray-400">
           {new Date(data[data.length - 1].date).toLocaleDateString('en-US', {
             month: 'short',

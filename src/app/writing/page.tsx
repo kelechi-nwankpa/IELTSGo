@@ -74,9 +74,7 @@ export default function WritingPage() {
               </div>
               <div className="rounded-lg border border-gray-100 bg-gray-50 p-3">
                 <h3 className="mb-1 font-medium text-gray-700">General Training</h3>
-                <p className="text-sm text-gray-500">
-                  Write essays on practical, everyday topics
-                </p>
+                <p className="text-sm text-gray-500">Write essays on practical, everyday topics</p>
               </div>
             </div>
 
@@ -114,9 +112,7 @@ export default function WritingPage() {
               </div>
               <div>
                 <h4 className="font-medium text-gray-700">Plan before you write</h4>
-                <p className="text-sm text-gray-500">
-                  Spend 2-3 minutes planning your structure
-                </p>
+                <p className="text-sm text-gray-500">Spend 2-3 minutes planning your structure</p>
               </div>
             </div>
             <div className="flex items-start gap-3">

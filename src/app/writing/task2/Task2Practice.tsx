@@ -43,13 +43,7 @@ interface ErrorState {
   isQuotaExceeded?: boolean;
 }
 
-export function Task2Practice({
-  promptId,
-  title,
-  prompt,
-  topic,
-  testType,
-}: Task2PracticeProps) {
+export function Task2Practice({ promptId, title, prompt, topic, testType }: Task2PracticeProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [error, setError] = useState<ErrorState | null>(null);
@@ -323,14 +317,14 @@ function EvaluationDisplay({
             <div className="mb-4 grid gap-4 md:grid-cols-2">
               <div className="rounded-lg border border-red-100 bg-red-50 p-4">
                 <p className="mb-2 text-xs font-medium text-red-700">Original:</p>
-                <p className="text-sm italic text-gray-700">
+                <p className="text-sm text-gray-700 italic">
                   &quot;{evaluation.rewritten_excerpt.original}&quot;
                 </p>
               </div>
 
               <div className="rounded-lg border border-green-100 bg-green-50 p-4">
                 <p className="mb-2 text-xs font-medium text-green-700">Improved:</p>
-                <p className="text-sm italic text-gray-700">
+                <p className="text-sm text-gray-700 italic">
                   &quot;{evaluation.rewritten_excerpt.improved}&quot;
                 </p>
               </div>
