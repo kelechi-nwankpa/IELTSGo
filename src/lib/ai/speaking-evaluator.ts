@@ -2,10 +2,21 @@ import Anthropic from '@anthropic-ai/sdk';
 
 const AI_TIMEOUT_MS = 60000;
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  timeout: AI_TIMEOUT_MS,
-});
+// Lazy-load Anthropic client to avoid build-time errors when env var is not set
+let anthropicClient: Anthropic | null = null;
+
+function getAnthropicClient(): Anthropic {
+  if (!anthropicClient) {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY environment variable is not set');
+    }
+    anthropicClient = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+      timeout: AI_TIMEOUT_MS,
+    });
+  }
+  return anthropicClient;
+}
 
 export interface SpeakingEvaluationInput {
   part: 1 | 2 | 3;
@@ -186,7 +197,7 @@ ${input.duration} seconds (${Math.round((input.duration / 60) * 10) / 10} minute
 
 ${input.transcription}`;
 
-  const response = await anthropic.messages.create({
+  const response = await getAnthropicClient().messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 2500,
     messages: [
@@ -198,7 +209,7 @@ ${input.transcription}`;
     system: SYSTEM_PROMPT,
   });
 
-  const textContent = response.content.find((c) => c.type === 'text');
+  const textContent = response.content.find((c: { type: string }) => c.type === 'text');
   if (!textContent || textContent.type !== 'text') {
     throw new Error('No text response from AI');
   }
