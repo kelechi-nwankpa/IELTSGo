@@ -4,7 +4,7 @@ This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
 **Last updated:** 2025-12-26
-**Current phase:** 5 (Task 1 & General Training) - In Progress
+**Current phase:** 5 (Task 1 & General Training) - Complete
 
 Legend:
 
@@ -283,7 +283,7 @@ Legend:
 - [x] Multiple data set prompts (5 pie charts, 4 tables, 2 mixed)
 - [x] Task 1 Academic evaluation prompt
 - [x] Minimum 20 Task 1 Academic items (36 total)
-- [~] Visual prompt handling (SVG placeholders created, needs full set)
+- [x] Visual prompt handling (36 SVG images for all chart types)
 
 ### Task 1 General Training
 
@@ -307,11 +307,11 @@ Legend:
 - [x] Back to Dashboard navigation on Writing page
 - [x] Back to Dashboard navigation on Speaking page
 
-### Pending
+### Completed Tasks
 
-- [ ] Create remaining SVG images for Task 1 Academic visuals
-- [ ] Run database seed to populate new prompts
-- [ ] Update dashboard to show Task 1 writing history
+- [x] All 36 SVG images created for Task 1 Academic visuals
+- [x] Database seeded with all new prompts (102 total new prompts)
+- [x] Dashboard updated to show Task 1 writing history
 
 ---
 
@@ -485,12 +485,12 @@ Legend:
 | 2         | Reading & Listening    | 27       | 27        | 100%     |
 | 3         | Speaking               | 30       | 30        | 100%     |
 | 4         | Payment & Premium      | 18       | 18        | 100%     |
-| 5         | Task 1 & GT            | 21       | 18        | 86%      |
+| 5         | Task 1 & GT            | 21       | 21        | 100%     |
 | 6         | Study Plans & Progress | 24       | 0         | 0%       |
 | 7         | Test Simulation        | 9        | 0         | 0%       |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **238**  | **136**   | **57%**  |
+| **Total** |                        | **238**  | **139**   | **58%**  |
 
 ---
 

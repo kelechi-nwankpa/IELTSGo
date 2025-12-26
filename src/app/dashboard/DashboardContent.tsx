@@ -474,11 +474,11 @@ export default function DashboardContent() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900">Writing Practice</h3>
-                  <p className="text-sm text-slate-500">Task 2 essays with AI feedback</p>
+                  <p className="text-sm text-slate-500">Task 1 & Task 2 with AI feedback</p>
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between">
-                <span className="text-xs text-slate-400">40 min per essay</span>
+                <span className="text-xs text-slate-400">20-40 min per task</span>
                 <span className="flex items-center gap-1 text-sm font-medium text-blue-600">
                   Start
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
