@@ -412,9 +412,17 @@ Legend:
 - [x] Section submit API endpoint
 - [x] Listening section page
 - [x] Reading section page
-- [x] Writing section page (placeholder for Phase 7.3)
-- [x] Speaking section page (placeholder for Phase 7.3)
 - [x] Results page
+
+### AI-Evaluated Sections (Phase 7.3)
+
+- [x] Writing section page (Task 1 + Task 2 combined)
+- [x] Speaking section page (Parts 1, 2, 3)
+- [x] Task tabs with word count tracking
+- [x] Part 2 preparation timer (1 minute)
+- [x] Audio recording for all speaking parts
+- [ ] AI evaluation integration for writing
+- [ ] AI evaluation integration for speaking
 
 ### Full Mock Tests
 
@@ -537,10 +545,10 @@ Legend:
 | 4         | Payment & Premium      | 18       | 18        | 100%     |
 | 5         | Task 1 & GT            | 21       | 21        | 100%     |
 | 6         | Study Plans & Progress | 38       | 38        | 100%     |
-| 7         | Test Simulation        | 30       | 24        | 80%      |
+| 7         | Test Simulation        | 35       | 29        | 83%      |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **273**  | **201**   | **74%**  |
+| **Total** |                        | **278**  | **206**   | **74%**  |
 
 ---
 
