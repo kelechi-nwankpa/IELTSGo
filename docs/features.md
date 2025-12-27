@@ -4,7 +4,7 @@ This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
 **Last updated:** 2025-12-27
-**Current phase:** 6 (Study Plans & Progress) - Complete
+**Current phase:** 7 (Test Simulation) - In Progress
 
 Legend:
 
@@ -389,12 +389,39 @@ Legend:
 
 ## Phase 7: Test Simulation
 
+### Infrastructure (Phase 7.1)
+
+- [x] MockTest database model
+- [x] MockTestStatus and MockTestSection enums
+- [x] Mock test quota in UsageQuota model
+- [x] Mock test quota functions (canUseMockTest, incrementMockTest)
+- [x] POST /api/mock-test/start endpoint
+- [x] GET /api/mock-test/[id] endpoint
+- [x] POST /api/mock-test/[id]/abandon endpoint
+- [x] GET /api/mock-test/active endpoint
+- [x] MockTestHub component
+- [x] TestTimer component
+- [x] TestProgress component
+- [x] Mock test hub page
+
+### Section Integration (Phase 7.2)
+
+- [x] Mock test orchestrator page
+- [x] SectionTransition component
+- [x] Section start API endpoint
+- [x] Section submit API endpoint
+- [x] Listening section page
+- [x] Reading section page
+- [x] Writing section page (placeholder for Phase 7.3)
+- [x] Speaking section page (placeholder for Phase 7.3)
+- [x] Results page
+
 ### Full Mock Tests
 
-- [ ] Full test mode
-- [ ] Timed sections
-- [ ] Section transitions
-- [ ] Final band estimate
+- [x] Full test mode (orchestration system)
+- [x] Timed sections
+- [x] Section transitions
+- [~] Final band estimate (partial - L/R complete, W/S pending AI eval)
 - [ ] Performance summary
 
 ### Exam Readiness Tools
@@ -510,10 +537,10 @@ Legend:
 | 4         | Payment & Premium      | 18       | 18        | 100%     |
 | 5         | Task 1 & GT            | 21       | 21        | 100%     |
 | 6         | Study Plans & Progress | 38       | 38        | 100%     |
-| 7         | Test Simulation        | 9        | 0         | 0%       |
+| 7         | Test Simulation        | 30       | 24        | 80%      |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **252**  | **177**   | **70%**  |
+| **Total** |                        | **273**  | **201**   | **74%**  |
 
 ---
 

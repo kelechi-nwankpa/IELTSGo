@@ -94,6 +94,21 @@ enum TaskPriority {
   CRITICAL
 }
 
+// Phase 7: Test Simulation enums
+enum MockTestStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+enum MockTestSection {
+  LISTENING
+  READING
+  WRITING
+  SPEAKING
+}
+
 // ============================================
 // MODELS
 // ============================================
@@ -137,6 +152,9 @@ model User {
   skillAssessments      SkillAssessment[]
   achievements          UserAchievement[]
   studyStreak           StudyStreak?
+
+  // Phase 7: Test Simulation relations
+  mockTests MockTest[]
 
   @@map("users")
 }
@@ -245,6 +263,7 @@ model UsageQuota {
   writingEvaluationsUsed   Int      @default(0) @map("writing_evaluations_used")
   speakingEvaluationsUsed  Int      @default(0) @map("speaking_evaluations_used")
   explanationsUsed         Int      @default(0) @map("explanations_used")
+  mockTestsUsed            Int      @default(0) @map("mock_tests_used")
   updatedAt                DateTime @updatedAt @map("updated_at")
 
   // Relations
@@ -502,4 +521,52 @@ model StudyStreak {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("study_streaks")
+}
+
+// ============================================
+// PHASE 7: TEST SIMULATION MODELS
+// ============================================
+
+// Full mock test session tracking
+model MockTest {
+  id       String         @id @default(uuid())
+  userId   String         @map("user_id")
+  testType TestType       // ACADEMIC or GENERAL
+  status   MockTestStatus @default(NOT_STARTED)
+
+  // Section timing
+  startedAt   DateTime? @map("started_at")
+  completedAt DateTime? @map("completed_at")
+
+  // Section deadline tracking (for enforcing time limits)
+  currentSectionStartedAt  DateTime?        @map("current_section_started_at")
+  currentSectionDeadline   DateTime?        @map("current_section_deadline")
+  currentSection           MockTestSection? @map("current_section")
+
+  // Section session references (linked to PracticeSession)
+  listeningSessionId String? @unique @map("listening_session_id")
+  readingSessionId   String? @unique @map("reading_session_id")
+  writingSessionId   String? @unique @map("writing_session_id")
+  // Speaking has multiple parts, stored as JSON array of session IDs
+  speakingSessionIds String[] @map("speaking_session_ids")
+
+  // Results (populated on completion)
+  listeningBand Float? @map("listening_band")
+  readingBand   Float? @map("reading_band")
+  writingBand   Float? @map("writing_band")
+  speakingBand  Float? @map("speaking_band")
+  overallBand   Float? @map("overall_band")
+
+  // Time tracking metadata (JSON with actual time spent per section)
+  sectionTimes Json? @map("section_times")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([userId, createdAt])
+  @@map("mock_tests")
 }

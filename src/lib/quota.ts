@@ -13,11 +13,13 @@ const QUOTA_LIMITS = {
     writingEvaluations: 3,
     speakingEvaluations: 0,
     explanations: 5,
+    mockTests: 0, // Mock tests are premium-only
   },
   PREMIUM: {
     writingEvaluations: Infinity,
     speakingEvaluations: Infinity,
     explanations: Infinity,
+    mockTests: 2, // 2 mock tests per month
   },
 } as const;
 
@@ -37,6 +39,11 @@ export interface QuotaStatus {
     used: number;
     limit: number | null;
     remaining: number | null;
+  };
+  mockTests: {
+    used: number;
+    limit: number;
+    remaining: number;
   };
 }
 
@@ -137,6 +144,11 @@ export async function getQuotaStatus(userId: string): Promise<QuotaStatus> {
       limit: limits.explanations === Infinity ? null : limits.explanations,
       remaining: getRemaining(quota.explanationsUsed, limits.explanations),
     },
+    mockTests: {
+      used: quota.mockTestsUsed,
+      limit: limits.mockTests,
+      remaining: Math.max(0, limits.mockTests - quota.mockTestsUsed),
+    },
   };
 }
 
@@ -234,6 +246,42 @@ export async function incrementExplanation(userId: string): Promise<void> {
       writingEvaluationsUsed: 0,
       speakingEvaluationsUsed: 0,
       explanationsUsed: 1,
+    },
+  });
+}
+
+/**
+ * Check if a user can start a mock test
+ * Mock tests are premium-only with a monthly limit
+ */
+export async function canUseMockTest(userId: string): Promise<boolean> {
+  const status = await getQuotaStatus(userId);
+
+  // Free tier cannot use mock tests
+  if (status.tier === 'FREE') {
+    return false;
+  }
+
+  return status.mockTests.remaining > 0;
+}
+
+/**
+ * Increment the mock test count for a user
+ * Call this when a mock test is started (not completed)
+ */
+export async function incrementMockTest(userId: string): Promise<void> {
+  await prisma.usageQuota.upsert({
+    where: { userId },
+    update: {
+      mockTestsUsed: { increment: 1 },
+    },
+    create: {
+      userId,
+      periodStart: new Date(),
+      writingEvaluationsUsed: 0,
+      speakingEvaluationsUsed: 0,
+      explanationsUsed: 0,
+      mockTestsUsed: 1,
     },
   });
 }
