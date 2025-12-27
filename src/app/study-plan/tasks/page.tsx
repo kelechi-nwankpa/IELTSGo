@@ -315,6 +315,40 @@ export default function TasksPage() {
   );
 }
 
+// Generate practice URL based on module and task title
+function getPracticeUrl(module: string, title: string): string {
+  const titleLower = title.toLowerCase();
+
+  switch (module) {
+    case 'WRITING':
+      if (titleLower.includes('task 1')) {
+        return '/writing/task1';
+      } else if (titleLower.includes('task 2')) {
+        return '/writing/task2';
+      }
+      return '/writing';
+
+    case 'SPEAKING':
+      if (titleLower.includes('part 1') || titleLower.includes('part1')) {
+        return '/speaking/part1';
+      } else if (titleLower.includes('part 2') || titleLower.includes('part2') || titleLower.includes('cue card')) {
+        return '/speaking/part2';
+      } else if (titleLower.includes('part 3') || titleLower.includes('part3')) {
+        return '/speaking/part3';
+      }
+      return '/speaking';
+
+    case 'READING':
+      return '/reading';
+
+    case 'LISTENING':
+      return '/listening';
+
+    default:
+      return '/dashboard';
+  }
+}
+
 function TaskCard({
   task,
   onComplete,
@@ -343,6 +377,8 @@ function TaskCard({
 
   const isCompleted = task.status === 'COMPLETED';
   const isSkipped = task.status === 'SKIPPED';
+  const practiceUrl = getPracticeUrl(task.module, task.title);
+  const canStartPractice = !isCompleted && !isSkipped && !upcoming;
 
   return (
     <div
@@ -358,9 +394,13 @@ function TaskCard({
         <div className="flex items-start gap-3">
           {!upcoming && !isCompleted && !isSkipped && (
             <button
-              onClick={() => onComplete(task.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onComplete(task.id);
+              }}
               disabled={updating}
               className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 border-slate-300 transition-colors hover:border-green-500 hover:bg-green-50"
+              title="Mark as complete"
             >
               {updating && (
                 <svg
@@ -402,7 +442,7 @@ function TaskCard({
               </svg>
             </div>
           )}
-          <div>
+          <div className="flex-1">
             <div className="flex items-center gap-2">
               <span
                 className={`rounded px-2 py-0.5 text-xs font-medium ${moduleColors[task.module] || 'bg-slate-100 text-slate-600'}`}
@@ -445,15 +485,36 @@ function TaskCard({
             </div>
           </div>
         </div>
-        {!isCompleted && !isSkipped && !upcoming && (
-          <button
-            onClick={() => onSkip(task.id)}
-            disabled={updating}
-            className="text-xs text-slate-400 hover:text-slate-600"
-          >
-            Skip
-          </button>
-        )}
+        <div className="flex flex-col items-end gap-2">
+          {canStartPractice && (
+            <Link
+              href={practiceUrl}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-500"
+            >
+              Start
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </Link>
+          )}
+          {!isCompleted && !isSkipped && !upcoming && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onSkip(task.id);
+              }}
+              disabled={updating}
+              className="text-xs text-slate-400 hover:text-slate-600"
+            >
+              Skip
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
