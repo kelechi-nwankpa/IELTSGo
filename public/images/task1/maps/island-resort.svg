@@ -3,98 +3,87 @@
 
   <!-- Title -->
   <text x="300" y="25" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Town Center: 1980 vs Present
+    Tropical Island Resort: Proposed Development Plan
   </text>
 
-  <!-- 1980 Map -->
-  <g transform="translate(25, 45)">
-    <text x="130" y="15" text-anchor="middle" fill="#475569" font-size="12" font-weight="500" font-family="system-ui">1980</text>
-    <rect x="5" y="25" width="250" height="280" fill="#e7f5e7" stroke="#94a3b8" stroke-width="2" rx="4"/>
+  <!-- Ocean background -->
+  <rect x="20" y="40" width="560" height="320" fill="#bae6fd" rx="8"/>
 
-    <!-- Main road -->
-    <rect x="110" y="25" width="40" height="280" fill="#d1d5db"/>
+  <!-- Island shape -->
+  <ellipse cx="300" cy="200" rx="220" ry="140" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
 
-    <!-- Market -->
-    <rect x="30" y="60" width="60" height="50" fill="#fcd34d" stroke="#b45309"/>
-    <text x="60" y="90" text-anchor="middle" fill="#78350f" font-size="9" font-family="system-ui">Market</text>
+  <!-- Beach ring -->
+  <ellipse cx="300" cy="200" rx="200" ry="125" fill="#fef9c3" stroke="none"/>
 
-    <!-- Small shops -->
-    <rect x="30" y="130" width="60" height="30" fill="#fed7aa" stroke="#c2410c"/>
-    <text x="60" y="150" text-anchor="middle" fill="#7c2d12" font-size="8" font-family="system-ui">Shops</text>
+  <!-- Inner vegetation -->
+  <ellipse cx="300" cy="200" rx="160" ry="100" fill="#bbf7d0" stroke="none"/>
 
-    <!-- Residential -->
-    <rect x="30" y="180" width="60" height="80" fill="#dbeafe" stroke="#2563eb"/>
-    <text x="60" y="225" text-anchor="middle" fill="#1e40af" font-size="8" font-family="system-ui">Residential</text>
+  <!-- Central mountain/hill -->
+  <ellipse cx="300" cy="180" rx="50" ry="35" fill="#86efac" stroke="#16a34a" stroke-width="1"/>
+  <text x="300" y="185" text-anchor="middle" fill="#166534" font-size="8" font-family="system-ui">Tropical</text>
+  <text x="300" y="195" text-anchor="middle" fill="#166534" font-size="8" font-family="system-ui">Forest</text>
 
-    <!-- Church -->
-    <rect x="170" y="60" width="50" height="40" fill="#e9d5ff" stroke="#7c3aed"/>
-    <text x="195" y="85" text-anchor="middle" fill="#5b21b6" font-size="8" font-family="system-ui">Church</text>
+  <!-- Main hotel complex - North -->
+  <rect x="260" y="80" width="80" height="40" fill="#c7d2fe" stroke="#4f46e5" stroke-width="2" rx="3"/>
+  <text x="300" y="100" text-anchor="middle" fill="#3730a3" font-size="9" font-weight="500" font-family="system-ui">Main Hotel</text>
+  <text x="300" y="112" text-anchor="middle" fill="#3730a3" font-size="8" font-family="system-ui">(200 rooms)</text>
 
-    <!-- Park -->
-    <ellipse cx="195" cy="160" rx="40" ry="35" fill="#86efac" stroke="#16a34a"/>
-    <text x="195" y="165" text-anchor="middle" fill="#166534" font-size="8" font-family="system-ui">Park</text>
-
-    <!-- Houses -->
-    <rect x="165" y="220" width="60" height="60" fill="#dbeafe" stroke="#2563eb"/>
-    <text x="195" y="255" text-anchor="middle" fill="#1e40af" font-size="8" font-family="system-ui">Houses</text>
+  <!-- Beach villas - West -->
+  <g transform="translate(120, 160)">
+    <rect x="0" y="0" width="30" height="20" fill="#fcd34d" stroke="#b45309" rx="2"/>
+    <rect x="0" y="25" width="30" height="20" fill="#fcd34d" stroke="#b45309" rx="2"/>
+    <rect x="0" y="50" width="30" height="20" fill="#fcd34d" stroke="#b45309" rx="2"/>
+    <text x="50" y="40" fill="#78350f" font-size="8" font-family="system-ui">Beach</text>
+    <text x="50" y="50" fill="#78350f" font-size="8" font-family="system-ui">Villas</text>
   </g>
 
-  <!-- Present Map -->
-  <g transform="translate(315, 45)">
-    <text x="130" y="15" text-anchor="middle" fill="#475569" font-size="12" font-weight="500" font-family="system-ui">Present</text>
-    <rect x="5" y="25" width="250" height="280" fill="#e7f5e7" stroke="#94a3b8" stroke-width="2" rx="4"/>
+  <!-- Water sports center - East -->
+  <rect x="420" y="170" width="50" height="35" fill="#7dd3fc" stroke="#0284c7" stroke-width="2" rx="3"/>
+  <text x="445" y="188" text-anchor="middle" fill="#0369a1" font-size="7" font-family="system-ui">Water</text>
+  <text x="445" y="198" text-anchor="middle" fill="#0369a1" font-size="7" font-family="system-ui">Sports</text>
 
-    <!-- Pedestrian zone -->
-    <rect x="80" y="25" width="100" height="280" fill="#f0fdf4"/>
-    <line x1="80" y1="25" x2="80" y2="305" stroke="#22c55e" stroke-width="2" stroke-dasharray="4"/>
-    <line x1="180" y1="25" x2="180" y2="305" stroke="#22c55e" stroke-width="2" stroke-dasharray="4"/>
+  <!-- Restaurant - South West -->
+  <rect x="180" y="260" width="50" height="30" fill="#fca5a5" stroke="#dc2626" stroke-width="2" rx="3"/>
+  <text x="205" y="280" text-anchor="middle" fill="#991b1b" font-size="8" font-family="system-ui">Restaurant</text>
 
-    <!-- Ring road -->
-    <path d="M30,25 Q5,150 30,305" fill="none" stroke="#9ca3af" stroke-width="20"/>
-    <path d="M230,25 Q255,150 230,305" fill="none" stroke="#9ca3af" stroke-width="20"/>
+  <!-- Spa - South East -->
+  <rect x="370" y="260" width="50" height="30" fill="#f0abfc" stroke="#a855f7" stroke-width="2" rx="3"/>
+  <text x="395" y="280" text-anchor="middle" fill="#7e22ce" font-size="8" font-family="system-ui">Spa</text>
 
-    <!-- Supermarket (replaced market) -->
-    <rect x="100" y="50" width="60" height="60" fill="#fcd34d" stroke="#b45309"/>
-    <text x="130" y="85" text-anchor="middle" fill="#78350f" font-size="8" font-family="system-ui">Super-</text>
-    <text x="130" y="95" text-anchor="middle" fill="#78350f" font-size="8" font-family="system-ui">market</text>
+  <!-- Swimming pool - Center South -->
+  <ellipse cx="300" cy="250" rx="35" ry="20" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+  <text x="300" y="254" text-anchor="middle" fill="#0369a1" font-size="8" font-family="system-ui">Pool</text>
 
-    <!-- Shopping area -->
-    <rect x="100" y="125" width="60" height="40" fill="#fed7aa" stroke="#c2410c"/>
-    <text x="130" y="150" text-anchor="middle" fill="#7c2d12" font-size="8" font-family="system-ui">Shopping</text>
+  <!-- Jetty/pier extending into ocean -->
+  <rect x="295" y="310" width="10" height="50" fill="#a8a29e" stroke="#78716c"/>
+  <text x="300" y="370" text-anchor="middle" fill="#57534e" font-size="8" font-family="system-ui">Jetty</text>
 
-    <!-- Multi-story car park -->
-    <rect x="50" y="180" width="40" height="50" fill="#d1d5db" stroke="#475569"/>
-    <text x="70" y="205" text-anchor="middle" fill="#1e293b" font-size="7" font-family="system-ui">Car</text>
-    <text x="70" y="215" text-anchor="middle" fill="#1e293b" font-size="7" font-family="system-ui">Park</text>
+  <!-- Paths (dashed lines connecting facilities) -->
+  <path d="M300,120 L300,230" stroke="#78716c" stroke-width="2" stroke-dasharray="4" fill="none"/>
+  <path d="M180,180 L260,200" stroke="#78716c" stroke-width="2" stroke-dasharray="4" fill="none"/>
+  <path d="M340,200 L420,188" stroke="#78716c" stroke-width="2" stroke-dasharray="4" fill="none"/>
 
-    <!-- Bus station -->
-    <rect x="100" y="180" width="40" height="30" fill="#bfdbfe" stroke="#2563eb"/>
-    <text x="120" y="200" text-anchor="middle" fill="#1e40af" font-size="7" font-family="system-ui">Bus Stn</text>
-
-    <!-- Offices -->
-    <rect x="165" y="125" width="50" height="85" fill="#e0e7ff" stroke="#4f46e5"/>
-    <text x="190" y="175" text-anchor="middle" fill="#3730a3" font-size="8" font-family="system-ui">Offices</text>
-
-    <!-- Small park -->
-    <ellipse cx="190" cy="260" rx="25" ry="20" fill="#86efac" stroke="#16a34a"/>
-    <text x="190" y="263" text-anchor="middle" fill="#166534" font-size="7" font-family="system-ui">Park</text>
+  <!-- Compass - North arrow (red) pointing UP -->
+  <g transform="translate(530, 70)">
+    <circle cx="0" cy="0" r="20" fill="white" stroke="#64748b"/>
+    <polygon points="0,-18 -5,0 5,0" fill="#dc2626"/>
+    <polygon points="0,18 -5,0 5,0" fill="#94a3b8"/>
+    <text x="0" y="-22" text-anchor="middle" fill="#dc2626" font-size="8" font-weight="bold" font-family="system-ui">N</text>
   </g>
 
   <!-- Legend -->
-  <g transform="translate(80, 370)" font-size="9" font-family="system-ui">
-    <rect x="0" y="0" width="10" height="10" fill="#dbeafe" stroke="#2563eb"/>
-    <text x="14" y="9" fill="#475569">Residential</text>
-
-    <rect x="80" y="0" width="10" height="10" fill="#fcd34d" stroke="#b45309"/>
-    <text x="94" y="9" fill="#475569">Commercial</text>
-
-    <rect x="175" y="0" width="10" height="10" fill="#86efac" stroke="#16a34a"/>
-    <text x="189" y="9" fill="#475569">Green space</text>
-
-    <rect x="260" y="0" width="10" height="10" fill="#d1d5db"/>
-    <text x="274" y="9" fill="#475569">Roads</text>
-
-    <rect x="320" y="0" width="10" height="10" fill="#e0e7ff" stroke="#4f46e5"/>
-    <text x="334" y="9" fill="#475569">Offices</text>
+  <g transform="translate(25, 375)" font-size="8" font-family="system-ui">
+    <rect x="0" y="0" width="10" height="10" fill="#c7d2fe" stroke="#4f46e5"/>
+    <text x="14" y="8" fill="#475569">Accommodation</text>
+    <rect x="90" y="0" width="10" height="10" fill="#fcd34d" stroke="#b45309"/>
+    <text x="104" y="8" fill="#475569">Villas</text>
+    <rect x="150" y="0" width="10" height="10" fill="#bbf7d0"/>
+    <text x="164" y="8" fill="#475569">Vegetation</text>
+    <rect x="230" y="0" width="10" height="10" fill="#fef3c7"/>
+    <text x="244" y="8" fill="#475569">Beach</text>
+    <rect x="290" y="0" width="10" height="10" fill="#38bdf8"/>
+    <text x="304" y="8" fill="#475569">Water features</text>
+    <line x1="380" y1="5" x2="400" y2="5" stroke="#78716c" stroke-width="2" stroke-dasharray="4"/>
+    <text x="405" y="8" fill="#475569">Paths</text>
   </g>
 </svg>
