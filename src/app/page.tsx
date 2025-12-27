@@ -73,16 +73,16 @@ export default async function Home() {
               </div>
 
               <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-                Your IELTS writing coach that{' '}
+                Finally understand{' '}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  actually explains
+                  why you&apos;re stuck
                 </span>{' '}
-                how to improve
+                at your current band
               </h1>
 
               <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
-                Stop guessing what examiners want. Get instant, detailed feedback on your essays
-                with band scores and specific suggestions — like having a tutor available 24/7.
+                Stop wondering what&apos;s holding you back. See exactly which criteria are keeping
+                you from Band 7+ and get specific steps to fix them — without expensive tutors.
               </p>
 
               <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
@@ -174,7 +174,7 @@ export default async function Home() {
                   </div>
                   {/* Feedback area */}
                   <div className="bg-gradient-to-br from-slate-50 to-white p-6">
-                    <div className="mb-4 text-sm font-medium text-slate-900">AI Feedback</div>
+                    <div className="mb-4 text-sm font-medium text-slate-900">Your Results</div>
                     <div className="space-y-3">
                       <div className="rounded-xl bg-white p-3 shadow-sm ring-1 ring-slate-100">
                         <div className="flex items-center justify-between">
@@ -242,10 +242,10 @@ export default async function Home() {
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-16 text-center">
               <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-                Everything you need to hit your target band
+                See your band score improve week by week
               </h2>
               <p className="mt-4 text-lg text-slate-600">
-                Real IELTS criteria. Honest feedback. Actual improvement.
+                Know exactly what&apos;s holding you back. Fix it. Watch your scores climb.
               </p>
             </div>
 
@@ -263,10 +263,10 @@ export default async function Home() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-bold">Official IELTS Criteria</h3>
+                  <h3 className="text-2xl font-bold">Know Exactly Where You Stand</h3>
                   <p className="mt-2 max-w-md text-blue-100">
-                    Scored exactly like real examiners do — Task Response, Coherence & Cohesion,
-                    Lexical Resource, and Grammatical Range & Accuracy.
+                    Get scored on the same four criteria real examiners use — so you know precisely
+                    which area to focus on to reach your target band.
                   </p>
                   <div className="mt-6 flex flex-wrap gap-2">
                     {['Task Response', 'Coherence', 'Vocabulary', 'Grammar'].map((criteria) => (
@@ -300,9 +300,10 @@ export default async function Home() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">Instant Feedback</h3>
+                <h3 className="text-lg font-bold text-slate-900">Practice Daily, Improve Faster</h3>
                 <p className="mt-2 text-slate-600">
-                  No waiting days for results. Get detailed feedback in seconds, not weeks.
+                  No more waiting weeks for tutor feedback. Practice as much as you want and see
+                  results immediately.
                 </p>
               </div>
 
@@ -323,9 +324,12 @@ export default async function Home() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">Specific Suggestions</h3>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Stop Repeating the Same Mistakes
+                </h3>
                 <p className="mt-2 text-slate-600">
-                  Not just scores — actionable advice on exactly what to fix and how.
+                  Get told exactly what&apos;s costing you marks — and how to fix it in your next
+                  essay.
                 </p>
               </div>
 
@@ -346,18 +350,18 @@ export default async function Home() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">Real IELTS Prompts</h3>
+                <h3 className="text-lg font-bold text-slate-900">Walk Into the Exam Confident</h3>
                 <p className="mt-2 text-slate-600">
-                  Practice with Task 1 and Task 2 prompts that mirror actual exam questions.
+                  Practice with prompts that mirror real exam questions — no surprises on test day.
                 </p>
               </div>
 
-              {/* Coming soon feature */}
-              <div className="relative overflow-hidden rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-6 md:col-span-2">
+              {/* Speaking feature */}
+              <div className="relative overflow-hidden rounded-3xl border border-green-200 bg-green-50/50 p-6 md:col-span-2">
                 <div className="flex items-start gap-4">
-                  <div className="inline-flex rounded-xl bg-slate-200 p-3">
+                  <div className="inline-flex rounded-xl bg-green-100 p-3">
                     <svg
-                      className="h-6 w-6 text-slate-500"
+                      className="h-6 w-6 text-green-600"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -372,14 +376,16 @@ export default async function Home() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-slate-900">Speaking Practice</h3>
-                      <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-600">
-                        Coming Soon
+                      <h3 className="text-lg font-bold text-slate-900">
+                        Practice Speaking Daily Without a Tutor
+                      </h3>
+                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-600">
+                        Available Now
                       </span>
                     </div>
                     <p className="mt-1 text-slate-600">
-                      Practice all three parts of the speaking test with an AI conversation partner.
-                      Real-time feedback on fluency, pronunciation, and vocabulary.
+                      No need to book expensive sessions. Practice all three speaking parts anytime,
+                      get feedback on fluency, vocabulary, and grammar — and track your progress.
                     </p>
                   </div>
                 </div>
@@ -393,9 +399,11 @@ export default async function Home() {
           <div className="mx-auto max-w-6xl px-6">
             <div className="mb-16 text-center">
               <h2 className="text-3xl font-bold text-white sm:text-4xl">
-                From practice to progress in minutes
+                From confused to confident in three steps
               </h2>
-              <p className="mt-4 text-lg text-slate-400">Simple workflow, powerful results</p>
+              <p className="mt-4 text-lg text-slate-400">
+                Finally know what examiners are looking for
+              </p>
             </div>
 
             <div className="grid gap-8 md:grid-cols-3">
@@ -403,10 +411,9 @@ export default async function Home() {
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 text-xl font-bold text-white shadow-lg shadow-blue-500/30">
                   1
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">Pick a prompt</h3>
+                <h3 className="mb-2 text-xl font-bold text-white">Choose your challenge</h3>
                 <p className="text-slate-400">
-                  Choose from Task 1 or Task 2 writing prompts. Each one mirrors real IELTS exam
-                  topics.
+                  Pick a writing or speaking task that matches what you&apos;ll face on exam day.
                 </p>
                 {/* Connector line */}
                 <div className="absolute top-6 right-0 hidden h-0.5 w-1/3 bg-gradient-to-r from-blue-500/50 to-transparent md:block" />
@@ -416,9 +423,9 @@ export default async function Home() {
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-xl font-bold text-white shadow-lg shadow-indigo-500/30">
                   2
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">Write your essay</h3>
+                <h3 className="mb-2 text-xl font-bold text-white">Give it your best shot</h3>
                 <p className="text-slate-400">
-                  Use our clean editor with built-in timer and word counter. Just like test day.
+                  Write or speak your response with a timer — just like the real test conditions.
                 </p>
                 {/* Connector line */}
                 <div className="absolute top-6 right-0 hidden h-0.5 w-1/3 bg-gradient-to-r from-purple-500/50 to-transparent md:block" />
@@ -428,10 +435,10 @@ export default async function Home() {
                 <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 text-xl font-bold text-white shadow-lg shadow-purple-500/30">
                   3
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">Get your feedback</h3>
+                <h3 className="mb-2 text-xl font-bold text-white">See exactly what to fix</h3>
                 <p className="text-slate-400">
-                  Receive band scores for all criteria plus specific, actionable suggestions to
-                  improve.
+                  Get your band score breakdown and specific steps to improve — know exactly what to
+                  work on next.
                 </p>
               </div>
             </div>
@@ -478,11 +485,11 @@ export default async function Home() {
 
               <div className="relative z-10">
                 <h2 className="text-3xl font-bold text-white sm:text-4xl">
-                  Ready to improve your score?
+                  Ready to break through your plateau?
                 </h2>
                 <p className="mx-auto mt-4 max-w-xl text-lg text-blue-100">
-                  Join thousands of students who&apos;ve already improved their band scores. Start
-                  with 3 free evaluations — no credit card needed.
+                  Join thousands of students who finally understood what was holding them back.
+                  Start with 3 free evaluations — no credit card needed.
                 </p>
                 <div className="mt-8">
                   {session ? (
