@@ -66,6 +66,34 @@ enum SubscriptionPlan {
   ANNUAL
 }
 
+// Phase 6: Study Plans & Progress enums
+enum DiagnosticStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum StudyPlanStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+  SKIPPED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
 // ============================================
 // MODELS
 // ============================================
@@ -101,6 +129,14 @@ model User {
   evaluations  Evaluation[]
   quota        UsageQuota?
   invoices     Invoice[]
+
+  // Phase 6: Study Plans & Progress relations
+  diagnosticAssessments DiagnosticAssessment[]
+  studyPlans            StudyPlan[]
+  progressSnapshots     ProgressSnapshot[]
+  skillAssessments      SkillAssessment[]
+  achievements          UserAchievement[]
+  studyStreak           StudyStreak?
 
   @@map("users")
 }
@@ -243,4 +279,227 @@ model Invoice {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("invoices")
+}
+
+// ============================================
+// PHASE 6: STUDY PLANS & PROGRESS MODELS
+// ============================================
+
+// Diagnostic assessment results - captures initial and periodic assessments
+model DiagnosticAssessment {
+  id            String           @id @default(uuid())
+  userId        String           @map("user_id")
+  status        DiagnosticStatus @default(NOT_STARTED)
+
+  // Estimated bands per module (null if not yet assessed)
+  listeningBand Float? @map("listening_band")
+  readingBand   Float? @map("reading_band")
+  writingBand   Float? @map("writing_band")
+  speakingBand  Float? @map("speaking_band")
+  overallBand   Float? @map("overall_band")
+
+  // Weak areas identified (JSONB array of skill identifiers)
+  weakAreas Json? @map("weak_areas")
+
+  // Session references for diagnostic practice
+  diagnosticData Json? @map("diagnostic_data") // Stores question responses
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  completedAt DateTime? @map("completed_at")
+
+  // Relations
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studyPlans StudyPlan[]
+
+  @@map("diagnostic_assessments")
+}
+
+// User's study plan configuration and generated plan
+model StudyPlan {
+  id           String @id @default(uuid())
+  userId       String @map("user_id")
+  diagnosticId String? @map("diagnostic_id")
+
+  // User inputs
+  targetBand       Float @map("target_band")
+  testDate         DateTime? @map("test_date")
+  hoursPerDay      Float @map("hours_per_day") // e.g., 1.5, 2, 3
+  studyDaysPerWeek Int   @default(5) @map("study_days_per_week")
+
+  // Plan status and metadata
+  status      StudyPlanStatus @default(DRAFT)
+  currentWeek Int             @default(1) @map("current_week")
+
+  // AI-generated plan content (JSONB)
+  planData      Json   @map("plan_data") // Full StudyPlan structure from AI
+  promptVersion String @map("prompt_version")
+  tokensUsed    Int    @map("tokens_used")
+
+  // Timestamps
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  lastRegeneratedAt DateTime? @map("last_regenerated_at")
+
+  // Relations
+  user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  diagnostic DiagnosticAssessment? @relation(fields: [diagnosticId], references: [id])
+  tasks      StudyTask[]
+  goals      WeeklyGoal[]
+
+  @@map("study_plans")
+}
+
+// Weekly goal tracking
+model WeeklyGoal {
+  id          String @id @default(uuid())
+  studyPlanId String @map("study_plan_id")
+  weekNumber  Int    @map("week_number")
+
+  // Goals per module (JSONB with structure {module: string, target: number, description: string})
+  goals     Json
+  theme     String // e.g., "Foundation Building", "Intensive Practice"
+  milestone String // What user should achieve by week end
+
+  // Progress tracking
+  completedTasks Int @default(0) @map("completed_tasks")
+  totalTasks     Int @map("total_tasks")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  studyPlan StudyPlan @relation(fields: [studyPlanId], references: [id], onDelete: Cascade)
+
+  @@unique([studyPlanId, weekNumber])
+  @@map("weekly_goals")
+}
+
+// Individual study tasks (daily recommendations)
+model StudyTask {
+  id          String @id @default(uuid())
+  studyPlanId String @map("study_plan_id")
+
+  // Task details
+  module      Module
+  title       String
+  description String
+  duration    Int          // in minutes
+  priority    TaskPriority @default(MEDIUM)
+
+  // Scheduling
+  scheduledDate DateTime @map("scheduled_date")
+  weekNumber    Int      @map("week_number")
+  dayOfWeek     Int      @map("day_of_week") // 0-6
+
+  // Status tracking
+  status      TaskStatus @default(PENDING)
+  completedAt DateTime?  @map("completed_at")
+
+  // Link to practice session if applicable
+  sessionId String? @map("session_id")
+
+  // Task metadata (JSONB for flexible activity types)
+  metadata Json? // e.g., {activityType: "passage", contentId: "...", difficulty: 6.5}
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  studyPlan StudyPlan @relation(fields: [studyPlanId], references: [id], onDelete: Cascade)
+
+  @@index([studyPlanId, scheduledDate])
+  @@index([studyPlanId, status])
+  @@map("study_tasks")
+}
+
+// Progress snapshots for trend analysis
+model ProgressSnapshot {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+
+  // Scores at this point in time
+  listeningBand Float? @map("listening_band")
+  readingBand   Float? @map("reading_band")
+  writingBand   Float? @map("writing_band")
+  speakingBand  Float? @map("speaking_band")
+  overallBand   Float? @map("overall_band")
+
+  // Skill-level metrics (JSONB)
+  skillBreakdown Json? @map("skill_breakdown")
+
+  // Completion metrics
+  sessionsCompleted Int @default(0) @map("sessions_completed")
+  tasksCompleted    Int @default(0) @map("tasks_completed")
+  studyMinutes      Int @default(0) @map("study_minutes")
+
+  // Context
+  weekNumber  Int?    @map("week_number")
+  studyPlanId String? @map("study_plan_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("progress_snapshots")
+}
+
+// User skill tracking for weak area identification
+model SkillAssessment {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+  module Module
+
+  // Skill identifier (e.g., "reading_tfng", "writing_task2_coherence", "speaking_fluency")
+  skillId   String @map("skill_id")
+  skillName String @map("skill_name")
+
+  // Performance tracking
+  currentLevel  Float     @map("current_level") // 0-9 scale
+  attempts      Int       @default(0)
+  lastPracticed DateTime? @map("last_practiced")
+
+  // Trend data
+  improvementRate Float? @map("improvement_rate") // band change per week
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+  @@index([userId, module])
+  @@map("skill_assessments")
+}
+
+// User achievements for gamification
+model UserAchievement {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  achievementId String   @map("achievement_id") // e.g., "first_steps", "7_day_streak"
+  unlockedAt    DateTime @default(now()) @map("unlocked_at")
+  metadata      Json?    // Extra data like band achieved, streak count
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+// Study streak tracking for gamification
+model StudyStreak {
+  id             String    @id @default(uuid())
+  userId         String    @unique @map("user_id")
+  currentStreak  Int       @default(0) @map("current_streak")
+  longestStreak  Int       @default(0) @map("longest_streak")
+  lastStudyDate  DateTime? @map("last_study_date")
+  totalStudyDays Int       @default(0) @map("total_study_days")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("study_streaks")
 }

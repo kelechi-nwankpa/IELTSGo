@@ -24,3 +24,38 @@ body {
   color: var(--foreground);
   font-family: var(--font-nunito), system-ui, sans-serif;
 }
+
+/* Gamification Animations */
+@keyframes confetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes badge-unlock {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-confetti {
+  animation: confetti linear forwards;
+}
+
+.animate-badge-unlock {
+  animation: badge-unlock 0.6s ease-out forwards;
+}
