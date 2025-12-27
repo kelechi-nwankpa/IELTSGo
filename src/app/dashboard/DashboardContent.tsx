@@ -125,6 +125,12 @@ export default function DashboardContent() {
               </Link>
             )}
             <Link
+              href="/study-plan"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              Study Plan
+            </Link>
+            <Link
               href="/history"
               className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
             >
@@ -451,6 +457,46 @@ export default function DashboardContent() {
               })}
             </div>
           )}
+        </div>
+
+        {/* Study Plan CTA */}
+        <div className="mt-8">
+          <Link
+            href="/study-plan"
+            className="group block rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-6 transition-all hover:shadow-lg"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25">
+                  <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">Personalized Study Plan</h3>
+                  <p className="text-slate-600">
+                    Get an AI-generated study plan tailored to your target band and test date
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl bg-amber-500 px-5 py-2.5 font-semibold text-white shadow-lg shadow-amber-500/25 transition-all group-hover:bg-amber-600 group-hover:shadow-xl">
+                Get Started
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Practice Modules */}
