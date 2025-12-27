@@ -331,7 +331,11 @@ function getPracticeUrl(module: string, title: string): string {
     case 'SPEAKING':
       if (titleLower.includes('part 1') || titleLower.includes('part1')) {
         return '/speaking/part1';
-      } else if (titleLower.includes('part 2') || titleLower.includes('part2') || titleLower.includes('cue card')) {
+      } else if (
+        titleLower.includes('part 2') ||
+        titleLower.includes('part2') ||
+        titleLower.includes('cue card')
+      ) {
         return '/speaking/part2';
       } else if (titleLower.includes('part 3') || titleLower.includes('part3')) {
         return '/speaking/part3';
