@@ -85,145 +85,39 @@ export interface GeneratedStudyPlan {
   adaptation_triggers: AdaptationTrigger[];
 }
 
-const STUDY_PLAN_SYSTEM_PROMPT = `You are an IELTS preparation expert and study coach. Your task is to generate a personalized study plan based on a student's diagnostic results, target band, and available time.
+const STUDY_PLAN_SYSTEM_PROMPT = `You are an IELTS preparation expert. Generate a CONCISE personalized study plan.
 
-## Planning Principles
+## CRITICAL CONSTRAINTS - FOLLOW EXACTLY:
+- Generate ONLY 4-6 weekly_plans (NOT 8-12)
+- Keep activity descriptions SHORT (5-10 words max)
+- Limit to 2-3 activities per module per day
+- Keep goals to 2-3 items per week
+- Milestones must be ONE short sentence
+- Total response must fit within 3500 tokens
 
-### 1. Prioritize Weakest Areas
-- Focus more time on modules furthest from target
-- But maintain some practice in all areas
+## Planning Principles:
+1. Prioritize modules furthest from target band
+2. Realistic goals: ~0.5 band improvement per 6-8 weeks
+3. Progressive difficulty increase
+4. Include mock tests in final week
 
-### 2. Realistic Goals
-- Band improvement typically takes time (0.5 band per 6-8 weeks of focused study)
-- Don't promise unrealistic gains
+## Band Gap Priority:
+- Gap > 1.5: High (40%+ time)
+- Gap 1.0-1.5: Medium-high (25-35%)
+- Gap 0.5-1.0: Medium (15-25%)
+- Gap < 0.5: Maintenance (10-15%)
 
-### 3. Balanced Approach
-- Mix skill-building and practice
-- Include both timed and untimed practice
-- Balance input (reading/listening) with output (writing/speaking)
+## Activity Examples (this length):
+- "Section 2 form-filling practice"
+- "T/F/NG passage - scanning drill"
+- "Task 2 essay - opinion type"
+- "Part 2 cue card practice"`;
 
-### 4. Spaced Repetition
-- Review previous mistakes
-- Return to difficult topics
-- Progressive difficulty increase
+const RESPONSE_FORMAT = `Respond with ONLY valid JSON (no markdown, no code blocks). Keep it COMPACT:
 
-### 5. Test-Taking Strategy
-- Include timing practice
-- Teach question-type strategies
-- Mock test practice closer to test date
+{"summary":{"total_weeks":4,"focus_areas":["Writing","Speaking"],"expected_improvement":"0.5 band in 4-6 weeks","key_strategy":"Focus on weakest areas"},"weekly_plans":[{"week":1,"theme":"Foundations","goals":["Build vocabulary","Practice timing"],"daily_breakdown":{"listening":{"minutes":30,"activities":["Section 1-2 practice"]},"reading":{"minutes":30,"activities":["Skimming drills"]},"writing":{"minutes":45,"activities":["Task 2 planning"]},"speaking":{"minutes":20,"activities":["Part 1 Q&A"]}},"milestone":"Complete baseline assessment"}],"skill_building_focus":[{"skill":"Coherence","current_issue":"Weak paragraph structure","recommended_practice":"Outline before writing","success_indicator":"Clear topic sentences"}],"resources_needed":[{"resource":"Practice tests","purpose":"Timed practice","available_in_app":true}],"test_day_tips":["Arrive early","Read instructions carefully"],"adaptation_triggers":[{"condition":"Scoring above target","adjustment":"Increase difficulty"}]}
 
-## Band Gap Analysis
-
-Calculate focus distribution based on gaps:
-- Gap > 1.5 bands: High priority (40%+ of study time)
-- Gap 1.0-1.5 bands: Medium-high priority (25-35%)
-- Gap 0.5-1.0 bands: Medium priority (15-25%)
-- Gap < 0.5 bands: Maintenance (10-15%)
-
-## Activity Types to Include
-
-### Listening
-- Section-specific practice (1, 2, 3, 4)
-- Question-type focus (form completion, matching, etc.)
-- Speed listening (1.25x)
-- Note-taking practice
-- Vocabulary building from transcripts
-
-### Reading
-- Passage-type practice (Academic: journals, reports; General: notices, advertisements)
-- Question-type focus (T/F/NG, matching headings, etc.)
-- Timed practice (20 minutes per passage)
-- Skimming and scanning drills
-- Vocabulary building from passages
-
-### Writing
-- Task 1 practice (varied chart/letter types)
-- Task 2 essay writing
-- Planning practice (outlines)
-- Paragraph structure exercises
-- Grammar focus (common errors)
-- Vocabulary building (academic word list)
-
-### Speaking
-- Part 1 Q&A practice
-- Part 2 monologue practice
-- Part 3 discussion practice
-- Fluency exercises
-- Pronunciation work
-- Recording and self-review
-
-## Important Guidelines
-
-1. Be specific — "Practice IELTS Reading" is too vague; "Complete 2 T/F/NG passages focusing on keyword identification" is better
-2. Include time estimates that fit within stated study hours
-3. Account for test date if provided — compress plan if needed
-4. If no test date, assume 8-12 week preparation
-5. Include rest days or lighter days for sustainability
-6. Make activities progressively harder
-7. Include mock test recommendations (typically weeks before test)
-8. Be encouraging but realistic about expected outcomes
-9. Reference specific question types and skills from the weak areas provided`;
-
-const RESPONSE_FORMAT = `You MUST respond with valid JSON matching this exact structure (no markdown, no code blocks, just pure JSON):
-
-{
-  "summary": {
-    "total_weeks": <number>,
-    "focus_areas": ["<primary focus>", "<secondary focus>"],
-    "expected_improvement": "<realistic expectation statement>",
-    "key_strategy": "<main strategic approach>"
-  },
-  "weekly_plans": [
-    {
-      "week": <number>,
-      "theme": "<week's focus theme>",
-      "goals": ["<specific goal>", ...],
-      "daily_breakdown": {
-        "listening": {
-          "minutes": <number>,
-          "activities": ["<specific activity>", ...]
-        },
-        "reading": {
-          "minutes": <number>,
-          "activities": ["<specific activity>", ...]
-        },
-        "writing": {
-          "minutes": <number>,
-          "activities": ["<specific activity>", ...]
-        },
-        "speaking": {
-          "minutes": <number>,
-          "activities": ["<specific activity>", ...]
-        }
-      },
-      "milestone": "<what student should achieve by end of week>"
-    }
-  ],
-  "skill_building_focus": [
-    {
-      "skill": "<specific skill to develop>",
-      "current_issue": "<what the diagnostic revealed>",
-      "recommended_practice": "<how to improve>",
-      "success_indicator": "<how to know improvement>"
-    }
-  ],
-  "resources_needed": [
-    {
-      "resource": "<resource name>",
-      "purpose": "<why it's needed>",
-      "available_in_app": <boolean>
-    }
-  ],
-  "test_day_tips": [
-    "<practical tip for test day>"
-  ],
-  "adaptation_triggers": [
-    {
-      "condition": "<if this happens>",
-      "adjustment": "<modify the plan this way>"
-    }
-  ]
-}`;
+Use this exact structure. Generate 4-6 weekly_plans with SHORT activity descriptions.`;
 
 export async function generateStudyPlan(input: StudyPlanInput): Promise<{
   plan: GeneratedStudyPlan;
@@ -266,7 +160,7 @@ Generate a personalized study plan for this student.`;
   try {
     const response = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 4096,
+      max_tokens: 8192,
       system: STUDY_PLAN_SYSTEM_PROMPT,
       messages: [
         {
@@ -283,8 +177,33 @@ Generate a personalized study plan for this student.`;
     }
 
     // Parse the JSON response
-    const jsonText = textContent.text.trim();
-    const plan = JSON.parse(jsonText) as GeneratedStudyPlan;
+    let jsonText = textContent.text.trim();
+
+    // Try to extract JSON if wrapped in markdown code blocks
+    const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (jsonMatch) {
+      jsonText = jsonMatch[1].trim();
+    }
+
+    // Try to find JSON object if there's extra text
+    const jsonStart = jsonText.indexOf('{');
+    const jsonEnd = jsonText.lastIndexOf('}');
+    if (jsonStart !== -1 && jsonEnd !== -1 && jsonStart < jsonEnd) {
+      jsonText = jsonText.slice(jsonStart, jsonEnd + 1);
+    }
+
+    let plan: GeneratedStudyPlan;
+    try {
+      plan = JSON.parse(jsonText) as GeneratedStudyPlan;
+    } catch {
+      console.error('JSON parse error. Raw response:', textContent.text.substring(0, 500));
+      throw new Error('AI response was not valid JSON. Please try again.');
+    }
+
+    // Validate required fields
+    if (!plan.summary || !plan.weekly_plans || !Array.isArray(plan.weekly_plans)) {
+      throw new Error('AI response missing required fields. Please try again.');
+    }
 
     // Calculate tokens used
     const tokensUsed = (response.usage?.input_tokens || 0) + (response.usage?.output_tokens || 0);
@@ -295,12 +214,6 @@ Generate a personalized study plan for this student.`;
     };
   } catch (error) {
     console.error('Study plan generation error:', error);
-
-    // If JSON parsing failed, try to extract JSON from the response
-    if (error instanceof SyntaxError) {
-      throw new Error('AI response was not valid JSON. Please try again.');
-    }
-
     throw error;
   }
 }
