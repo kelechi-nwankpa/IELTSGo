@@ -3,56 +3,67 @@
 
   <!-- Title -->
   <text x="300" y="30" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Energy Consumption by Source: 1990 vs 2020
+    Global Energy Consumption by Source: 1990 vs 2020
   </text>
 
   <!-- 1990 Pie Chart -->
-  <g transform="translate(150, 200)">
-    <text x="0" y="-120" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">1990</text>
+  <g transform="translate(150, 195)">
+    <text x="0" y="-115" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">1990</text>
 
-    <!-- Oil 45% -->
-    <path d="M0,0 L0,-100 A100,100 0 0,1 95,-31 Z" fill="#1e40af"/>
-    <!-- Coal 30% -->
-    <path d="M0,0 L95,-31 A100,100 0 0,1 59,81 Z" fill="#475569"/>
-    <!-- Gas 15% -->
-    <path d="M0,0 L59,81 A100,100 0 0,1 -59,81 Z" fill="#0891b2"/>
-    <!-- Nuclear 8% -->
-    <path d="M0,0 L-59,81 A100,100 0 0,1 -95,-31 Z" fill="#7c3aed"/>
-    <!-- Renewables 2% -->
-    <path d="M0,0 L-95,-31 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+    <!-- Oil 40% (144 degrees) - starts at top -->
+    <path d="M0,0 L0,-100 A100,100 0 0,1 93.97,-34.2 Z" fill="#1e40af"/>
+    <!-- Coal 32% (115.2 degrees) -->
+    <path d="M0,0 L93.97,-34.2 A100,100 0 0,1 30.9,95.11 Z" fill="#475569"/>
+    <!-- Gas 18% (64.8 degrees) -->
+    <path d="M0,0 L30.9,95.11 A100,100 0 0,1 -58.78,80.9 Z" fill="#0891b2"/>
+    <!-- Nuclear 6% (21.6 degrees) -->
+    <path d="M0,0 L-58.78,80.9 A100,100 0 0,1 -86.6,50 Z" fill="#7c3aed"/>
+    <!-- Renewables 4% (14.4 degrees) -->
+    <path d="M0,0 L-86.6,50 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+
+    <!-- Labels -->
+    <text x="45" y="-50" fill="white" font-size="11" font-weight="600" font-family="system-ui">40%</text>
+    <text x="70" y="35" fill="white" font-size="11" font-weight="600" font-family="system-ui">32%</text>
+    <text x="-15" y="75" fill="white" font-size="10" font-weight="600" font-family="system-ui">18%</text>
   </g>
 
   <!-- 2020 Pie Chart -->
-  <g transform="translate(450, 200)">
-    <text x="0" y="-120" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">2020</text>
+  <g transform="translate(450, 195)">
+    <text x="0" y="-115" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">2020</text>
 
-    <!-- Oil 35% -->
-    <path d="M0,0 L0,-100 A100,100 0 0,1 81,-59 Z" fill="#1e40af"/>
-    <!-- Gas 28% -->
-    <path d="M0,0 L81,-59 A100,100 0 0,1 95,31 Z" fill="#0891b2"/>
-    <!-- Coal 18% -->
-    <path d="M0,0 L95,31 A100,100 0 0,1 31,95 Z" fill="#475569"/>
-    <!-- Nuclear 10% -->
-    <path d="M0,0 L31,95 A100,100 0 0,1 -59,81 Z" fill="#7c3aed"/>
-    <!-- Renewables 9% -->
-    <path d="M0,0 L-59,81 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+    <!-- Oil 31% (111.6 degrees) -->
+    <path d="M0,0 L0,-100 A100,100 0 0,1 93.36,35.84 Z" fill="#1e40af"/>
+    <!-- Gas 25% (90 degrees) -->
+    <path d="M0,0 L93.36,35.84 A100,100 0 0,1 -35.84,93.36 Z" fill="#0891b2"/>
+    <!-- Coal 27% (97.2 degrees) -->
+    <path d="M0,0 L-35.84,93.36 A100,100 0 0,1 -99.45,-10.45 Z" fill="#475569"/>
+    <!-- Renewables 12% (43.2 degrees) -->
+    <path d="M0,0 L-99.45,-10.45 A100,100 0 0,1 -34.2,-93.97 Z" fill="#16a34a"/>
+    <!-- Nuclear 5% (18 degrees) -->
+    <path d="M0,0 L-34.2,-93.97 A100,100 0 0,1 0,-100 Z" fill="#7c3aed"/>
+
+    <!-- Labels -->
+    <text x="40" y="-25" fill="white" font-size="11" font-weight="600" font-family="system-ui">31%</text>
+    <text x="35" y="60" fill="white" font-size="11" font-weight="600" font-family="system-ui">25%</text>
+    <text x="-75" y="40" fill="white" font-size="11" font-weight="600" font-family="system-ui">27%</text>
+    <text x="-70" y="-45" fill="#16a34a" font-size="10" font-weight="600" font-family="system-ui">12%</text>
   </g>
 
   <!-- Legend -->
-  <g transform="translate(150, 350)" font-size="11" font-family="system-ui">
-    <rect x="0" y="0" width="12" height="12" fill="#1e40af"/>
+  <g transform="translate(120, 345)" font-size="10" font-family="system-ui">
+    <rect x="0" y="0" width="12" height="12" fill="#1e40af" rx="2"/>
     <text x="16" y="10" fill="#475569">Oil</text>
 
-    <rect x="60" y="0" width="12" height="12" fill="#475569"/>
+    <rect x="60" y="0" width="12" height="12" fill="#475569" rx="2"/>
     <text x="76" y="10" fill="#475569">Coal</text>
 
-    <rect x="130" y="0" width="12" height="12" fill="#0891b2"/>
-    <text x="146" y="10" fill="#475569">Gas</text>
+    <rect x="130" y="0" width="12" height="12" fill="#0891b2" rx="2"/>
+    <text x="146" y="10" fill="#475569">Natural Gas</text>
 
-    <rect x="190" y="0" width="12" height="12" fill="#7c3aed"/>
-    <text x="206" y="10" fill="#475569">Nuclear</text>
+    <rect x="230" y="0" width="12" height="12" fill="#7c3aed" rx="2"/>
+    <text x="246" y="10" fill="#475569">Nuclear</text>
 
-    <rect x="270" y="0" width="12" height="12" fill="#16a34a"/>
-    <text x="286" y="10" fill="#475569">Renewables</text>
+    <rect x="310" y="0" width="12" height="12" fill="#16a34a" rx="2"/>
+    <text x="326" y="10" fill="#475569">Renewables</text>
   </g>
 </svg>

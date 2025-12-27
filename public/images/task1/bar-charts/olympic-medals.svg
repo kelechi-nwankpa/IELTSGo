@@ -1,77 +1,63 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
   <rect width="600" height="400" fill="#f8fafc"/>
-  <rect x="60" y="40" width="500" height="300" fill="white" stroke="#e2e8f0" stroke-width="2"/>
-
-  <!-- Grid lines -->
-  <g stroke="#e2e8f0" stroke-width="1">
-    <line x1="60" y1="100" x2="560" y2="100"/>
-    <line x1="60" y1="160" x2="560" y2="160"/>
-    <line x1="60" y1="220" x2="560" y2="220"/>
-    <line x1="60" y1="280" x2="560" y2="280"/>
-  </g>
-
-  <!-- Y-axis labels -->
-  <g fill="#64748b" font-size="12" font-family="system-ui">
-    <text x="50" y="105" text-anchor="end">80%</text>
-    <text x="50" y="165" text-anchor="end">60%</text>
-    <text x="50" y="225" text-anchor="end">40%</text>
-    <text x="50" y="285" text-anchor="end">20%</text>
-    <text x="50" y="345" text-anchor="end">0%</text>
-  </g>
-
-  <!-- Bar groups -->
-  <!-- Africa -->
-  <rect x="80" y="70" width="20" height="270" fill="#3b82f6"/>
-  <rect x="102" y="320" width="20" height="20" fill="#f59e0b"/>
-  <rect x="124" y="300" width="20" height="40" fill="#10b981"/>
-
-  <!-- Asia -->
-  <rect x="160" y="90" width="20" height="250" fill="#3b82f6"/>
-  <rect x="182" y="300" width="20" height="40" fill="#f59e0b"/>
-  <rect x="204" y="300" width="20" height="40" fill="#10b981"/>
-
-  <!-- Europe -->
-  <rect x="240" y="220" width="20" height="120" fill="#3b82f6"/>
-  <rect x="262" y="140" width="20" height="200" fill="#f59e0b"/>
-  <rect x="284" y="260" width="20" height="80" fill="#10b981"/>
-
-  <!-- N. America -->
-  <rect x="320" y="180" width="20" height="160" fill="#3b82f6"/>
-  <rect x="342" y="160" width="20" height="180" fill="#f59e0b"/>
-  <rect x="364" y="280" width="20" height="60" fill="#10b981"/>
-
-  <!-- S. America -->
-  <rect x="400" y="120" width="20" height="220" fill="#3b82f6"/>
-  <rect x="422" y="280" width="20" height="60" fill="#f59e0b"/>
-  <rect x="444" y="280" width="20" height="60" fill="#10b981"/>
-
-  <!-- Oceania -->
-  <rect x="480" y="150" width="20" height="190" fill="#3b82f6"/>
-  <rect x="502" y="280" width="20" height="60" fill="#f59e0b"/>
-  <rect x="524" y="260" width="20" height="80" fill="#10b981"/>
-
-  <!-- X-axis labels -->
-  <g fill="#64748b" font-size="10" font-family="system-ui" text-anchor="middle">
-    <text x="112" y="360">Africa</text>
-    <text x="192" y="360">Asia</text>
-    <text x="272" y="360">Europe</text>
-    <text x="352" y="360">N. America</text>
-    <text x="432" y="360">S. America</text>
-    <text x="512" y="360">Oceania</text>
-  </g>
-
-  <!-- Legend -->
-  <g font-size="11" font-family="system-ui">
-    <rect x="200" y="375" width="12" height="12" fill="#3b82f6"/>
-    <text x="216" y="385" fill="#475569">Agriculture</text>
-    <rect x="300" y="375" width="12" height="12" fill="#f59e0b"/>
-    <text x="316" y="385" fill="#475569">Industry</text>
-    <rect x="390" y="375" width="12" height="12" fill="#10b981"/>
-    <text x="406" y="385" fill="#475569">Domestic</text>
-  </g>
+  <rect x="70" y="40" width="480" height="310" fill="white" stroke="#e2e8f0" stroke-width="2"/>
 
   <!-- Title -->
   <text x="300" y="25" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Water Usage by Sector Across Regions
+    Total Olympic Medal Count (2000-2020)
   </text>
+
+  <!-- Grid lines -->
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="70" y1="90" x2="550" y2="90"/>
+    <line x1="70" y1="145" x2="550" y2="145"/>
+    <line x1="70" y1="200" x2="550" y2="200"/>
+    <line x1="70" y1="255" x2="550" y2="255"/>
+    <line x1="70" y1="310" x2="550" y2="310"/>
+  </g>
+
+  <!-- Y-axis labels -->
+  <g fill="#64748b" font-size="10" font-family="system-ui">
+    <text x="60" y="44" text-anchor="end">600</text>
+    <text x="60" y="94" text-anchor="end">500</text>
+    <text x="60" y="149" text-anchor="end">400</text>
+    <text x="60" y="204" text-anchor="end">300</text>
+    <text x="60" y="259" text-anchor="end">200</text>
+    <text x="60" y="314" text-anchor="end">100</text>
+    <text x="60" y="354" text-anchor="end">0</text>
+  </g>
+
+  <!-- USA: 550 medals -->
+  <rect x="100" y="58" width="60" height="292" fill="#3b82f6" rx="3"/>
+  <text x="130" y="50" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="500" font-family="system-ui">550</text>
+
+  <!-- China: 420 medals -->
+  <rect x="180" y="130" width="60" height="220" fill="#ef4444" rx="3"/>
+  <text x="210" y="122" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="500" font-family="system-ui">420</text>
+
+  <!-- Russia: 380 medals -->
+  <rect x="260" y="152" width="60" height="198" fill="#8b5cf6" rx="3"/>
+  <text x="290" y="144" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="500" font-family="system-ui">380</text>
+
+  <!-- GB: 340 medals -->
+  <rect x="340" y="174" width="60" height="176" fill="#10b981" rx="3"/>
+  <text x="370" y="166" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="500" font-family="system-ui">340</text>
+
+  <!-- Germany: 310 medals -->
+  <rect x="420" y="191" width="60" height="159" fill="#f59e0b" rx="3"/>
+  <text x="450" y="183" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="500" font-family="system-ui">310</text>
+
+  <!-- Australia: 290 medals -->
+  <rect x="500" y="202" width="60" height="148" fill="#ec4899" rx="3"/>
+  <text x="530" y="194" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="500" font-family="system-ui">290</text>
+
+  <!-- X-axis labels -->
+  <g fill="#64748b" font-size="10" font-family="system-ui" text-anchor="middle">
+    <text x="130" y="365">USA</text>
+    <text x="210" y="365">China</text>
+    <text x="290" y="365">Russia</text>
+    <text x="370" y="365">GB</text>
+    <text x="450" y="365">Germany</text>
+    <text x="530" y="365">Australia</text>
+  </g>
 </svg>

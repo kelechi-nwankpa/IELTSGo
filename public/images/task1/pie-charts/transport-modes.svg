@@ -3,56 +3,84 @@
 
   <!-- Title -->
   <text x="300" y="30" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Energy Consumption by Source: 1990 vs 2020
+    Commuter Transport Modes: City Center vs Suburbs
   </text>
 
-  <!-- 1990 Pie Chart -->
-  <g transform="translate(150, 200)">
-    <text x="0" y="-120" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">1990</text>
+  <!-- City Center Pie Chart -->
+  <!-- PT 45%, Walking 25%, Cycling 15%, Car 10%, Other 5% = 100% -->
+  <g transform="translate(150, 190)">
+    <text x="0" y="-110" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">City Center</text>
 
-    <!-- Oil 45% -->
-    <path d="M0,0 L0,-100 A100,100 0 0,1 95,-31 Z" fill="#1e40af"/>
-    <!-- Coal 30% -->
-    <path d="M0,0 L95,-31 A100,100 0 0,1 59,81 Z" fill="#475569"/>
-    <!-- Gas 15% -->
-    <path d="M0,0 L59,81 A100,100 0 0,1 -59,81 Z" fill="#0891b2"/>
-    <!-- Nuclear 8% -->
-    <path d="M0,0 L-59,81 A100,100 0 0,1 -95,-31 Z" fill="#7c3aed"/>
-    <!-- Renewables 2% -->
-    <path d="M0,0 L-95,-31 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+    <!-- Public Transport 45% = 162 degrees, end at (sin162°, -cos162°)*90 = (27.8, 85.6) -->
+    <path d="M0,0 L0,-90 A90,90 0 0,1 27.8,85.6 Z" fill="#3b82f6"/>
+    <!-- Walking 25% = 90 degrees, cumulative 252°, end at (sin252°, -cos252°)*90 = (-85.6, 27.8) -->
+    <path d="M0,0 L27.8,85.6 A90,90 0 0,1 -85.6,27.8 Z" fill="#10b981"/>
+    <!-- Cycling 15% = 54 degrees, cumulative 306°, end at (sin306°, -cos306°)*90 = (-72.8, -52.9) -->
+    <path d="M0,0 L-85.6,27.8 A90,90 0 0,1 -72.8,-52.9 Z" fill="#f59e0b"/>
+    <!-- Car 10% = 36 degrees, cumulative 342°, end at (sin342°, -cos342°)*90 = (-27.8, -85.6) -->
+    <path d="M0,0 L-72.8,-52.9 A90,90 0 0,1 -27.8,-85.6 Z" fill="#ef4444"/>
+    <!-- Other 5% = 18 degrees, cumulative 360°, end at (0, -90) -->
+    <path d="M0,0 L-27.8,-85.6 A90,90 0 0,1 0,-90 Z" fill="#94a3b8"/>
+
+    <!-- Labels inside pie -->
+    <text x="15" y="25" fill="white" font-size="12" font-weight="600" font-family="system-ui">45%</text>
+    <text x="-45" y="50" fill="white" font-size="11" font-weight="600" font-family="system-ui">25%</text>
+    <text x="-65" y="-5" fill="white" font-size="10" font-weight="600" font-family="system-ui">15%</text>
+    <text x="-42" y="-55" fill="white" font-size="9" font-weight="600" font-family="system-ui">10%</text>
+    <!-- Other 5% label outside with line -->
+    <line x1="-10" y1="-75" x2="5" y2="-100" stroke="#64748b" stroke-width="1"/>
+    <text x="8" y="-103" fill="#64748b" font-size="9" font-weight="500" font-family="system-ui">5%</text>
   </g>
 
-  <!-- 2020 Pie Chart -->
-  <g transform="translate(450, 200)">
-    <text x="0" y="-120" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">2020</text>
+  <!-- Suburbs Pie Chart -->
+  <!-- Car 65%, PT 15%, Cycling 10%, Walking 5%, Other 5% = 100% -->
+  <g transform="translate(450, 190)">
+    <text x="0" y="-110" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">Suburbs</text>
 
-    <!-- Oil 35% -->
-    <path d="M0,0 L0,-100 A100,100 0 0,1 81,-59 Z" fill="#1e40af"/>
-    <!-- Gas 28% -->
-    <path d="M0,0 L81,-59 A100,100 0 0,1 95,31 Z" fill="#0891b2"/>
-    <!-- Coal 18% -->
-    <path d="M0,0 L95,31 A100,100 0 0,1 31,95 Z" fill="#475569"/>
-    <!-- Nuclear 10% -->
-    <path d="M0,0 L31,95 A100,100 0 0,1 -59,81 Z" fill="#7c3aed"/>
-    <!-- Renewables 9% -->
-    <path d="M0,0 L-59,81 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+    <!-- Car 65% = 234 degrees, end at (sin234°, -cos234°)*90 = (-72.8, 52.9) - large arc -->
+    <path d="M0,0 L0,-90 A90,90 0 1,1 -72.8,52.9 Z" fill="#ef4444"/>
+    <!-- Public Transport 15% = 54 degrees, cumulative 288°, end at (sin288°, -cos288°)*90 = (-85.6, -27.8) -->
+    <path d="M0,0 L-72.8,52.9 A90,90 0 0,1 -85.6,-27.8 Z" fill="#3b82f6"/>
+    <!-- Cycling 10% = 36 degrees, cumulative 324°, end at (sin324°, -cos324°)*90 = (-52.9, -72.8) -->
+    <path d="M0,0 L-85.6,-27.8 A90,90 0 0,1 -52.9,-72.8 Z" fill="#f59e0b"/>
+    <!-- Walking 5% = 18 degrees, cumulative 342°, end at (sin342°, -cos342°)*90 = (-27.8, -85.6) -->
+    <path d="M0,0 L-52.9,-72.8 A90,90 0 0,1 -27.8,-85.6 Z" fill="#10b981"/>
+    <!-- Other 5% = 18 degrees, cumulative 360°, end at (0, -90) -->
+    <path d="M0,0 L-27.8,-85.6 A90,90 0 0,1 0,-90 Z" fill="#94a3b8"/>
+
+    <!-- Labels -->
+    <text x="5" y="15" fill="white" font-size="14" font-weight="600" font-family="system-ui">65%</text>
+    <text x="-68" y="10" fill="white" font-size="9" font-weight="600" font-family="system-ui">15%</text>
+    <text x="-58" y="-40" fill="white" font-size="9" font-weight="600" font-family="system-ui">10%</text>
+    <!-- Walking 5% label outside -->
+    <line x1="-35" y1="-68" x2="-50" y2="-95" stroke="#64748b" stroke-width="1"/>
+    <text x="-53" y="-98" fill="#64748b" font-size="9" font-weight="500" font-family="system-ui">5%</text>
+    <!-- Other 5% label outside -->
+    <line x1="-10" y1="-78" x2="5" y2="-100" stroke="#64748b" stroke-width="1"/>
+    <text x="8" y="-103" fill="#64748b" font-size="9" font-weight="500" font-family="system-ui">5%</text>
   </g>
 
   <!-- Legend -->
-  <g transform="translate(150, 350)" font-size="11" font-family="system-ui">
-    <rect x="0" y="0" width="12" height="12" fill="#1e40af"/>
-    <text x="16" y="10" fill="#475569">Oil</text>
+  <g transform="translate(70, 340)" font-size="10" font-family="system-ui">
+    <rect x="0" y="0" width="12" height="12" fill="#3b82f6" rx="2"/>
+    <text x="16" y="10" fill="#475569">Public Transport</text>
 
-    <rect x="60" y="0" width="12" height="12" fill="#475569"/>
-    <text x="76" y="10" fill="#475569">Coal</text>
+    <rect x="115" y="0" width="12" height="12" fill="#ef4444" rx="2"/>
+    <text x="131" y="10" fill="#475569">Car</text>
 
-    <rect x="130" y="0" width="12" height="12" fill="#0891b2"/>
-    <text x="146" y="10" fill="#475569">Gas</text>
+    <rect x="175" y="0" width="12" height="12" fill="#10b981" rx="2"/>
+    <text x="191" y="10" fill="#475569">Walking</text>
 
-    <rect x="190" y="0" width="12" height="12" fill="#7c3aed"/>
-    <text x="206" y="10" fill="#475569">Nuclear</text>
+    <rect x="260" y="0" width="12" height="12" fill="#f59e0b" rx="2"/>
+    <text x="276" y="10" fill="#475569">Cycling</text>
 
-    <rect x="270" y="0" width="12" height="12" fill="#16a34a"/>
-    <text x="286" y="10" fill="#475569">Renewables</text>
+    <rect x="340" y="0" width="12" height="12" fill="#94a3b8" rx="2"/>
+    <text x="356" y="10" fill="#475569">Other</text>
+  </g>
+
+  <!-- Data summary -->
+  <g transform="translate(70, 365)" font-size="8" font-family="system-ui" fill="#64748b">
+    <text x="0" y="0">City Center: Public Transport 45%, Walking 25%, Cycling 15%, Car 10%, Other 5%</text>
+    <text x="0" y="12">Suburbs: Car 65%, Public Transport 15%, Cycling 10%, Walking 5%, Other 5%</text>
   </g>
 </svg>

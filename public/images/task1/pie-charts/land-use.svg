@@ -3,56 +3,58 @@
 
   <!-- Title -->
   <text x="300" y="30" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Energy Consumption by Source: 1990 vs 2020
+    Global Land Use Distribution (%)
   </text>
 
-  <!-- 1990 Pie Chart -->
-  <g transform="translate(150, 200)">
-    <text x="0" y="-120" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">1990</text>
+  <!-- Main Pie Chart -->
+  <g transform="translate(240, 200)">
+    <!-- Agriculture 50% (180 degrees) -->
+    <path d="M0,0 L0,-110 A110,110 0 0,1 0,110 Z" fill="#f59e0b"/>
+    <!-- Forests 31% (111.6 degrees) -->
+    <path d="M0,0 L0,110 A110,110 0 0,1 -107.51,-23.68 Z" fill="#16a34a"/>
+    <!-- Shrubland 8% (28.8 degrees) -->
+    <path d="M0,0 L-107.51,-23.68 A110,110 0 0,1 -78.49,-77.07 Z" fill="#84cc16"/>
+    <!-- Urban 3% (10.8 degrees) -->
+    <path d="M0,0 L-78.49,-77.07 A110,110 0 0,1 -48.78,-98.61 Z" fill="#6366f1"/>
+    <!-- Freshwater 2% (7.2 degrees) -->
+    <path d="M0,0 L-48.78,-98.61 A110,110 0 0,1 -27.47,-106.52 Z" fill="#0ea5e9"/>
+    <!-- Barren 6% (21.6 degrees) -->
+    <path d="M0,0 L-27.47,-106.52 A110,110 0 0,1 0,-110 Z" fill="#a8a29e"/>
 
-    <!-- Oil 45% -->
-    <path d="M0,0 L0,-100 A100,100 0 0,1 95,-31 Z" fill="#1e40af"/>
-    <!-- Coal 30% -->
-    <path d="M0,0 L95,-31 A100,100 0 0,1 59,81 Z" fill="#475569"/>
-    <!-- Gas 15% -->
-    <path d="M0,0 L59,81 A100,100 0 0,1 -59,81 Z" fill="#0891b2"/>
-    <!-- Nuclear 8% -->
-    <path d="M0,0 L-59,81 A100,100 0 0,1 -95,-31 Z" fill="#7c3aed"/>
-    <!-- Renewables 2% -->
-    <path d="M0,0 L-95,-31 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+    <!-- Center percentage labels -->
+    <text x="55" y="5" fill="white" font-size="14" font-weight="600" font-family="system-ui">50%</text>
+    <text x="-55" y="50" fill="white" font-size="12" font-weight="600" font-family="system-ui">31%</text>
   </g>
 
-  <!-- 2020 Pie Chart -->
-  <g transform="translate(450, 200)">
-    <text x="0" y="-120" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">2020</text>
+  <!-- Legend with details -->
+  <g transform="translate(380, 90)" font-size="11" font-family="system-ui">
+    <rect x="0" y="0" width="14" height="14" fill="#f59e0b" rx="2"/>
+    <text x="20" y="12" fill="#1e293b" font-weight="500">Agriculture</text>
+    <text x="20" y="26" fill="#64748b" font-size="10">Cropland &amp; pasture: 50%</text>
 
-    <!-- Oil 35% -->
-    <path d="M0,0 L0,-100 A100,100 0 0,1 81,-59 Z" fill="#1e40af"/>
-    <!-- Gas 28% -->
-    <path d="M0,0 L81,-59 A100,100 0 0,1 95,31 Z" fill="#0891b2"/>
-    <!-- Coal 18% -->
-    <path d="M0,0 L95,31 A100,100 0 0,1 31,95 Z" fill="#475569"/>
-    <!-- Nuclear 10% -->
-    <path d="M0,0 L31,95 A100,100 0 0,1 -59,81 Z" fill="#7c3aed"/>
-    <!-- Renewables 9% -->
-    <path d="M0,0 L-59,81 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+    <rect x="0" y="45" width="14" height="14" fill="#16a34a" rx="2"/>
+    <text x="20" y="57" fill="#1e293b" font-weight="500">Forests</text>
+    <text x="20" y="71" fill="#64748b" font-size="10">31% of land surface</text>
+
+    <rect x="0" y="90" width="14" height="14" fill="#84cc16" rx="2"/>
+    <text x="20" y="102" fill="#1e293b" font-weight="500">Shrubland</text>
+    <text x="20" y="116" fill="#64748b" font-size="10">8%</text>
+
+    <rect x="0" y="135" width="14" height="14" fill="#6366f1" rx="2"/>
+    <text x="20" y="147" fill="#1e293b" font-weight="500">Urban Areas</text>
+    <text x="20" y="161" fill="#64748b" font-size="10">3%</text>
+
+    <rect x="0" y="180" width="14" height="14" fill="#0ea5e9" rx="2"/>
+    <text x="20" y="192" fill="#1e293b" font-weight="500">Freshwater</text>
+    <text x="20" y="206" fill="#64748b" font-size="10">2%</text>
+
+    <rect x="0" y="225" width="14" height="14" fill="#a8a29e" rx="2"/>
+    <text x="20" y="237" fill="#1e293b" font-weight="500">Barren Land</text>
+    <text x="20" y="251" fill="#64748b" font-size="10">6%</text>
   </g>
 
-  <!-- Legend -->
-  <g transform="translate(150, 350)" font-size="11" font-family="system-ui">
-    <rect x="0" y="0" width="12" height="12" fill="#1e40af"/>
-    <text x="16" y="10" fill="#475569">Oil</text>
-
-    <rect x="60" y="0" width="12" height="12" fill="#475569"/>
-    <text x="76" y="10" fill="#475569">Coal</text>
-
-    <rect x="130" y="0" width="12" height="12" fill="#0891b2"/>
-    <text x="146" y="10" fill="#475569">Gas</text>
-
-    <rect x="190" y="0" width="12" height="12" fill="#7c3aed"/>
-    <text x="206" y="10" fill="#475569">Nuclear</text>
-
-    <rect x="270" y="0" width="12" height="12" fill="#16a34a"/>
-    <text x="286" y="10" fill="#475569">Renewables</text>
-  </g>
+  <!-- Source note -->
+  <text x="300" y="380" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="system-ui">
+    Total global land area: 149 million km²
+  </text>
 </svg>

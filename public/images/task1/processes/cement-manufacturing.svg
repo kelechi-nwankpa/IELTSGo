@@ -1,116 +1,126 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
   <rect width="600" height="400" fill="#f8fafc"/>
 
-  <!-- Title -->
-  <text x="300" y="25" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Water Treatment Process
-  </text>
-
-  <!-- Process boxes and arrows -->
-  <!-- Row 1 -->
-  <!-- Water source -->
-  <g transform="translate(40, 60)">
-    <rect x="0" y="0" width="80" height="50" rx="8" fill="#0ea5e9" stroke="#0284c7" stroke-width="2"/>
-    <text x="40" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Water</text>
-    <text x="40" y="35" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Source</text>
-  </g>
-
-  <!-- Arrow 1 -->
-  <path d="M125,85 L155,85" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-  <!-- Screening -->
-  <g transform="translate(160, 60)">
-    <rect x="0" y="0" width="80" height="50" rx="8" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
-    <text x="40" y="28" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Screening</text>
-  </g>
-
-  <!-- Arrow 2 -->
-  <path d="M245,85 L275,85" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-  <!-- Coagulation -->
-  <g transform="translate(280, 60)">
-    <rect x="0" y="0" width="80" height="50" rx="8" fill="#6366f1" stroke="#4f46e5" stroke-width="2"/>
-    <text x="40" y="28" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Coagulation</text>
-  </g>
-
-  <!-- Arrow 3 -->
-  <path d="M365,85 L395,85" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-  <!-- Sedimentation -->
-  <g transform="translate(400, 60)">
-    <rect x="0" y="0" width="90" height="50" rx="8" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
-    <text x="45" y="28" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Sedimentation</text>
-  </g>
-
-  <!-- Arrow down -->
-  <path d="M445,115 L445,155" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-  <!-- Row 2 -->
-  <!-- Filtration -->
-  <g transform="translate(400, 160)">
-    <rect x="0" y="0" width="90" height="50" rx="8" fill="#a855f7" stroke="#9333ea" stroke-width="2"/>
-    <text x="45" y="28" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Filtration</text>
-  </g>
-
-  <!-- Arrow 4 -->
-  <path d="M395,185 L365,185" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-  <!-- Disinfection -->
-  <g transform="translate(280, 160)">
-    <rect x="0" y="0" width="80" height="50" rx="8" fill="#d946ef" stroke="#c026d3" stroke-width="2"/>
-    <text x="40" y="28" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Disinfection</text>
-  </g>
-
-  <!-- Arrow 5 -->
-  <path d="M275,185 L245,185" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-  <!-- Storage -->
-  <g transform="translate(160, 160)">
-    <rect x="0" y="0" width="80" height="50" rx="8" fill="#ec4899" stroke="#db2777" stroke-width="2"/>
-    <text x="40" y="28" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Storage</text>
-  </g>
-
-  <!-- Arrow 6 -->
-  <path d="M155,185 L125,185" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-  <!-- Distribution -->
-  <g transform="translate(40, 160)">
-    <rect x="0" y="0" width="80" height="50" rx="8" fill="#10b981" stroke="#059669" stroke-width="2"/>
-    <text x="40" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Distribution</text>
-    <text x="40" y="35" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">to Homes</text>
-  </g>
-
-  <!-- Descriptions -->
-  <g font-size="10" font-family="system-ui" fill="#64748b">
-    <text x="80" y="125">River/reservoir</text>
-    <text x="200" y="125">Remove debris</text>
-    <text x="300" y="125">Add chemicals</text>
-    <text x="430" y="125">Particles settle</text>
-    <text x="430" y="225">Sand/carbon</text>
-    <text x="300" y="225">Chlorine/UV</text>
-    <text x="180" y="225">Clean water tanks</text>
-    <text x="55" y="225">Pipe network</text>
-  </g>
-
   <!-- Arrow marker definition -->
   <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <marker id="cementArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
     </marker>
   </defs>
 
-  <!-- Key stages box -->
-  <g transform="translate(50, 280)">
-    <rect x="0" y="0" width="500" height="100" fill="white" stroke="#e2e8f0" stroke-width="2" rx="8"/>
-    <text x="250" y="25" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600" font-family="system-ui">Key Stages</text>
+  <!-- Title -->
+  <text x="300" y="25" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
+    Cement Manufacturing Process
+  </text>
 
-    <g font-size="10" font-family="system-ui" fill="#475569">
-      <text x="20" y="50">1. Screening: Large debris removed</text>
-      <text x="20" y="68">2. Coagulation: Chemicals bind particles</text>
-      <text x="20" y="86">3. Sedimentation: Heavy particles sink</text>
-      <text x="270" y="50">4. Filtration: Fine particles removed</text>
-      <text x="270" y="68">5. Disinfection: Bacteria eliminated</text>
-      <text x="270" y="86">6. Storage &amp; Distribution: Clean water delivered</text>
+  <!-- Raw Materials Section -->
+  <g transform="translate(20, 50)">
+    <text x="55" y="15" text-anchor="middle" fill="#475569" font-size="10" font-weight="600" font-family="system-ui">Raw Materials</text>
+
+    <!-- Limestone -->
+    <rect x="0" y="25" width="55" height="40" rx="6" fill="#a3a3a3" stroke="#737373" stroke-width="2"/>
+    <text x="27" y="50" text-anchor="middle" fill="white" font-size="8" font-weight="600" font-family="system-ui">Limestone</text>
+
+    <!-- Clay -->
+    <rect x="60" y="25" width="50" height="40" rx="6" fill="#92400e" stroke="#78350f" stroke-width="2"/>
+    <text x="85" y="50" text-anchor="middle" fill="white" font-size="8" font-weight="600" font-family="system-ui">Clay</text>
+  </g>
+
+  <!-- Arrow to crusher -->
+  <path d="M130,85 L155,85" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Step 1: Crushing -->
+  <g transform="translate(160, 55)">
+    <rect x="0" y="0" width="75" height="55" rx="8" fill="#6366f1" stroke="#4f46e5" stroke-width="2"/>
+    <text x="37" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Crushing</text>
+    <text x="37" y="38" text-anchor="middle" fill="#e0e7ff" font-size="7" font-family="system-ui">Reduce to</text>
+    <text x="37" y="48" text-anchor="middle" fill="#e0e7ff" font-size="7" font-family="system-ui">small pieces</text>
+  </g>
+  <path d="M240,82 L265,82" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Step 2: Raw Mill -->
+  <g transform="translate(270, 55)">
+    <rect x="0" y="0" width="75" height="55" rx="8" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+    <text x="37" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Raw Mill</text>
+    <text x="37" y="38" text-anchor="middle" fill="#ede9fe" font-size="7" font-family="system-ui">Ground to</text>
+    <text x="37" y="48" text-anchor="middle" fill="#ede9fe" font-size="7" font-family="system-ui">fine powder</text>
+  </g>
+  <path d="M350,82 L375,82" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Step 3: Preheater -->
+  <g transform="translate(380, 55)">
+    <rect x="0" y="0" width="75" height="55" rx="8" fill="#f97316" stroke="#ea580c" stroke-width="2"/>
+    <text x="37" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Preheater</text>
+    <text x="37" y="38" text-anchor="middle" fill="#ffedd5" font-size="7" font-family="system-ui">Heat to</text>
+    <text x="37" y="48" text-anchor="middle" fill="#ffedd5" font-size="7" font-family="system-ui">800°C</text>
+  </g>
+  <path d="M460,82 L485,82" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Step 4: Kiln (larger, central) -->
+  <g transform="translate(490, 45)">
+    <rect x="0" y="0" width="90" height="75" rx="8" fill="#dc2626" stroke="#b91c1c" stroke-width="2"/>
+    <text x="45" y="22" text-anchor="middle" fill="white" font-size="10" font-weight="700" font-family="system-ui">ROTARY</text>
+    <text x="45" y="36" text-anchor="middle" fill="white" font-size="10" font-weight="700" font-family="system-ui">KILN</text>
+    <text x="45" y="52" text-anchor="middle" fill="#fecaca" font-size="8" font-family="system-ui">1450°C</text>
+    <text x="45" y="66" text-anchor="middle" fill="#fecaca" font-size="7" font-family="system-ui">Clinker formed</text>
+  </g>
+
+  <!-- Arrow down from kiln -->
+  <path d="M535,125 L535,155" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Step 5: Cooler -->
+  <g transform="translate(490, 160)">
+    <rect x="0" y="0" width="90" height="50" rx="8" fill="#0ea5e9" stroke="#0284c7" stroke-width="2"/>
+    <text x="45" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Cooler</text>
+    <text x="45" y="38" text-anchor="middle" fill="#e0f2fe" font-size="7" font-family="system-ui">Rapid cooling</text>
+  </g>
+  <path d="M485,185 L455,185" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Step 6: Cement Mill -->
+  <g transform="translate(355, 160)">
+    <rect x="0" y="0" width="95" height="50" rx="8" fill="#a855f7" stroke="#9333ea" stroke-width="2"/>
+    <text x="47" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Cement Mill</text>
+    <text x="47" y="38" text-anchor="middle" fill="#f3e8ff" font-size="7" font-family="system-ui">+ Gypsum grinding</text>
+  </g>
+  <path d="M350,185 L320,185" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Step 7: Silo Storage -->
+  <g transform="translate(220, 160)">
+    <rect x="0" y="0" width="95" height="50" rx="8" fill="#64748b" stroke="#475569" stroke-width="2"/>
+    <text x="47" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Silo Storage</text>
+    <text x="47" y="38" text-anchor="middle" fill="#e2e8f0" font-size="7" font-family="system-ui">Quality testing</text>
+  </g>
+  <path d="M215,185 L185,185" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Step 8: Packaging/Distribution -->
+  <g transform="translate(80, 160)">
+    <rect x="0" y="0" width="100" height="50" rx="8" fill="#22c55e" stroke="#16a34a" stroke-width="2"/>
+    <text x="50" y="22" text-anchor="middle" fill="white" font-size="9" font-weight="600" font-family="system-ui">Packaging</text>
+    <text x="50" y="38" text-anchor="middle" fill="#dcfce7" font-size="7" font-family="system-ui">Bags or bulk</text>
+  </g>
+
+  <!-- Final arrow down -->
+  <path d="M130,215 L130,240" fill="none" stroke="#64748b" stroke-width="2" marker-end="url(#cementArrow)"/>
+
+  <!-- Final Product -->
+  <g transform="translate(55, 245)">
+    <rect x="0" y="0" width="150" height="45" rx="8" fill="#1e40af" stroke="#1e3a8a" stroke-width="2"/>
+    <text x="75" y="20" text-anchor="middle" fill="white" font-size="11" font-weight="700" font-family="system-ui">CEMENT</text>
+    <text x="75" y="36" text-anchor="middle" fill="#bfdbfe" font-size="8" font-family="system-ui">Ready for construction</text>
+  </g>
+
+  <!-- Info Box -->
+  <g transform="translate(230, 230)">
+    <rect x="0" y="0" width="350" height="145" fill="white" stroke="#e2e8f0" stroke-width="2" rx="8"/>
+    <text x="175" y="22" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600" font-family="system-ui">Key Process Information</text>
+
+    <g font-size="9" font-family="system-ui">
+      <text x="15" y="45" fill="#475569">• Limestone provides ~80% of raw material</text>
+      <text x="15" y="62" fill="#475569">• Kiln is the heart of cement production</text>
+      <text x="15" y="79" fill="#475569">• Clinker = calcium silicates formed at high temp</text>
+      <text x="15" y="96" fill="#475569">• Gypsum added to control setting time</text>
+      <text x="15" y="113" fill="#dc2626" font-weight="500">• Major CO₂ source: ~8% of global emissions</text>
+      <text x="15" y="130" fill="#16a34a" font-weight="500">• Industry working on green cement alternatives</text>
     </g>
   </g>
 </svg>

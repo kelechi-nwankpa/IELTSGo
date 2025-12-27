@@ -1,63 +1,74 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
   <rect width="600" height="400" fill="#f8fafc"/>
-  <rect x="60" y="40" width="500" height="300" fill="white" stroke="#e2e8f0" stroke-width="2"/>
+  <rect x="70" y="40" width="480" height="300" fill="white" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- Title -->
+  <text x="300" y="25" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600" font-family="system-ui">
+    Temperature Change from 1900-1950 Baseline (°C)
+  </text>
 
   <!-- Grid lines -->
   <g stroke="#e2e8f0" stroke-width="1">
-    <line x1="60" y1="100" x2="560" y2="100"/>
-    <line x1="60" y1="160" x2="560" y2="160"/>
-    <line x1="60" y1="220" x2="560" y2="220"/>
-    <line x1="60" y1="280" x2="560" y2="280"/>
+    <line x1="70" y1="85" x2="550" y2="85"/>
+    <line x1="70" y1="145" x2="550" y2="145"/>
+    <line x1="70" y1="205" x2="550" y2="205"/>
+    <line x1="70" y1="265" x2="550" y2="265"/>
   </g>
 
+  <!-- Baseline reference line -->
+  <line x1="70" y1="265" x2="550" y2="265" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4"/>
+  <text x="555" y="269" fill="#94a3b8" font-size="9" font-family="system-ui">Baseline</text>
+
   <!-- Y-axis labels -->
-  <g fill="#64748b" font-size="12" font-family="system-ui">
-    <text x="50" y="105" text-anchor="end">80%</text>
-    <text x="50" y="165" text-anchor="end">60%</text>
-    <text x="50" y="225" text-anchor="end">40%</text>
-    <text x="50" y="285" text-anchor="end">20%</text>
-    <text x="50" y="345" text-anchor="end">0%</text>
+  <g fill="#64748b" font-size="11" font-family="system-ui">
+    <text x="60" y="49" text-anchor="end">+1.6°C</text>
+    <text x="60" y="89" text-anchor="end">+1.2°C</text>
+    <text x="60" y="149" text-anchor="end">+0.8°C</text>
+    <text x="60" y="209" text-anchor="end">+0.4°C</text>
+    <text x="60" y="269" text-anchor="end">0°C</text>
+    <text x="60" y="329" text-anchor="end">-0.2°C</text>
   </g>
 
   <!-- X-axis labels -->
-  <g fill="#64748b" font-size="12" font-family="system-ui" text-anchor="middle">
-    <text x="110" y="360">2000</text>
-    <text x="210" y="360">2005</text>
-    <text x="310" y="360">2010</text>
-    <text x="410" y="360">2015</text>
-    <text x="510" y="360">2020</text>
+  <g fill="#64748b" font-size="11" font-family="system-ui" text-anchor="middle">
+    <text x="70" y="360">1950</text>
+    <text x="150" y="360">1960</text>
+    <text x="230" y="360">1970</text>
+    <text x="310" y="360">1980</text>
+    <text x="390" y="360">1990</text>
+    <text x="470" y="360">2000</text>
+    <text x="550" y="360">2020</text>
   </g>
 
-  <!-- Line 1 - Developed Countries -->
-  <polyline points="110,280 210,220 310,140 410,100 510,70" fill="none" stroke="#3b82f6" stroke-width="3"/>
+  <!-- Northern Hemisphere (0 -> 0.05 -> 0.1 -> 0.3 -> 0.55 -> 0.85 -> 1.5) - steeper increase -->
+  <polyline points="70,265 150,259 230,253 310,229 390,193 470,157 550,49" fill="none" stroke="#ef4444" stroke-width="3"/>
+  <g fill="#ef4444">
+    <circle cx="70" cy="265" r="5"/>
+    <circle cx="150" cy="259" r="5"/>
+    <circle cx="230" cy="253" r="5"/>
+    <circle cx="310" cy="229" r="5"/>
+    <circle cx="390" cy="193" r="5"/>
+    <circle cx="470" cy="157" r="5"/>
+    <circle cx="550" cy="49" r="5"/>
+  </g>
+
+  <!-- Southern Hemisphere (0 -> 0.02 -> 0.08 -> 0.2 -> 0.35 -> 0.55 -> 0.9) - more gradual -->
+  <polyline points="70,265 150,262 230,256 310,241 390,217 470,193 550,145" fill="none" stroke="#3b82f6" stroke-width="3"/>
   <g fill="#3b82f6">
-    <circle cx="110" cy="280" r="5"/>
-    <circle cx="210" cy="220" r="5"/>
-    <circle cx="310" cy="140" r="5"/>
-    <circle cx="410" cy="100" r="5"/>
-    <circle cx="510" cy="70" r="5"/>
-  </g>
-
-  <!-- Line 2 - Developing Countries -->
-  <polyline points="110,320 210,300 310,260 410,200 510,150" fill="none" stroke="#f59e0b" stroke-width="3"/>
-  <g fill="#f59e0b">
-    <circle cx="110" cy="320" r="5"/>
-    <circle cx="210" cy="300" r="5"/>
-    <circle cx="310" cy="260" r="5"/>
-    <circle cx="410" cy="200" r="5"/>
-    <circle cx="510" cy="150" r="5"/>
+    <circle cx="70" cy="265" r="5"/>
+    <circle cx="150" cy="262" r="5"/>
+    <circle cx="230" cy="256" r="5"/>
+    <circle cx="310" cy="241" r="5"/>
+    <circle cx="390" cy="217" r="5"/>
+    <circle cx="470" cy="193" r="5"/>
+    <circle cx="550" cy="145" r="5"/>
   </g>
 
   <!-- Legend -->
-  <g font-size="12" font-family="system-ui">
-    <rect x="380" y="50" width="15" height="3" fill="#3b82f6"/>
-    <text x="400" y="55" fill="#475569">Developed Countries</text>
-    <rect x="380" y="70" width="15" height="3" fill="#f59e0b"/>
-    <text x="400" y="75" fill="#475569">Developing Countries</text>
+  <g font-size="11" font-family="system-ui">
+    <line x1="380" y1="55" x2="405" y2="55" stroke="#ef4444" stroke-width="3"/>
+    <text x="410" y="59" fill="#475569">Northern Hemisphere</text>
+    <line x1="380" y1="75" x2="405" y2="75" stroke="#3b82f6" stroke-width="3"/>
+    <text x="410" y="79" fill="#475569">Southern Hemisphere</text>
   </g>
-
-  <!-- Title -->
-  <text x="300" y="25" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Internet Usage by Households (2000-2020)
-  </text>
 </svg>

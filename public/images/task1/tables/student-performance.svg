@@ -2,57 +2,77 @@
   <rect width="600" height="400" fill="#f8fafc"/>
 
   <!-- Title -->
-  <text x="300" y="35" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Student Performance: Average Test Scores (Age 15)
+  <text x="300" y="30" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
+    International Student Performance: PISA Test Scores (Age 15)
   </text>
 
   <!-- Table -->
-  <g transform="translate(75, 60)">
+  <g transform="translate(50, 50)">
     <!-- Header row -->
-    <rect x="0" y="0" width="450" height="40" fill="#1e40af"/>
-    <text x="100" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Country</text>
-    <text x="275" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Mathematics</text>
-    <text x="400" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Science</text>
+    <rect x="0" y="0" width="500" height="38" fill="#1e40af" rx="4"/>
+    <text x="80" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="600" font-family="system-ui">Country</text>
+    <text x="200" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="600" font-family="system-ui">Reading</text>
+    <text x="310" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="600" font-family="system-ui">Mathematics</text>
+    <text x="420" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="600" font-family="system-ui">Science</text>
 
-    <!-- Row 1 -->
-    <rect x="0" y="40" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="66" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Singapore</text>
-    <text x="275" y="66" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">569</text>
-    <text x="400" y="66" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">551</text>
+    <!-- Row 1 - Singapore -->
+    <rect x="0" y="38" width="500" height="36" fill="white" stroke="#e2e8f0"/>
+    <text x="80" y="62" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Singapore</text>
+    <text x="200" y="62" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">543</text>
+    <text x="310" y="62" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">569</text>
+    <text x="420" y="62" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">551</text>
 
-    <!-- Row 2 -->
-    <rect x="0" y="80" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="106" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Japan</text>
-    <text x="275" y="106" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">527</text>
-    <text x="400" y="106" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">529</text>
+    <!-- Row 2 - Japan -->
+    <rect x="0" y="74" width="500" height="36" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="80" y="98" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Japan</text>
+    <text x="200" y="98" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">516</text>
+    <text x="310" y="98" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">527</text>
+    <text x="420" y="98" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">529</text>
 
-    <!-- Row 3 -->
-    <rect x="0" y="120" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="146" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">South Korea</text>
-    <text x="275" y="146" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">524</text>
-    <text x="400" y="146" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">519</text>
+    <!-- Row 3 - Estonia -->
+    <rect x="0" y="110" width="500" height="36" fill="white" stroke="#e2e8f0"/>
+    <text x="80" y="134" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Estonia</text>
+    <text x="200" y="134" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">523</text>
+    <text x="310" y="134" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">523</text>
+    <text x="420" y="134" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">530</text>
 
-    <!-- Row 4 -->
-    <rect x="0" y="160" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="186" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Germany</text>
-    <text x="275" y="186" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">500</text>
-    <text x="400" y="186" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">503</text>
+    <!-- Row 4 - Finland -->
+    <rect x="0" y="146" width="500" height="36" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="80" y="170" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Finland</text>
+    <text x="200" y="170" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">520</text>
+    <text x="310" y="170" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">507</text>
+    <text x="420" y="170" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">522</text>
 
-    <!-- Row 5 -->
-    <rect x="0" y="200" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="226" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">USA</text>
-    <text x="275" y="226" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="600" font-family="system-ui">478</text>
-    <text x="400" y="226" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">496</text>
+    <!-- Row 5 - UK -->
+    <rect x="0" y="182" width="500" height="36" fill="white" stroke="#e2e8f0"/>
+    <text x="80" y="206" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">UK</text>
+    <text x="200" y="206" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">504</text>
+    <text x="310" y="206" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">502</text>
+    <text x="420" y="206" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">505</text>
 
-    <!-- Row 6 -->
-    <rect x="0" y="240" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="266" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Brazil</text>
-    <text x="275" y="266" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="600" font-family="system-ui">384</text>
-    <text x="400" y="266" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="600" font-family="system-ui">401</text>
+    <!-- Row 6 - USA -->
+    <rect x="0" y="218" width="500" height="36" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="80" y="242" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">USA</text>
+    <text x="200" y="242" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">505</text>
+    <text x="310" y="242" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">478</text>
+    <text x="420" y="242" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">502</text>
+
+    <!-- Row 7 - Brazil -->
+    <rect x="0" y="254" width="500" height="36" fill="white" stroke="#e2e8f0"/>
+    <text x="80" y="278" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Brazil</text>
+    <text x="200" y="278" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">413</text>
+    <text x="310" y="278" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">384</text>
+    <text x="420" y="278" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">404</text>
   </g>
 
-  <!-- Footer note -->
-  <text x="300" y="370" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">
-    OECD Average: 489 (Math), 491 (Science)
-  </text>
+  <!-- Legend -->
+  <g transform="translate(50, 345)" font-size="10" font-family="system-ui">
+    <rect x="0" y="0" width="10" height="10" fill="#16a34a" rx="2"/>
+    <text x="15" y="9" fill="#475569">Above OECD avg</text>
+    <rect x="120" y="0" width="10" height="10" fill="#3b82f6" rx="2"/>
+    <text x="135" y="9" fill="#475569">Near OECD avg</text>
+    <rect x="240" y="0" width="10" height="10" fill="#dc2626" rx="2"/>
+    <text x="255" y="9" fill="#475569">Below OECD avg</text>
+    <text x="380" y="9" fill="#64748b">OECD Average: ~490</text>
+  </g>
 </svg>

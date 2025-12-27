@@ -2,136 +2,146 @@
   <rect width="600" height="400" fill="#f8fafc"/>
 
   <!-- Title -->
-  <text x="300" y="20" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600" font-family="system-ui">
-    Oil Production vs Consumption by Region &amp; Price Trends
+  <text x="300" y="25" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
+    Global Oil Production, Consumption &amp; Price (2000-2023)
   </text>
 
-  <!-- Production bar chart (left) -->
-  <g transform="translate(30, 40)">
-    <text x="85" y="15" text-anchor="middle" fill="#475569" font-size="10" font-weight="500" font-family="system-ui">Production (million barrels/day)</text>
+  <!-- Main chart area -->
+  <rect x="60" y="50" width="480" height="200" fill="white" stroke="#e2e8f0" stroke-width="1"/>
 
-    <!-- Y axis -->
-    <line x1="30" y1="25" x2="30" y2="150" stroke="#e2e8f0" stroke-width="1"/>
-    <g fill="#64748b" font-size="8" font-family="system-ui">
-      <text x="25" y="30" text-anchor="end">40</text>
-      <text x="25" y="60" text-anchor="end">30</text>
-      <text x="25" y="90" text-anchor="end">20</text>
-      <text x="25" y="120" text-anchor="end">10</text>
-      <text x="25" y="150" text-anchor="end">0</text>
-    </g>
-
-    <!-- Bars -->
-    <rect x="45" y="30" width="25" height="115" fill="#1e40af"/>
-    <rect x="80" y="75" width="25" height="70" fill="#3b82f6"/>
-    <rect x="115" y="110" width="25" height="35" fill="#60a5fa"/>
-
-    <!-- Labels -->
-    <g fill="#475569" font-size="7" font-family="system-ui" text-anchor="middle">
-      <text x="57" y="160">M.East</text>
-      <text x="92" y="160">N.Am</text>
-      <text x="127" y="160">Europe</text>
-    </g>
+  <!-- Grid lines -->
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="60" y1="90" x2="540" y2="90"/>
+    <line x1="60" y1="130" x2="540" y2="130"/>
+    <line x1="60" y1="170" x2="540" y2="170"/>
+    <line x1="60" y1="210" x2="540" y2="210"/>
   </g>
 
-  <!-- Consumption bar chart (center) -->
-  <g transform="translate(200, 40)">
-    <text x="85" y="15" text-anchor="middle" fill="#475569" font-size="10" font-weight="500" font-family="system-ui">Consumption (million barrels/day)</text>
+  <!-- Left Y axis labels (million barrels/day) -->
+  <g fill="#64748b" font-size="9" font-family="system-ui" text-anchor="end">
+    <text x="55" y="55">100</text>
+    <text x="55" y="95">80</text>
+    <text x="55" y="135">60</text>
+    <text x="55" y="175">40</text>
+    <text x="55" y="215">20</text>
+    <text x="55" y="250">0</text>
+  </g>
+  <text x="20" y="150" fill="#475569" font-size="9" font-family="system-ui" transform="rotate(-90 20 150)">Million barrels/day</text>
 
-    <!-- Y axis -->
-    <line x1="30" y1="25" x2="30" y2="150" stroke="#e2e8f0" stroke-width="1"/>
-    <g fill="#64748b" font-size="8" font-family="system-ui">
-      <text x="25" y="30" text-anchor="end">40</text>
-      <text x="25" y="60" text-anchor="end">30</text>
-      <text x="25" y="90" text-anchor="end">20</text>
-      <text x="25" y="120" text-anchor="end">10</text>
-      <text x="25" y="150" text-anchor="end">0</text>
-    </g>
+  <!-- Right Y axis labels ($ per barrel) -->
+  <g fill="#f59e0b" font-size="9" font-family="system-ui" text-anchor="start">
+    <text x="545" y="55">150</text>
+    <text x="545" y="95">120</text>
+    <text x="545" y="135">90</text>
+    <text x="545" y="175">60</text>
+    <text x="545" y="215">30</text>
+    <text x="545" y="250">0</text>
+  </g>
+  <text x="585" y="150" fill="#f59e0b" font-size="9" font-family="system-ui" transform="rotate(90 585 150)">$ per barrel</text>
 
-    <!-- Bars -->
-    <rect x="45" y="115" width="25" height="30" fill="#dc2626"/>
-    <rect x="80" y="60" width="25" height="85" fill="#ef4444"/>
-    <rect x="115" y="85" width="25" height="60" fill="#f87171"/>
-
-    <!-- Labels -->
-    <g fill="#475569" font-size="7" font-family="system-ui" text-anchor="middle">
-      <text x="57" y="160">M.East</text>
-      <text x="92" y="160">N.Am</text>
-      <text x="127" y="160">Europe</text>
-    </g>
+  <!-- X axis labels -->
+  <g fill="#64748b" font-size="9" font-family="system-ui" text-anchor="middle">
+    <text x="80" y="265">2000</text>
+    <text x="140" y="265">2004</text>
+    <text x="200" y="265">2008</text>
+    <text x="260" y="265">2012</text>
+    <text x="320" y="265">2016</text>
+    <text x="380" y="265">2019</text>
+    <text x="440" y="265">2021</text>
+    <text x="500" y="265">2023</text>
   </g>
 
-  <!-- Line chart - Oil prices -->
-  <g transform="translate(380, 40)">
-    <text x="95" y="15" text-anchor="middle" fill="#475569" font-size="10" font-weight="500" font-family="system-ui">Oil Price ($ per barrel)</text>
+  <!-- Production bars (blue) -->
+  <g fill="#3b82f6" opacity="0.8">
+    <rect x="68" y="138" width="12" height="112" rx="1"/><!-- 2000: 77 -->
+    <rect x="128" y="122" width="12" height="128" rx="1"/><!-- 2004: 83 -->
+    <rect x="188" y="114" width="12" height="136" rx="1"/><!-- 2008: 86 -->
+    <rect x="248" y="106" width="12" height="144" rx="1"/><!-- 2012: 90 -->
+    <rect x="308" y="98" width="12" height="152" rx="1"/><!-- 2016: 96 -->
+    <rect x="368" y="90" width="12" height="160" rx="1"/><!-- 2019: 100 -->
+    <rect x="428" y="114" width="12" height="136" rx="1"/><!-- 2021: 93 (COVID) -->
+    <rect x="488" y="94" width="12" height="156" rx="1"/><!-- 2023: 101 -->
+  </g>
 
-    <rect x="20" y="25" width="170" height="125" fill="white" stroke="#e2e8f0"/>
+  <!-- Consumption bars (red) -->
+  <g fill="#ef4444" opacity="0.8">
+    <rect x="82" y="140" width="12" height="110" rx="1"/><!-- 2000: 76 -->
+    <rect x="142" y="120" width="12" height="130" rx="1"/><!-- 2004: 84 -->
+    <rect x="202" y="112" width="12" height="138" rx="1"/><!-- 2008: 87 -->
+    <rect x="262" y="102" width="12" height="148" rx="1"/><!-- 2012: 92 -->
+    <rect x="322" y="96" width="12" height="154" rx="1"/><!-- 2016: 97 -->
+    <rect x="382" y="88" width="12" height="162" rx="1"/><!-- 2019: 101 -->
+    <rect x="442" y="122" width="12" height="128" rx="1"/><!-- 2021: 90 (COVID) -->
+    <rect x="502" y="90" width="12" height="160" rx="1"/><!-- 2023: 102 -->
+  </g>
 
-    <!-- Grid -->
-    <g stroke="#e2e8f0" stroke-width="1">
-      <line x1="20" y1="50" x2="190" y2="50"/>
-      <line x1="20" y1="75" x2="190" y2="75"/>
-      <line x1="20" y1="100" x2="190" y2="100"/>
-      <line x1="20" y1="125" x2="190" y2="125"/>
-    </g>
+  <!-- Price line (orange) -->
+  <polyline
+    points="80,210 140,195 200,100 260,122 320,200 380,170 440,175 500,135"
+    fill="none"
+    stroke="#f59e0b"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
 
-    <!-- Y labels -->
-    <g fill="#64748b" font-size="8" font-family="system-ui">
-      <text x="15" y="30" text-anchor="end">120</text>
-      <text x="15" y="55" text-anchor="end">90</text>
-      <text x="15" y="80" text-anchor="end">60</text>
-      <text x="15" y="105" text-anchor="end">30</text>
-      <text x="15" y="130" text-anchor="end">0</text>
-    </g>
+  <!-- Price data points -->
+  <g fill="#f59e0b">
+    <circle cx="80" cy="210" r="4"/>
+    <circle cx="140" cy="195" r="4"/>
+    <circle cx="200" cy="100" r="4"/>
+    <circle cx="260" cy="122" r="4"/>
+    <circle cx="320" cy="200" r="4"/>
+    <circle cx="380" cy="170" r="4"/>
+    <circle cx="440" cy="175" r="4"/>
+    <circle cx="500" cy="135" r="4"/>
+  </g>
 
-    <!-- X labels -->
-    <g fill="#64748b" font-size="7" font-family="system-ui" text-anchor="middle">
-      <text x="35" y="145">2000</text>
-      <text x="75" y="145">2008</text>
-      <text x="115" y="145">2014</text>
-      <text x="155" y="145">2022</text>
-    </g>
+  <!-- Price annotations with white background for visibility -->
+  <g font-size="9" font-family="system-ui" font-weight="600">
+    <rect x="190" y="80" width="32" height="14" fill="white" stroke="#f59e0b" stroke-width="1" rx="2"/>
+    <text x="206" y="91" text-anchor="middle" fill="#b45309">$133</text>
+    <rect x="310" y="198" width="28" height="14" fill="white" stroke="#f59e0b" stroke-width="1" rx="2"/>
+    <text x="324" y="209" text-anchor="middle" fill="#b45309">$43</text>
+    <rect x="490" y="115" width="28" height="14" fill="white" stroke="#f59e0b" stroke-width="1" rx="2"/>
+    <text x="504" y="126" text-anchor="middle" fill="#b45309">$82</text>
+  </g>
 
-    <!-- Price line -->
-    <polyline points="35,125 55,105 75,40 95,65 115,45 135,90 155,70 175,65" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
-    <g fill="#f59e0b">
-      <circle cx="35" cy="125" r="3"/>
-      <circle cx="75" cy="40" r="3"/>
-      <circle cx="115" cy="45" r="3"/>
-      <circle cx="135" cy="90" r="3"/>
-      <circle cx="175" cy="65" r="3"/>
-    </g>
+  <!-- Event markers -->
+  <g font-size="7" font-family="system-ui">
+    <line x1="200" y1="50" x2="200" y2="100" stroke="#dc2626" stroke-width="1" stroke-dasharray="3"/>
+    <text x="203" y="60" fill="#dc2626">2008 Peak</text>
 
-    <!-- Annotations -->
-    <text x="78" y="35" fill="#f59e0b" font-size="7" font-family="system-ui">$110</text>
-    <text x="138" y="100" fill="#f59e0b" font-size="7" font-family="system-ui">$45</text>
+    <line x1="320" y1="200" x2="320" y2="250" stroke="#16a34a" stroke-width="1" stroke-dasharray="3"/>
+    <text x="323" y="245" fill="#16a34a">2016 Low</text>
+
+    <line x1="440" y1="50" x2="440" y2="115" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3"/>
+    <text x="443" y="60" fill="#7c3aed">COVID-19</text>
   </g>
 
   <!-- Legend -->
-  <g transform="translate(50, 220)" font-size="9" font-family="system-ui">
-    <rect x="0" y="0" width="500" height="35" fill="white" stroke="#e2e8f0" rx="4"/>
+  <g transform="translate(60, 280)">
+    <rect x="0" y="0" width="480" height="30" fill="white" stroke="#e2e8f0" rx="4"/>
 
-    <rect x="20" y="12" width="12" height="12" fill="#1e40af"/>
-    <text x="36" y="22" fill="#475569">Production</text>
+    <rect x="20" y="10" width="14" height="10" fill="#3b82f6" rx="1"/>
+    <text x="40" y="18" fill="#475569" font-size="9" font-family="system-ui">Production</text>
 
-    <rect x="120" y="12" width="12" height="12" fill="#dc2626"/>
-    <text x="136" y="22" fill="#475569">Consumption</text>
+    <rect x="130" y="10" width="14" height="10" fill="#ef4444" rx="1"/>
+    <text x="150" y="18" fill="#475569" font-size="9" font-family="system-ui">Consumption</text>
 
-    <rect x="230" y="12" width="12" height="3" fill="#f59e0b"/>
-    <text x="246" y="22" fill="#475569">Oil Price</text>
-
-    <text x="340" y="22" fill="#64748b" font-size="8">Source: International Energy Agency</text>
+    <line x1="250" y1="15" x2="270" y2="15" stroke="#f59e0b" stroke-width="3"/>
+    <circle cx="260" cy="15" r="3" fill="#f59e0b"/>
+    <text x="278" y="18" fill="#475569" font-size="9" font-family="system-ui">Brent Crude Price ($/barrel)</text>
   </g>
 
-  <!-- Key insight box -->
-  <g transform="translate(50, 270)">
-    <rect x="0" y="0" width="500" height="110" fill="#fef3c7" stroke="#f59e0b" rx="6"/>
-    <text x="250" y="22" text-anchor="middle" fill="#92400e" font-size="11" font-weight="600" font-family="system-ui">Key Observations</text>
+  <!-- Info box -->
+  <g transform="translate(60, 320)">
+    <rect x="0" y="0" width="480" height="65" fill="#f0f9ff" stroke="#0284c7" rx="6"/>
+    <text x="240" y="18" text-anchor="middle" fill="#0369a1" font-size="10" font-weight="600" font-family="system-ui">Key Insights</text>
 
-    <g font-size="9" font-family="system-ui" fill="#78350f">
-      <text x="20" y="45">• Middle East: Major exporter (production far exceeds consumption)</text>
-      <text x="20" y="62">• North America &amp; Europe: Net importers (consumption exceeds production)</text>
-      <text x="20" y="79">• Oil prices peaked in 2008 and 2012-2014, crashed in 2016</text>
-      <text x="20" y="96">• Price volatility correlates with geopolitical events and economic cycles</text>
+    <g font-size="8" font-family="system-ui" fill="#0c4a6e">
+      <text x="15" y="35">• Global production grew from 77 to 101 million bpd (31% increase over 23 years)</text>
+      <text x="15" y="48">• 2008 financial crisis caused price spike to $133; 2016 oversupply led to $43 low</text>
+      <text x="15" y="61">• COVID-19 pandemic (2020-21) caused temporary demand collapse and production cuts</text>
     </g>
   </g>
 </svg>

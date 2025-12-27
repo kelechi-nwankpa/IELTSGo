@@ -1,58 +1,90 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
-  <rect width="600" height="400" fill="#f8fafc"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420">
+  <rect width="600" height="420" fill="#f8fafc"/>
 
   <!-- Title -->
-  <text x="300" y="35" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Student Performance: Average Test Scores (Age 15)
+  <text x="300" y="30" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
+    Cost of Living Comparison: Major Cities (Index: NYC = 100)
   </text>
 
   <!-- Table -->
-  <g transform="translate(75, 60)">
+  <g transform="translate(35, 50)">
     <!-- Header row -->
-    <rect x="0" y="0" width="450" height="40" fill="#1e40af"/>
-    <text x="100" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Country</text>
-    <text x="275" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Mathematics</text>
-    <text x="400" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Science</text>
+    <rect x="0" y="0" width="530" height="38" fill="#0f766e" rx="4"/>
+    <text x="70" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">City</text>
+    <text x="170" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Overall</text>
+    <text x="260" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Rent</text>
+    <text x="350" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Groceries</text>
+    <text x="450" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Transport</text>
 
-    <!-- Row 1 -->
-    <rect x="0" y="40" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="66" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Singapore</text>
-    <text x="275" y="66" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">569</text>
-    <text x="400" y="66" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">551</text>
+    <!-- Row 1 - Zurich -->
+    <rect x="0" y="38" width="530" height="34" fill="white" stroke="#e2e8f0"/>
+    <text x="70" y="60" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Zurich</text>
+    <text x="170" y="60" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">131</text>
+    <text x="260" y="60" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">118</text>
+    <text x="350" y="60" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">128</text>
+    <text x="450" y="60" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">145</text>
 
-    <!-- Row 2 -->
-    <rect x="0" y="80" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="106" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Japan</text>
-    <text x="275" y="106" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">527</text>
-    <text x="400" y="106" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">529</text>
+    <!-- Row 2 - Singapore -->
+    <rect x="0" y="72" width="530" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="70" y="94" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Singapore</text>
+    <text x="170" y="94" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">112</text>
+    <text x="260" y="94" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">142</text>
+    <text x="350" y="94" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">89</text>
+    <text x="450" y="94" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">72</text>
 
-    <!-- Row 3 -->
-    <rect x="0" y="120" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="146" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">South Korea</text>
-    <text x="275" y="146" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">524</text>
-    <text x="400" y="146" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">519</text>
+    <!-- Row 3 - New York -->
+    <rect x="0" y="106" width="530" height="34" fill="white" stroke="#e2e8f0"/>
+    <text x="70" y="128" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">New York</text>
+    <text x="170" y="128" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">100</text>
+    <text x="260" y="128" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">100</text>
+    <text x="350" y="128" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">100</text>
+    <text x="450" y="128" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">100</text>
 
-    <!-- Row 4 -->
-    <rect x="0" y="160" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="186" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Germany</text>
-    <text x="275" y="186" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">500</text>
-    <text x="400" y="186" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">503</text>
+    <!-- Row 4 - London -->
+    <rect x="0" y="140" width="530" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="70" y="162" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">London</text>
+    <text x="170" y="162" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">93</text>
+    <text x="260" y="162" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">108</text>
+    <text x="350" y="162" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">72</text>
+    <text x="450" y="162" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">112</text>
 
-    <!-- Row 5 -->
-    <rect x="0" y="200" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="226" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">USA</text>
-    <text x="275" y="226" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="600" font-family="system-ui">478</text>
-    <text x="400" y="226" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">496</text>
+    <!-- Row 5 - Sydney -->
+    <rect x="0" y="174" width="530" height="34" fill="white" stroke="#e2e8f0"/>
+    <text x="70" y="196" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Sydney</text>
+    <text x="170" y="196" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">88</text>
+    <text x="260" y="196" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">82</text>
+    <text x="350" y="196" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">86</text>
+    <text x="450" y="196" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">92</text>
 
-    <!-- Row 6 -->
-    <rect x="0" y="240" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="266" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Brazil</text>
-    <text x="275" y="266" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="600" font-family="system-ui">384</text>
-    <text x="400" y="266" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="600" font-family="system-ui">401</text>
+    <!-- Row 6 - Berlin -->
+    <rect x="0" y="208" width="530" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="70" y="230" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Berlin</text>
+    <text x="170" y="230" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">68</text>
+    <text x="260" y="230" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">45</text>
+    <text x="350" y="230" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">62</text>
+    <text x="450" y="230" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">85</text>
+
+    <!-- Row 7 - Bangkok -->
+    <rect x="0" y="242" width="530" height="34" fill="white" stroke="#e2e8f0"/>
+    <text x="70" y="264" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Bangkok</text>
+    <text x="170" y="264" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">42</text>
+    <text x="260" y="264" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">22</text>
+    <text x="350" y="264" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">48</text>
+    <text x="450" y="264" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">38</text>
   </g>
 
-  <!-- Footer note -->
-  <text x="300" y="370" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">
-    OECD Average: 489 (Math), 491 (Science)
+  <!-- Legend -->
+  <g transform="translate(35, 345)" font-size="10" font-family="system-ui">
+    <rect x="0" y="0" width="10" height="10" fill="#dc2626" rx="2"/>
+    <text x="15" y="9" fill="#475569">Higher than NYC</text>
+    <rect x="130" y="0" width="10" height="10" fill="#3b82f6" rx="2"/>
+    <text x="145" y="9" fill="#475569">Baseline (NYC)</text>
+    <rect x="260" y="0" width="10" height="10" fill="#16a34a" rx="2"/>
+    <text x="275" y="9" fill="#475569">Lower than NYC</text>
+  </g>
+
+  <!-- Note -->
+  <text x="300" y="390" text-anchor="middle" fill="#64748b" font-size="9" font-family="system-ui">
+    Data based on 2023 cost of living indices. Index 100 = New York City baseline.
   </text>
 </svg>

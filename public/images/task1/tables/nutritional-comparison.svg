@@ -1,58 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
-  <rect width="600" height="400" fill="#f8fafc"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420">
+  <rect width="600" height="420" fill="#f8fafc"/>
 
   <!-- Title -->
-  <text x="300" y="35" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Student Performance: Average Test Scores (Age 15)
+  <text x="300" y="30" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
+    Nutritional Comparison: Common Foods (per 100g serving)
   </text>
 
   <!-- Table -->
-  <g transform="translate(75, 60)">
+  <g transform="translate(25, 50)">
     <!-- Header row -->
-    <rect x="0" y="0" width="450" height="40" fill="#1e40af"/>
-    <text x="100" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Country</text>
-    <text x="275" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Mathematics</text>
-    <text x="400" y="26" text-anchor="middle" fill="white" font-size="13" font-weight="600" font-family="system-ui">Science</text>
+    <rect x="0" y="0" width="550" height="38" fill="#16a34a" rx="4"/>
+    <text x="70" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Food Item</text>
+    <text x="175" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Calories</text>
+    <text x="265" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Protein</text>
+    <text x="355" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Carbs</text>
+    <text x="445" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Fat</text>
+    <text x="520" y="25" text-anchor="middle" fill="white" font-size="11" font-weight="600" font-family="system-ui">Fiber</text>
 
-    <!-- Row 1 -->
-    <rect x="0" y="40" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="66" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Singapore</text>
-    <text x="275" y="66" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">569</text>
-    <text x="400" y="66" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">551</text>
+    <!-- Row 1 - Chicken Breast -->
+    <rect x="0" y="38" width="550" height="34" fill="white" stroke="#e2e8f0"/>
+    <text x="70" y="60" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Chicken Breast</text>
+    <text x="175" y="60" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600" font-family="system-ui">165</text>
+    <text x="265" y="60" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">31g</text>
+    <text x="355" y="60" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">0g</text>
+    <text x="445" y="60" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">3.6g</text>
+    <text x="520" y="60" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">0g</text>
 
-    <!-- Row 2 -->
-    <rect x="0" y="80" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="106" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Japan</text>
-    <text x="275" y="106" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">527</text>
-    <text x="400" y="106" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">529</text>
+    <!-- Row 2 - Salmon -->
+    <rect x="0" y="72" width="550" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="70" y="94" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Salmon</text>
+    <text x="175" y="94" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600" font-family="system-ui">208</text>
+    <text x="265" y="94" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">20g</text>
+    <text x="355" y="94" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">0g</text>
+    <text x="445" y="94" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">13g</text>
+    <text x="520" y="94" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">0g</text>
 
-    <!-- Row 3 -->
-    <rect x="0" y="120" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="146" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">South Korea</text>
-    <text x="275" y="146" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">524</text>
-    <text x="400" y="146" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="600" font-family="system-ui">519</text>
+    <!-- Row 3 - Brown Rice -->
+    <rect x="0" y="106" width="550" height="34" fill="white" stroke="#e2e8f0"/>
+    <text x="70" y="128" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Brown Rice</text>
+    <text x="175" y="128" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600" font-family="system-ui">111</text>
+    <text x="265" y="128" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">2.6g</text>
+    <text x="355" y="128" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">23g</text>
+    <text x="445" y="128" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">0.9g</text>
+    <text x="520" y="128" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">1.8g</text>
 
-    <!-- Row 4 -->
-    <rect x="0" y="160" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="186" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Germany</text>
-    <text x="275" y="186" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">500</text>
-    <text x="400" y="186" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">503</text>
+    <!-- Row 4 - Quinoa -->
+    <rect x="0" y="140" width="550" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="70" y="162" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Quinoa</text>
+    <text x="175" y="162" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600" font-family="system-ui">120</text>
+    <text x="265" y="162" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">4.4g</text>
+    <text x="355" y="162" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">21g</text>
+    <text x="445" y="162" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">1.9g</text>
+    <text x="520" y="162" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">2.8g</text>
 
-    <!-- Row 5 -->
-    <rect x="0" y="200" width="450" height="40" fill="white" stroke="#e2e8f0"/>
-    <text x="100" y="226" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">USA</text>
-    <text x="275" y="226" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="600" font-family="system-ui">478</text>
-    <text x="400" y="226" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600" font-family="system-ui">496</text>
+    <!-- Row 5 - Broccoli -->
+    <rect x="0" y="174" width="550" height="34" fill="white" stroke="#e2e8f0"/>
+    <text x="70" y="196" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Broccoli</text>
+    <text x="175" y="196" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">34</text>
+    <text x="265" y="196" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">2.8g</text>
+    <text x="355" y="196" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">7g</text>
+    <text x="445" y="196" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">0.4g</text>
+    <text x="520" y="196" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">2.6g</text>
 
-    <!-- Row 6 -->
-    <rect x="0" y="240" width="450" height="40" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="100" y="266" text-anchor="middle" fill="#1e293b" font-size="12" font-family="system-ui">Brazil</text>
-    <text x="275" y="266" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="600" font-family="system-ui">384</text>
-    <text x="400" y="266" text-anchor="middle" fill="#dc2626" font-size="12" font-weight="600" font-family="system-ui">401</text>
+    <!-- Row 6 - Avocado -->
+    <rect x="0" y="208" width="550" height="34" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="70" y="230" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Avocado</text>
+    <text x="175" y="230" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600" font-family="system-ui">160</text>
+    <text x="265" y="230" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">2g</text>
+    <text x="355" y="230" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600" font-family="system-ui">9g</text>
+    <text x="445" y="230" text-anchor="middle" fill="#dc2626" font-size="11" font-weight="600" font-family="system-ui">15g</text>
+    <text x="520" y="230" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">7g</text>
+
+    <!-- Row 7 - Eggs -->
+    <rect x="0" y="242" width="550" height="34" fill="white" stroke="#e2e8f0"/>
+    <text x="70" y="264" text-anchor="middle" fill="#1e293b" font-size="11" font-family="system-ui">Eggs (whole)</text>
+    <text x="175" y="264" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600" font-family="system-ui">155</text>
+    <text x="265" y="264" text-anchor="middle" fill="#16a34a" font-size="11" font-weight="600" font-family="system-ui">13g</text>
+    <text x="355" y="264" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">1.1g</text>
+    <text x="445" y="264" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600" font-family="system-ui">11g</text>
+    <text x="520" y="264" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">0g</text>
   </g>
 
-  <!-- Footer note -->
-  <text x="300" y="370" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui">
-    OECD Average: 489 (Math), 491 (Science)
+  <!-- Legend -->
+  <g transform="translate(25, 345)" font-size="9" font-family="system-ui">
+    <text x="0" y="10" fill="#64748b">Color coding:</text>
+    <rect x="80" y="0" width="10" height="10" fill="#16a34a" rx="1"/>
+    <text x="95" y="9" fill="#475569">High/Good</text>
+    <rect x="160" y="0" width="10" height="10" fill="#3b82f6" rx="1"/>
+    <text x="175" y="9" fill="#475569">Moderate</text>
+    <rect x="240" y="0" width="10" height="10" fill="#f59e0b" rx="1"/>
+    <text x="255" y="9" fill="#475569">Medium</text>
+    <rect x="315" y="0" width="10" height="10" fill="#dc2626" rx="1"/>
+    <text x="330" y="9" fill="#475569">High (limit)</text>
+  </g>
+
+  <!-- Note -->
+  <text x="300" y="390" text-anchor="middle" fill="#64748b" font-size="9" font-family="system-ui">
+    Values are approximate and may vary by preparation method
   </text>
 </svg>

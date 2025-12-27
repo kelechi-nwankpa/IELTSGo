@@ -3,56 +3,67 @@
 
   <!-- Title -->
   <text x="300" y="30" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="600" font-family="system-ui">
-    Energy Consumption by Source: 1990 vs 2020
+    Municipal Waste Composition by Material Type (%)
   </text>
 
-  <!-- 1990 Pie Chart -->
-  <g transform="translate(150, 200)">
-    <text x="0" y="-120" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">1990</text>
+  <!-- Main Pie Chart -->
+  <g transform="translate(230, 205)">
+    <!-- Organic/Food 35% (126 degrees) -->
+    <path d="M0,0 L0,-105 A105,105 0 0,1 99.21,34.13 Z" fill="#16a34a"/>
+    <!-- Paper/Cardboard 25% (90 degrees) -->
+    <path d="M0,0 L99.21,34.13 A105,105 0 0,1 -34.13,99.21 Z" fill="#3b82f6"/>
+    <!-- Plastics 15% (54 degrees) -->
+    <path d="M0,0 L-34.13,99.21 A105,105 0 0,1 -91.92,51.3 Z" fill="#ef4444"/>
+    <!-- Glass 8% (28.8 degrees) -->
+    <path d="M0,0 L-91.92,51.3 A105,105 0 0,1 -104.48,-10.99 Z" fill="#0ea5e9"/>
+    <!-- Metals 7% (25.2 degrees) -->
+    <path d="M0,0 L-104.48,-10.99 A105,105 0 0,1 -87.36,-58.47 Z" fill="#f59e0b"/>
+    <!-- Textiles 5% (18 degrees) -->
+    <path d="M0,0 L-87.36,-58.47 A105,105 0 0,1 -58.47,-87.36 Z" fill="#ec4899"/>
+    <!-- Other 5% (18 degrees) -->
+    <path d="M0,0 L-58.47,-87.36 A105,105 0 0,1 0,-105 Z" fill="#94a3b8"/>
 
-    <!-- Oil 45% -->
-    <path d="M0,0 L0,-100 A100,100 0 0,1 95,-31 Z" fill="#1e40af"/>
-    <!-- Coal 30% -->
-    <path d="M0,0 L95,-31 A100,100 0 0,1 59,81 Z" fill="#475569"/>
-    <!-- Gas 15% -->
-    <path d="M0,0 L59,81 A100,100 0 0,1 -59,81 Z" fill="#0891b2"/>
-    <!-- Nuclear 8% -->
-    <path d="M0,0 L-59,81 A100,100 0 0,1 -95,-31 Z" fill="#7c3aed"/>
-    <!-- Renewables 2% -->
-    <path d="M0,0 L-95,-31 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+    <!-- Labels on slices -->
+    <text x="45" y="-30" fill="white" font-size="12" font-weight="600" font-family="system-ui">35%</text>
+    <text x="35" y="60" fill="white" font-size="11" font-weight="600" font-family="system-ui">25%</text>
+    <text x="-60" y="60" fill="white" font-size="10" font-weight="600" font-family="system-ui">15%</text>
   </g>
 
-  <!-- 2020 Pie Chart -->
-  <g transform="translate(450, 200)">
-    <text x="0" y="-120" text-anchor="middle" fill="#475569" font-size="13" font-weight="500" font-family="system-ui">2020</text>
+  <!-- Legend with breakdown -->
+  <g transform="translate(370, 75)" font-size="11" font-family="system-ui">
+    <rect x="0" y="0" width="14" height="14" fill="#16a34a" rx="2"/>
+    <text x="20" y="12" fill="#1e293b" font-weight="500">Organic/Food Waste</text>
+    <text x="165" y="12" fill="#64748b">35%</text>
 
-    <!-- Oil 35% -->
-    <path d="M0,0 L0,-100 A100,100 0 0,1 81,-59 Z" fill="#1e40af"/>
-    <!-- Gas 28% -->
-    <path d="M0,0 L81,-59 A100,100 0 0,1 95,31 Z" fill="#0891b2"/>
-    <!-- Coal 18% -->
-    <path d="M0,0 L95,31 A100,100 0 0,1 31,95 Z" fill="#475569"/>
-    <!-- Nuclear 10% -->
-    <path d="M0,0 L31,95 A100,100 0 0,1 -59,81 Z" fill="#7c3aed"/>
-    <!-- Renewables 9% -->
-    <path d="M0,0 L-59,81 A100,100 0 0,1 0,-100 Z" fill="#16a34a"/>
+    <rect x="0" y="30" width="14" height="14" fill="#3b82f6" rx="2"/>
+    <text x="20" y="42" fill="#1e293b" font-weight="500">Paper &amp; Cardboard</text>
+    <text x="165" y="42" fill="#64748b">25%</text>
+
+    <rect x="0" y="60" width="14" height="14" fill="#ef4444" rx="2"/>
+    <text x="20" y="72" fill="#1e293b" font-weight="500">Plastics</text>
+    <text x="165" y="72" fill="#64748b">15%</text>
+
+    <rect x="0" y="90" width="14" height="14" fill="#0ea5e9" rx="2"/>
+    <text x="20" y="102" fill="#1e293b" font-weight="500">Glass</text>
+    <text x="165" y="102" fill="#64748b">8%</text>
+
+    <rect x="0" y="120" width="14" height="14" fill="#f59e0b" rx="2"/>
+    <text x="20" y="132" fill="#1e293b" font-weight="500">Metals</text>
+    <text x="165" y="132" fill="#64748b">7%</text>
+
+    <rect x="0" y="150" width="14" height="14" fill="#ec4899" rx="2"/>
+    <text x="20" y="162" fill="#1e293b" font-weight="500">Textiles</text>
+    <text x="165" y="162" fill="#64748b">5%</text>
+
+    <rect x="0" y="180" width="14" height="14" fill="#94a3b8" rx="2"/>
+    <text x="20" y="192" fill="#1e293b" font-weight="500">Other</text>
+    <text x="165" y="192" fill="#64748b">5%</text>
   </g>
 
-  <!-- Legend -->
-  <g transform="translate(150, 350)" font-size="11" font-family="system-ui">
-    <rect x="0" y="0" width="12" height="12" fill="#1e40af"/>
-    <text x="16" y="10" fill="#475569">Oil</text>
-
-    <rect x="60" y="0" width="12" height="12" fill="#475569"/>
-    <text x="76" y="10" fill="#475569">Coal</text>
-
-    <rect x="130" y="0" width="12" height="12" fill="#0891b2"/>
-    <text x="146" y="10" fill="#475569">Gas</text>
-
-    <rect x="190" y="0" width="12" height="12" fill="#7c3aed"/>
-    <text x="206" y="10" fill="#475569">Nuclear</text>
-
-    <rect x="270" y="0" width="12" height="12" fill="#16a34a"/>
-    <text x="286" y="10" fill="#475569">Renewables</text>
+  <!-- Recycling note -->
+  <g transform="translate(370, 290)" font-size="10" font-family="system-ui">
+    <rect x="0" y="0" width="180" height="50" fill="#f0fdf4" stroke="#86efac" stroke-width="1" rx="6"/>
+    <text x="90" y="20" text-anchor="middle" fill="#166534" font-weight="500">Recyclable: 55%</text>
+    <text x="90" y="38" text-anchor="middle" fill="#15803d" font-size="9">(Paper, Plastics, Glass, Metals)</text>
   </g>
 </svg>
