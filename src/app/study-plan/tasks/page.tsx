@@ -23,6 +23,7 @@ interface TasksData {
   completedThisWeek: number;
   totalThisWeek: number;
   currentStreak: number;
+  hasStudyPlan: boolean;
 }
 
 export default function TasksPage() {
@@ -37,17 +38,46 @@ export default function TasksPage() {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch('/api/tasks');
-      if (!res.ok) {
-        if (res.status === 404) {
-          setData(null);
-          setLoading(false);
-          return;
-        }
+      // Fetch today's tasks and week's tasks in parallel
+      const [todayRes, weekRes, streakRes] = await Promise.all([
+        fetch('/api/tasks?view=today'),
+        fetch('/api/tasks?view=week'),
+        fetch('/api/progress/overview'),
+      ]);
+
+      if (!todayRes.ok || !weekRes.ok) {
         throw new Error('Failed to load tasks');
       }
-      const tasksData = await res.json();
-      setData(tasksData);
+
+      const todayData = await todayRes.json();
+      const weekData = await weekRes.json();
+      const progressData = streakRes.ok ? await streakRes.json() : null;
+
+      // Check if there's no study plan
+      if (todayData.message === 'No active study plan') {
+        setData({
+          todaysTasks: [],
+          weekTasks: [],
+          completedThisWeek: 0,
+          totalThisWeek: 0,
+          currentStreak: progressData?.streak?.currentStreak || 0,
+          hasStudyPlan: false,
+        });
+        setLoading(false);
+        return;
+      }
+
+      const weekTasks = weekData.tasks || [];
+      const completedThisWeek = weekTasks.filter((t: StudyTask) => t.status === 'COMPLETED').length;
+
+      setData({
+        todaysTasks: todayData.tasks || [],
+        weekTasks: weekTasks,
+        completedThisWeek,
+        totalThisWeek: weekTasks.length,
+        currentStreak: progressData?.streak?.currentStreak || 0,
+        hasStudyPlan: true,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -98,10 +128,26 @@ export default function TasksPage() {
     );
   }
 
-  if (!data) {
+  if (!data || !data.hasStudyPlan) {
     return (
       <div className="min-h-screen bg-slate-50 py-8">
         <div className="mx-auto max-w-4xl px-6">
+          <div className="mb-4">
+            <Link
+              href="/study-plan"
+              className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              Back to Study Plan
+            </Link>
+          </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
               <svg
