@@ -168,6 +168,74 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Generate a helpful description based on activity and module
+function generateTaskDescription(
+  activity: string,
+  module: string,
+  duration: number
+): string {
+  const moduleDescriptions: Record<string, Record<string, string>> = {
+    LISTENING: {
+      'section 1': 'Practice everyday conversation scenarios - focus on names, numbers, and basic details.',
+      'section 2': 'Listen to monologues about social situations - practice note-taking skills.',
+      'section 3': 'Academic discussion practice - identify opinions and track multiple speakers.',
+      'section 4': 'Academic lecture listening - practice following complex arguments.',
+      'gap-fill': 'Fill in missing words while listening - builds spelling and prediction skills.',
+      'matching': 'Match speakers to opinions or information - improves tracking multiple voices.',
+      'multiple choice': 'Answer comprehension questions - practice eliminating wrong options.',
+      default: 'Improve your ability to understand spoken English in academic and everyday contexts.',
+    },
+    READING: {
+      'skimming': 'Practice reading quickly to get the main idea - essential for time management.',
+      'scanning': 'Find specific information quickly - locate names, dates, and key terms.',
+      't/f/ng': 'True/False/Not Given practice - distinguish between what\'s stated vs. implied.',
+      'matching': 'Match headings, information, or features - understand paragraph organization.',
+      'fill': 'Complete sentences or summaries - builds vocabulary and comprehension.',
+      'multiple choice': 'Practice selecting correct answers - improve detail comprehension.',
+      default: 'Develop reading strategies for academic texts and improve comprehension speed.',
+    },
+    WRITING: {
+      'task 1': 'Describe visual data (charts, graphs, diagrams) or write a letter clearly.',
+      'task 2': 'Write a well-structured essay with clear arguments and examples.',
+      'planning': 'Practice outlining essays before writing - improves coherence and saves time.',
+      'structure': 'Focus on paragraph organization and linking ideas logically.',
+      'vocabulary': 'Build topic-specific vocabulary for more precise expression.',
+      'grammar': 'Practice complex sentence structures to improve grammatical range.',
+      default: 'Develop clear, well-organized writing with appropriate style and vocabulary.',
+    },
+    SPEAKING: {
+      'part 1': 'Practice answering personal questions fluently - build confidence with common topics.',
+      'part 2': 'Prepare and deliver a 2-minute talk - practice organizing ideas under time pressure.',
+      'part 3': 'Discuss abstract topics in depth - develop your ability to express complex ideas.',
+      'cue card': 'Practice the long turn - organize thoughts quickly and speak for 2 minutes.',
+      'fluency': 'Work on speaking smoothly without long pauses or excessive hesitation.',
+      'vocabulary': 'Expand your range of expressions for discussing various topics.',
+      default: 'Build confidence speaking English and develop natural fluency.',
+    },
+  };
+
+  const activityLower = activity.toLowerCase();
+  const moduleDesc = moduleDescriptions[module] || moduleDescriptions.LISTENING;
+
+  // Find a matching description key
+  let description = moduleDesc.default;
+  for (const [key, desc] of Object.entries(moduleDesc)) {
+    if (key !== 'default' && activityLower.includes(key)) {
+      description = desc;
+      break;
+    }
+  }
+
+  // Add duration context
+  const timeContext = duration <= 15
+    ? 'Quick practice session - focus on quality over quantity.'
+    : duration >= 45
+      ? 'Extended practice - take short breaks if needed to maintain focus.'
+      : '';
+
+  return timeContext ? `${description} ${timeContext}` : description;
+}
+
 async function createTasksForWeeks(
   studyPlanId: string,
   weeks: Array<{
@@ -214,13 +282,21 @@ async function createTasksForWeeks(
           // Pick an activity for this day (rotate through activities)
           const activityIndex = day % breakdown.activities.length;
           const activity = breakdown.activities[activityIndex];
+          const duration = Math.ceil(breakdown.minutes / breakdown.activities.length);
+
+          // Generate a helpful description
+          const description = generateTaskDescription(
+            activity,
+            moduleEnums[i],
+            duration
+          );
 
           tasks.push({
             studyPlanId,
             module: moduleEnums[i],
             title: activity.substring(0, 100),
-            description: activity,
-            duration: Math.ceil(breakdown.minutes / breakdown.activities.length),
+            description,
+            duration,
             priority: breakdown.minutes > 30 ? 'HIGH' : 'MEDIUM',
             scheduledDate: taskDate,
             weekNumber: week.week,
