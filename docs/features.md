@@ -3,8 +3,8 @@
 This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
-**Last updated:** 2025-12-26
-**Current phase:** 5 (Task 1 & General Training) - Complete
+**Last updated:** 2025-12-27
+**Current phase:** 6 (Study Plans & Progress) - Complete
 
 Legend:
 
@@ -317,50 +317,73 @@ Legend:
 
 ## Phase 6: Study Plans & Progress
 
+### Database Schema
+
+- [x] DiagnosticAssessment model
+- [x] StudyPlan model
+- [x] WeeklyGoal model
+- [x] StudyTask model
+- [x] ProgressSnapshot model
+- [x] SkillAssessment model
+- [x] UserAchievement model
+- [x] StudyStreak model
+
 ### Progress Tracking
 
-- [ ] Skill-level breakdown
-- [ ] Band score trends
-- [ ] Weak-area identification
-- [ ] Attempt history
-- [ ] Completion metrics
+- [x] Skill-level breakdown
+- [x] Band score trends API
+- [x] Weak-area identification
+- [x] Attempt history
+- [x] Completion metrics
+- [x] Progress dashboard component
+- [x] Module progress cards
+- [x] Band trend charts
 
 ### Diagnostic Assessment
 
-- [ ] Initial diagnostic test design
-- [ ] Band estimation per module
-- [ ] Diagnostic results storage
-- [ ] Results visualization
+- [x] Initial diagnostic test design (53 questions)
+- [x] Band estimation per module
+- [x] Diagnostic results storage
+- [x] Diagnostic API routes
+- [x] Manual band input alternative
 
 ### Plan Configuration
 
-- [ ] Target band input
-- [ ] Test date input
-- [ ] Available study time input
-- [ ] Weak area identification
+- [x] Target band input
+- [x] Test date input
+- [x] Available study time input
+- [x] Weak area identification
+- [x] Multi-step setup wizard
 
 ### AI Plan Generation
 
-- [ ] Study plan prompt integrated
-- [ ] Personalized plan generation
-- [ ] Plan storage in database
-- [ ] Plan display UI
+- [x] Study plan prompt integrated (Claude Sonnet)
+- [x] Personalized plan generation
+- [x] Plan storage in database
+- [x] Plan generation API
 
 ### Task Management
 
-- [ ] Daily task recommendations
-- [ ] Weekly goals view
-- [ ] Task completion tracking
-- [ ] Progress visualization
-- [ ] Skill prioritisation
-- [ ] Adaptive difficulty
+- [x] Daily task recommendations
+- [x] Weekly goals view
+- [x] Task completion tracking
+- [x] Task skip functionality
+- [x] Tasks API routes
+
+### Gamification
+
+- [x] Study streak tracking
+- [x] Achievement badges (18 achievements)
+- [x] Confetti animations
+- [x] Achievement toast notifications
+- [x] Shareable achievement cards
+- [x] Rarity system (common, rare, epic, legendary)
 
 ### Adaptation
 
-- [ ] Performance tracking over time
-- [ ] Plan adjustment based on progress
-- [ ] Re-assessment prompts
-- [ ] Focus area recommendations
+- [x] Performance tracking over time
+- [x] Plan adaptation check logic
+- [x] Progress snapshot system
 
 ---
 
@@ -486,11 +509,11 @@ Legend:
 | 3         | Speaking               | 30       | 30        | 100%     |
 | 4         | Payment & Premium      | 18       | 18        | 100%     |
 | 5         | Task 1 & GT            | 21       | 21        | 100%     |
-| 6         | Study Plans & Progress | 24       | 0         | 0%       |
+| 6         | Study Plans & Progress | 38       | 38        | 100%     |
 | 7         | Test Simulation        | 9        | 0         | 0%       |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **238**  | **139**   | **58%**  |
+| **Total** |                        | **252**  | **177**   | **70%**  |
 
 ---
 

@@ -79,7 +79,6 @@ export default async function Task1Page({ searchParams }: PageProps) {
       title={prompt.title || 'Writing Task 1'}
       prompt={contentData.prompt}
       topic={contentData.topic}
-      testType={testType}
       isAcademic={isAcademic}
       imageUrl={isAcademic ? (contentData as Task1AcademicContentData).imageUrl : undefined}
       imageDescription={
