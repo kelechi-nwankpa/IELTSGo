@@ -137,6 +137,12 @@ export default function DashboardContent() {
               History
             </Link>
             <Link
+              href="/mock-test"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              Mock Test
+            </Link>
+            <Link
               href="/writing"
               className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl"
             >
@@ -647,6 +653,46 @@ export default function DashboardContent() {
               </div>
             </Link>
           </div>
+        </div>
+
+        {/* Mock Test CTA */}
+        <div className="mt-8">
+          <Link
+            href="/mock-test"
+            className="group block rounded-2xl border border-rose-200 bg-gradient-to-r from-rose-50 to-pink-50 p-6 transition-all hover:shadow-lg"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 text-white shadow-lg shadow-rose-500/25">
+                  <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">Full Mock Test</h3>
+                  <p className="text-slate-600">
+                    Take a complete IELTS test with all 4 sections under real exam conditions
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl bg-rose-500 px-5 py-2.5 font-semibold text-white shadow-lg shadow-rose-500/25 transition-all group-hover:bg-rose-600 group-hover:shadow-xl">
+                Start Test
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </div>
+            </div>
+          </Link>
         </div>
       </main>
     </div>

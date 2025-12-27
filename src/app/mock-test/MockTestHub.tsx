@@ -9,6 +9,7 @@ interface QuotaInfo {
   used: number;
   limit: number;
   remaining: number;
+  tier: string;
 }
 
 interface MockTestInfo {
@@ -49,6 +50,7 @@ export function MockTestHub() {
               used: data.quota.used,
               limit: data.quota.limit,
               remaining: data.quota.remaining,
+              tier: data.quota.tier,
             });
           }
         }
@@ -212,8 +214,126 @@ export function MockTestHub() {
         </div>
       )}
 
-      {/* Test Type Selection */}
-      {!existingTest && (
+      {/* Premium Upgrade Prompt for Free Users (or when quota not loaded) */}
+      {(!quotaInfo || quotaInfo.tier === 'FREE') && !existingTest && (
+        <div className="rounded-xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-8">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-100">
+              <svg
+                className="h-6 w-6 text-amber-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-slate-900">Premium Feature</h3>
+              <p className="mt-1 text-slate-600">
+                Full mock tests are available exclusively for Premium members. Upgrade to access
+                complete IELTS simulations with all 4 sections and detailed AI feedback.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Link
+                  href="/pricing"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
+                >
+                  Upgrade to Premium
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </Link>
+                <Link
+                  href="/writing"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 transition-all hover:bg-slate-50"
+                >
+                  Try Free Practice
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <svg
+                className="h-5 w-5 text-green-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              2 full mock tests per month
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <svg
+                className="h-5 w-5 text-green-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              Unlimited writing evaluations
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <svg
+                className="h-5 w-5 text-green-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              AI-powered speaking feedback
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <svg
+                className="h-5 w-5 text-green-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              Personalized study plans
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Test Type Selection - Only for Premium Users */}
+      {quotaInfo && quotaInfo.tier !== 'FREE' && !existingTest && (
         <div className="rounded-xl border border-slate-200 bg-white p-6">
           <h2 className="text-lg font-semibold text-slate-900">Select Test Type</h2>
           <p className="mt-1 text-sm text-slate-600">
@@ -275,8 +395,8 @@ export function MockTestHub() {
         </div>
       )}
 
-      {/* Quota Info */}
-      {quotaInfo && (
+      {/* Quota Info - Only for Premium Users */}
+      {quotaInfo && quotaInfo.tier !== 'FREE' && (
         <div className="rounded-xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-600">Monthly Mock Tests</span>
