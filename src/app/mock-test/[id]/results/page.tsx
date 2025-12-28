@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -68,6 +68,13 @@ export default function MockTestResultsPage() {
   const [results, setResults] = useState<MockTestResults | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [newlyUpdated, setNewlyUpdated] = useState<Set<string>>(new Set());
+
+  // Track previous scores to detect updates
+  const prevScoresRef = useRef<{
+    writingBand: number | null;
+    speakingBand: number | null;
+  }>({ writingBand: null, speakingBand: null });
 
   const fetchResults = useCallback(async () => {
     try {
@@ -101,6 +108,26 @@ export default function MockTestResultsPage() {
       speakingBand === null ||
       listeningBand === null ||
       readingBand === null;
+
+    // Detect newly arrived scores and highlight them
+    const prev = prevScoresRef.current;
+    const updated = new Set<string>();
+
+    if (prev.writingBand === null && writingBand !== null) {
+      updated.add('writing');
+    }
+    if (prev.speakingBand === null && speakingBand !== null) {
+      updated.add('speaking');
+    }
+
+    if (updated.size > 0) {
+      setNewlyUpdated(updated);
+      // Clear highlight after 3 seconds
+      setTimeout(() => setNewlyUpdated(new Set()), 3000);
+    }
+
+    // Update ref for next comparison
+    prevScoresRef.current = { writingBand, speakingBand };
 
     if (!hasPendingBands) return;
 
@@ -239,17 +266,37 @@ export default function MockTestResultsPage() {
           <p className="text-sm font-medium tracking-wide text-slate-500 uppercase">
             Estimated Overall Band
           </p>
-          <div className={`mt-2 text-6xl font-bold ${getBandColor(overallBand)}`}>
-            {overallBand !== null ? overallBand.toFixed(1) : 'Pending'}
-          </div>
-          {overallBand !== null && (
-            <p className="mt-2 text-slate-600">
-              {overallBand >= 7
-                ? "Excellent! You're well prepared."
-                : overallBand >= 6
-                  ? 'Good progress! Keep practicing.'
-                  : 'Room for improvement. Focus on your weak areas.'}
-            </p>
+          {overallBand !== null ? (
+            <>
+              <div className={`mt-2 text-6xl font-bold ${getBandColor(overallBand)}`}>
+                {overallBand.toFixed(1)}
+              </div>
+              <p className="mt-2 text-slate-600">
+                {overallBand >= 7
+                  ? "Excellent! You're well prepared."
+                  : overallBand >= 6
+                    ? 'Good progress! Keep practicing.'
+                    : 'Room for improvement. Focus on your weak areas.'}
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="mt-2 flex items-center justify-center gap-3">
+                {moduleScores.length >= 2 ? (
+                  // Show estimated range based on available scores
+                  <span className="text-4xl font-bold text-slate-500">
+                    {Math.min(...moduleScores.map((m) => m.band)).toFixed(1)} -{' '}
+                    {Math.max(...moduleScores.map((m) => m.band)).toFixed(1)}
+                  </span>
+                ) : (
+                  <span className="text-4xl font-bold text-slate-400">Calculating...</span>
+                )}
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              </div>
+              <p className="mt-2 text-sm text-slate-500">
+                Waiting for AI evaluations to complete...
+              </p>
+            </>
           )}
         </div>
 
@@ -279,33 +326,57 @@ export default function MockTestResultsPage() {
             </div>
           </div>
 
-          <div className={`rounded-xl border p-6 ${getBandBgColor(writingBand)}`}>
+          <div
+            className={`rounded-xl border p-6 transition-all duration-500 ${getBandBgColor(writingBand)} ${
+              newlyUpdated.has('writing') ? 'ring-2 ring-green-500 ring-offset-2' : ''
+            }`}
+          >
             <div className="flex items-center gap-3">
               <span className="text-3xl">✍️</span>
               <div>
                 <p className="text-sm text-slate-500">Writing</p>
                 <p className={`text-2xl font-bold ${getBandColor(writingBand)}`}>
-                  {writingBand !== null ? writingBand.toFixed(1) : 'Pending'}
+                  {writingBand !== null ? writingBand.toFixed(1) : 'Evaluating...'}
                 </p>
               </div>
+              {writingBand === null && (
+                <div className="ml-auto h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              )}
+              {newlyUpdated.has('writing') && (
+                <span className="ml-auto text-sm font-medium text-green-600">✓ Ready!</span>
+              )}
             </div>
             {writingBand === null && (
-              <p className="mt-2 text-xs text-slate-500">AI evaluation in progress...</p>
+              <p className="mt-2 text-xs text-slate-500">
+                AI evaluation in progress... ~20-30 seconds
+              </p>
             )}
           </div>
 
-          <div className={`rounded-xl border p-6 ${getBandBgColor(speakingBand)}`}>
+          <div
+            className={`rounded-xl border p-6 transition-all duration-500 ${getBandBgColor(speakingBand)} ${
+              newlyUpdated.has('speaking') ? 'ring-2 ring-green-500 ring-offset-2' : ''
+            }`}
+          >
             <div className="flex items-center gap-3">
               <span className="text-3xl">🎤</span>
               <div>
                 <p className="text-sm text-slate-500">Speaking</p>
                 <p className={`text-2xl font-bold ${getBandColor(speakingBand)}`}>
-                  {speakingBand !== null ? speakingBand.toFixed(1) : 'Pending'}
+                  {speakingBand !== null ? speakingBand.toFixed(1) : 'Evaluating...'}
                 </p>
               </div>
+              {speakingBand === null && (
+                <div className="ml-auto h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+              )}
+              {newlyUpdated.has('speaking') && (
+                <span className="ml-auto text-sm font-medium text-green-600">✓ Ready!</span>
+              )}
             </div>
             {speakingBand === null && (
-              <p className="mt-2 text-xs text-slate-500">AI evaluation in progress...</p>
+              <p className="mt-2 text-xs text-slate-500">
+                AI evaluation in progress... ~30-45 seconds
+              </p>
             )}
           </div>
         </div>
