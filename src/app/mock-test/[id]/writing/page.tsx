@@ -66,36 +66,64 @@ export default function MockTestWritingPage() {
 
         const data = await response.json();
 
-        // For now, we'll create placeholder prompts since the API may not have writing content
-        const placeholderData: SectionData = {
+        // Use API-provided content if available, otherwise use placeholders
+        const apiContent = data.content as {
+          task1?: WritingTask;
+          task2?: WritingTask;
+        } | null;
+
+        const sectionContent: SectionData = {
           section: data.section,
           timing: data.timing,
           contentId: data.contentId,
-          content: {
-            task1: {
-              id: 'task1-placeholder',
-              taskNumber: 1,
-              title: 'Task 1',
-              prompt:
-                'The chart below shows information about changes in average house prices in five different cities between 1990 and 2002 compared with the average house prices in 1989.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.',
-              topic: 'House Prices',
-              minWords: 150,
-              recommendedTime: 20,
-            },
-            task2: {
-              id: 'task2-placeholder',
-              taskNumber: 2,
-              title: 'Task 2',
-              prompt:
-                'Some people believe that university students should be required to attend classes. Others believe that going to classes should be optional for students.\n\nWhich point of view do you agree with? Use specific reasons and details to explain your answer.',
-              topic: 'Education',
-              minWords: 250,
-              recommendedTime: 40,
-            },
-          },
+          content: apiContent
+            ? {
+                task1: {
+                  id: apiContent.task1?.id || 'task1-placeholder',
+                  taskNumber: 1,
+                  title: apiContent.task1?.title || 'Task 1',
+                  prompt: apiContent.task1?.prompt || 'Task 1 writing prompt',
+                  topic: apiContent.task1?.topic,
+                  imageUrl: apiContent.task1?.imageUrl,
+                  imageDescription: apiContent.task1?.imageDescription,
+                  minWords: apiContent.task1?.minWords || 150,
+                  recommendedTime: apiContent.task1?.recommendedTime || 20,
+                },
+                task2: {
+                  id: apiContent.task2?.id || 'task2-placeholder',
+                  taskNumber: 2,
+                  title: apiContent.task2?.title || 'Task 2',
+                  prompt: apiContent.task2?.prompt || 'Task 2 writing prompt',
+                  topic: apiContent.task2?.topic,
+                  minWords: apiContent.task2?.minWords || 250,
+                  recommendedTime: apiContent.task2?.recommendedTime || 40,
+                },
+              }
+            : {
+                task1: {
+                  id: 'task1-placeholder',
+                  taskNumber: 1,
+                  title: 'Task 1',
+                  prompt:
+                    'The chart below shows information about changes in average house prices in five different cities between 1990 and 2002 compared with the average house prices in 1989.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.',
+                  topic: 'House Prices',
+                  minWords: 150,
+                  recommendedTime: 20,
+                },
+                task2: {
+                  id: 'task2-placeholder',
+                  taskNumber: 2,
+                  title: 'Task 2',
+                  prompt:
+                    'Some people believe that university students should be required to attend classes. Others believe that going to classes should be optional for students.\n\nWhich point of view do you agree with? Use specific reasons and details to explain your answer.',
+                  topic: 'Education',
+                  minWords: 250,
+                  recommendedTime: 40,
+                },
+              },
         };
 
-        setSectionData(placeholderData);
+        setSectionData(sectionContent);
         setTaskStartTime(new Date());
       } catch {
         setError('Failed to connect to server');
@@ -129,11 +157,15 @@ export default function MockTestWritingPage() {
               essay: task1Essay,
               wordCount: countWords(task1Essay),
               timeSpent: task1TimeSpent,
+              promptId: sectionData?.content?.task1?.id,
+              prompt: sectionData?.content?.task1?.prompt,
             },
             task2: {
               essay: task2Essay,
               wordCount: countWords(task2Essay),
               timeSpent: task2TimeSpent,
+              promptId: sectionData?.content?.task2?.id,
+              prompt: sectionData?.content?.task2?.prompt,
             },
           },
           timeSpent: task1TimeSpent + task2TimeSpent,
@@ -156,6 +188,10 @@ export default function MockTestWritingPage() {
   }, [
     testId,
     sectionData?.contentId,
+    sectionData?.content?.task1?.id,
+    sectionData?.content?.task1?.prompt,
+    sectionData?.content?.task2?.id,
+    sectionData?.content?.task2?.prompt,
     task1Essay,
     task2Essay,
     task1TimeSpent,
@@ -224,11 +260,15 @@ export default function MockTestWritingPage() {
               essay: task1Essay,
               wordCount: task1Words,
               timeSpent: task1TimeSpent,
+              promptId: sectionData?.content?.task1?.id,
+              prompt: sectionData?.content?.task1?.prompt,
             },
             task2: {
               essay: task2Essay,
               wordCount: task2Words,
               timeSpent: task2TimeSpent,
+              promptId: sectionData?.content?.task2?.id,
+              prompt: sectionData?.content?.task2?.prompt,
             },
           },
           timeSpent: task1TimeSpent + task2TimeSpent,

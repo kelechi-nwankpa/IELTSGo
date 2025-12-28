@@ -1,4 +1,6 @@
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth/config';
 import { Task1Practice } from './Task1Practice';
 
 // Force dynamic rendering - this page needs database access
@@ -24,13 +26,15 @@ interface PageProps {
   searchParams: Promise<{ type?: string }>;
 }
 
-async function getRandomTask1Prompt(testType: 'academic' | 'general') {
+async function getRandomTask1Prompt(testType: 'academic' | 'general', isPremiumUser: boolean) {
   const contentType = testType === 'academic' ? 'TASK1_ACADEMIC' : 'TASK1_GENERAL';
 
   const prompts = await prisma.content.findMany({
     where: {
       module: 'WRITING',
       type: contentType,
+      // Free users only see non-premium content
+      ...(isPremiumUser ? {} : { isPremium: false }),
     },
     select: {
       id: true,
@@ -50,10 +54,31 @@ async function getRandomTask1Prompt(testType: 'academic' | 'general') {
   return prompts[randomIndex];
 }
 
+async function getUserTier(): Promise<boolean> {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return false; // Not logged in = free tier
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { subscriptionTier: true, subscriptionStatus: true },
+  });
+
+  // Premium if tier is PREMIUM and status is active
+  return (
+    user?.subscriptionTier === 'PREMIUM' &&
+    (user?.subscriptionStatus === 'ACTIVE' ||
+      user?.subscriptionStatus === 'TRIALING' ||
+      user?.subscriptionStatus === 'PAST_DUE')
+  );
+}
+
 export default async function Task1Page({ searchParams }: PageProps) {
   const params = await searchParams;
   const testType = params.type === 'general' ? 'general' : 'academic';
-  const prompt = await getRandomTask1Prompt(testType);
+  const isPremiumUser = await getUserTier();
+  const prompt = await getRandomTask1Prompt(testType, isPremiumUser);
 
   if (!prompt) {
     return (

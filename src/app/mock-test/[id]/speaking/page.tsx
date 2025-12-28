@@ -13,10 +13,33 @@ interface SpeakingPart {
   questions: string[];
   prepTime?: number; // seconds (only for Part 2)
   speakingTime: number; // seconds
+  cueCard?: string; // For Part 2
+}
+
+interface SpeakingContent {
+  part1: {
+    id: string;
+    topic: string;
+    questions: string[];
+  };
+  part2: {
+    id: string;
+    topic: string;
+    cueCard: string;
+    prepTime: number;
+    speakingTime: number;
+    followUpQuestion?: string;
+  };
+  part3: {
+    id: string;
+    topic: string;
+    questions: string[];
+  };
 }
 
 interface SectionData {
   section: string;
+  content?: SpeakingContent;
   timing: {
     startedAt: string;
     deadline: string;
@@ -29,7 +52,8 @@ interface RecordingData {
   duration: number;
 }
 
-const SPEAKING_PARTS: SpeakingPart[] = [
+// Default speaking parts (fallback if API doesn't provide content)
+const DEFAULT_speakingParts: SpeakingPart[] = [
   {
     part: 1,
     title: 'Part 1: Introduction & Interview',
@@ -71,12 +95,47 @@ const SPEAKING_PARTS: SpeakingPart[] = [
   },
 ];
 
+// Convert API content to SpeakingPart format
+function buildSpeakingParts(content?: SpeakingContent): SpeakingPart[] {
+  if (!content) return DEFAULT_speakingParts;
+
+  return [
+    {
+      part: 1,
+      title: 'Part 1: Introduction & Interview',
+      description: 'The examiner will ask general questions about yourself and familiar topics.',
+      questions: content.part1.questions || DEFAULT_speakingParts[0].questions,
+      speakingTime: 180,
+    },
+    {
+      part: 2,
+      title: 'Part 2: Individual Long Turn',
+      description:
+        'You will be given a topic card. You have 1 minute to prepare, then speak for 1-2 minutes.',
+      questions: content.part2.cueCard
+        ? [content.part2.cueCard]
+        : DEFAULT_speakingParts[1].questions,
+      cueCard: content.part2.cueCard,
+      prepTime: content.part2.prepTime || 60,
+      speakingTime: content.part2.speakingTime || 120,
+    },
+    {
+      part: 3,
+      title: 'Part 3: Two-way Discussion',
+      description: 'The examiner will ask deeper questions related to the Part 2 topic.',
+      questions: content.part3.questions || DEFAULT_speakingParts[2].questions,
+      speakingTime: 300,
+    },
+  ];
+}
+
 export default function MockTestSpeakingPage() {
   const router = useRouter();
   const params = useParams();
   const testId = params.id as string;
 
   const [sectionData, setSectionData] = useState<SectionData | null>(null);
+  const [speakingParts, setSpeakingParts] = useState<SpeakingPart[]>(DEFAULT_speakingParts);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -111,8 +170,14 @@ export default function MockTestSpeakingPage() {
         const data = await response.json();
         setSectionData({
           section: data.section,
+          content: data.content,
           timing: data.timing,
         });
+
+        // Build speaking parts from API content
+        if (data.content) {
+          setSpeakingParts(buildSpeakingParts(data.content));
+        }
       } catch {
         setError('Failed to connect to server');
       } finally {
@@ -146,20 +211,25 @@ export default function MockTestSpeakingPage() {
     setError(null);
 
     try {
+      // Create FormData with recordings for AI transcription and evaluation
+      const formData = new FormData();
+      formData.append('contentId', 'mock-test-speaking');
+      formData.append(
+        'timeSpent',
+        String(sectionData?.timing.durationMinutes ? sectionData.timing.durationMinutes * 60 : 840)
+      );
+
+      // Add recordings and their associated questions
+      Object.entries(recordings).forEach(([part, data]) => {
+        formData.append(`part${part}`, data.blob, `part${part}.webm`);
+        const partIndex = parseInt(part, 10) - 1;
+        const questions = speakingParts[partIndex]?.questions || [];
+        formData.append(`part${part}Questions`, JSON.stringify(questions));
+      });
+
       const response = await fetch(`/api/mock-test/${testId}/section/speaking/submit`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contentId: 'mock-test-speaking',
-          answers: {
-            part1Recorded: !!recordings[1],
-            part2Recorded: !!recordings[2],
-            part3Recorded: !!recordings[3],
-          },
-          timeSpent: sectionData?.timing.durationMinutes
-            ? sectionData.timing.durationMinutes * 60
-            : 840,
-        }),
+        body: formData,
       });
 
       if (response.ok) {
@@ -170,11 +240,11 @@ export default function MockTestSpeakingPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [testId, recordings, sectionData?.timing.durationMinutes, router]);
+  }, [testId, recordings, sectionData?.timing.durationMinutes, router, speakingParts]);
 
   const handleStartPart2Prep = () => {
     setIsPreparing(true);
-    setPrepTimeLeft(SPEAKING_PARTS[1].prepTime || 60);
+    setPrepTimeLeft(speakingParts[1].prepTime || 60);
   };
 
   const handleRecordingComplete = (blob: Blob) => {
@@ -213,30 +283,26 @@ export default function MockTestSpeakingPage() {
     setError(null);
 
     try {
-      // Create FormData with recordings
+      // Create FormData with recordings for AI transcription and evaluation
       const formData = new FormData();
       formData.append('contentId', 'mock-test-speaking');
+      formData.append(
+        'timeSpent',
+        String(sectionData?.timing.durationMinutes ? sectionData.timing.durationMinutes * 60 : 840)
+      );
 
-      // Add recordings
+      // Add recordings and their associated questions
       Object.entries(recordings).forEach(([part, data]) => {
         formData.append(`part${part}`, data.blob, `part${part}.webm`);
+        // Include the questions for this part for evaluation context
+        const partIndex = parseInt(part, 10) - 1;
+        const questions = speakingParts[partIndex]?.questions || [];
+        formData.append(`part${part}Questions`, JSON.stringify(questions));
       });
 
-      // For now, just submit basic data since we're not doing full transcription in mock test
       const response = await fetch(`/api/mock-test/${testId}/section/speaking/submit`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contentId: 'mock-test-speaking',
-          answers: {
-            part1Recorded: !!recordings[1],
-            part2Recorded: !!recordings[2],
-            part3Recorded: !!recordings[3],
-          },
-          timeSpent: sectionData?.timing.durationMinutes
-            ? sectionData.timing.durationMinutes * 60
-            : 840,
-        }),
+        body: formData, // Send as FormData, not JSON
       });
 
       if (!response.ok) {
@@ -288,7 +354,7 @@ export default function MockTestSpeakingPage() {
     );
   }
 
-  const currentPartData = SPEAKING_PARTS[currentPart - 1];
+  const currentPartData = speakingParts[currentPart - 1];
   const completedParts = Object.entries(partStatus).filter(
     ([, status]) => status === 'completed'
   ).length;
@@ -393,7 +459,7 @@ export default function MockTestSpeakingPage() {
               {currentPart === 2 ? 'Topic Card:' : 'Sample Questions:'}
             </h3>
             <ul className="space-y-1">
-              {currentPartData.questions.map((q, i) => (
+              {currentPartData.questions.map((q: string, i: number) => (
                 <li key={i} className="text-slate-700">
                   {currentPart === 2 ? q : `• ${q}`}
                 </li>

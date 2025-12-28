@@ -7,6 +7,7 @@ export interface Task2GTPrompt {
   prompt: string;
   topic: string;
   difficultyBand: number;
+  isFree?: boolean; // Whether this prompt is available to free tier users
 }
 
 export const task2GTPrompts: Task2GTPrompt[] = [
@@ -23,6 +24,7 @@ Give reasons for your answer and include any relevant examples from your own kno
 Write at least 250 words.`,
     topic: 'work',
     difficultyBand: 6.0,
+    isFree: true, // Free tier access
   },
   {
     id: 'task2g-002',
@@ -36,6 +38,7 @@ Give reasons for your answer and include any relevant examples from your own kno
 Write at least 250 words.`,
     topic: 'work',
     difficultyBand: 6.5,
+    isFree: true, // Free tier access
   },
   {
     id: 'task2g-003',
@@ -49,6 +52,7 @@ Give reasons for your answer and include any relevant examples from your own kno
 Write at least 250 words.`,
     topic: 'work',
     difficultyBand: 6.5,
+    isFree: true, // Free tier access
   },
   {
     id: 'task2g-004',

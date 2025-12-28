@@ -14,6 +14,7 @@ Give reasons for your answer and include any relevant examples from your own kno
 Write at least 250 words.`,
     topic: 'education',
     difficultyBand: 6.5,
+    isFree: true, // Free tier access
   },
   {
     id: 'task2-002',
@@ -27,6 +28,7 @@ Give reasons for your answer and include any relevant examples from your own kno
 Write at least 250 words.`,
     topic: 'technology',
     difficultyBand: 6.5,
+    isFree: true, // Free tier access
   },
   {
     id: 'task2-003',
@@ -40,6 +42,7 @@ Give reasons for your answer and include any relevant examples from your own kno
 Write at least 250 words.`,
     topic: 'environment',
     difficultyBand: 7.0,
+    isFree: true, // Free tier access
   },
   {
     id: 'task2-004',

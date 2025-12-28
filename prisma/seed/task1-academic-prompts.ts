@@ -10,6 +10,7 @@ export interface Task1AcademicPrompt {
   imageUrl: string;
   imageDescription: string; // Alt text and context for accessibility
   difficultyBand: number;
+  isFree?: boolean; // Whether this prompt is available to free tier users
 }
 
 export const task1AcademicPrompts: Task1AcademicPrompt[] = [
@@ -28,6 +29,7 @@ Write at least 150 words.`,
     imageDescription:
       'Line graph showing internet access percentages for USA (starting at 40% in 2000, rising to 92% in 2020), UK (starting at 25% in 2000, rising to 95% in 2020), and Brazil (starting at 5% in 2000, rising to 75% in 2020)',
     difficultyBand: 6.0,
+    isFree: true, // Free tier access
   },
   {
     id: 'task1a-002',
@@ -43,6 +45,7 @@ Write at least 150 words.`,
     imageDescription:
       'Line graph showing population in millions for China (steady rise then decline after 2020), India (continuous rise overtaking China by 2030), Japan (decline from 2010), and Indonesia (steady growth)',
     difficultyBand: 6.5,
+    isFree: true, // Free tier access
   },
   {
     id: 'task1a-003',
@@ -58,6 +61,7 @@ Write at least 150 words.`,
     imageDescription:
       'Line graph showing electricity generation by source: coal (declining from 60% to 20%), natural gas (rising from 15% to 35%), nuclear (stable around 20%), and renewables (rising from 5% to 25%)',
     difficultyBand: 6.5,
+    isFree: true, // Free tier access
   },
   {
     id: 'task1a-004',

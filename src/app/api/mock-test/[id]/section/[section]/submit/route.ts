@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { formatApiError, ErrorCode } from '@/lib/errors';
+import { evaluateWriting, WritingEvaluation } from '@/lib/ai/writing-evaluator';
+import { evaluateSpeaking, SpeakingEvaluation } from '@/lib/ai/speaking-evaluator';
+import { transcribeAudio } from '@/lib/ai/transcription';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +43,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
     const { id, section } = await context.params;
     const userId = session.user.id;
-    const body = await request.json();
 
     // Validate section
     const sectionUpper = section.toUpperCase();
@@ -89,12 +91,56 @@ export async function POST(request: NextRequest, context: RouteContext) {
       );
     }
 
-    const { contentId, answers, timeSpent } = body;
+    // Parse request body - handle FormData for speaking (with audio) or JSON for other sections
+    let contentId: string | undefined;
+    let answers: Record<string, unknown> = {};
+    let timeSpent: number | undefined;
+    const speakingAudioParts: { part: number; audio: Blob; questions: string[] }[] = [];
+
+    const contentType = request.headers.get('content-type') || '';
+
+    if (sectionUpper === 'SPEAKING' && contentType.includes('multipart/form-data')) {
+      // Handle FormData for speaking with audio files
+      const formData = await request.formData();
+      contentId = (formData.get('contentId') as string) || undefined;
+      timeSpent = parseInt(formData.get('timeSpent') as string, 10) || undefined;
+
+      // Extract audio files for each part
+      for (let part = 1; part <= 3; part++) {
+        const audioFile = formData.get(`part${part}`) as Blob | null;
+        const questionsJson = formData.get(`part${part}Questions`) as string | null;
+        if (audioFile) {
+          speakingAudioParts.push({
+            part,
+            audio: audioFile,
+            questions: questionsJson ? JSON.parse(questionsJson) : [],
+          });
+        }
+      }
+
+      // Also check for transcriptions (if client-side transcription was done)
+      const transcriptionsJson = formData.get('transcriptions') as string | null;
+      if (transcriptionsJson) {
+        answers = JSON.parse(transcriptionsJson);
+      }
+    } else {
+      // Handle JSON for other sections
+      const body = await request.json();
+      contentId = body.contentId;
+      answers = body.answers || {};
+      timeSpent = body.timeSpent;
+    }
+
     const now = new Date();
 
     // Calculate score for auto-scored sections (Listening/Reading)
     let bandScore: number | null = null;
     let scoreDetails: Record<string, unknown> | null = null;
+    let writingEvaluations: {
+      task1?: WritingEvaluation;
+      task2?: WritingEvaluation;
+      combinedBand?: number;
+    } | null = null;
 
     if (sectionUpper === 'LISTENING' || sectionUpper === 'READING') {
       // Fetch content with answer key
@@ -134,6 +180,139 @@ export async function POST(request: NextRequest, context: RouteContext) {
         bandScore = calculateBandScore(percentage);
         scoreDetails = { correct, total, percentage, results };
       }
+    } else if (sectionUpper === 'WRITING') {
+      // Evaluate writing with AI
+      const writingAnswers = answers as {
+        task1?: { essay: string; wordCount: number; promptId?: string; prompt?: string };
+        task2?: { essay: string; wordCount: number; promptId?: string; prompt?: string };
+      };
+
+      writingEvaluations = {};
+
+      // Evaluate Task 1 if submitted
+      if (writingAnswers.task1?.essay && writingAnswers.task1.essay.trim().length > 0) {
+        try {
+          // Determine task type based on test type
+          const task1Type =
+            mockTest.testType === 'ACADEMIC' ? 'task1_academic' : ('task1_general' as const);
+
+          const { evaluation: task1Eval } = await evaluateWriting({
+            taskType: task1Type,
+            testType: mockTest.testType === 'ACADEMIC' ? 'academic' : 'general',
+            questionPrompt: writingAnswers.task1.prompt || 'Task 1 writing prompt',
+            userResponse: writingAnswers.task1.essay,
+          });
+
+          writingEvaluations.task1 = task1Eval;
+        } catch (error) {
+          console.error('Task 1 evaluation error:', error);
+          // Continue even if Task 1 evaluation fails
+        }
+      }
+
+      // Evaluate Task 2 if submitted
+      if (writingAnswers.task2?.essay && writingAnswers.task2.essay.trim().length > 0) {
+        try {
+          const { evaluation: task2Eval } = await evaluateWriting({
+            taskType: 'task2',
+            testType: mockTest.testType === 'ACADEMIC' ? 'academic' : 'general',
+            questionPrompt: writingAnswers.task2.prompt || 'Task 2 writing prompt',
+            userResponse: writingAnswers.task2.essay,
+          });
+
+          writingEvaluations.task2 = task2Eval;
+        } catch (error) {
+          console.error('Task 2 evaluation error:', error);
+          // Continue even if Task 2 evaluation fails
+        }
+      }
+
+      // Calculate combined writing band
+      // IELTS Writing: Task 2 is worth twice as much as Task 1
+      // Formula: (Task1 + Task2 * 2) / 3
+      if (writingEvaluations.task1 || writingEvaluations.task2) {
+        const task1Band = writingEvaluations.task1?.overall_band;
+        const task2Band = writingEvaluations.task2?.overall_band;
+
+        if (task1Band && task2Band) {
+          // Both tasks evaluated - use weighted average
+          const weightedBand = (task1Band + task2Band * 2) / 3;
+          writingEvaluations.combinedBand = Math.round(weightedBand * 2) / 2; // Round to 0.5
+        } else if (task2Band) {
+          // Only Task 2 evaluated
+          writingEvaluations.combinedBand = task2Band;
+        } else if (task1Band) {
+          // Only Task 1 evaluated
+          writingEvaluations.combinedBand = task1Band;
+        }
+
+        bandScore = writingEvaluations.combinedBand || null;
+        scoreDetails = {
+          task1: writingEvaluations.task1,
+          task2: writingEvaluations.task2,
+          combinedBand: writingEvaluations.combinedBand,
+        };
+      }
+    } else if (sectionUpper === 'SPEAKING') {
+      // Evaluate speaking with AI - requires transcription from audio
+      const speakingEvaluations: {
+        part1?: SpeakingEvaluation;
+        part2?: SpeakingEvaluation;
+        part3?: SpeakingEvaluation;
+        transcriptions?: Record<number, string>;
+        combinedBand?: number;
+      } = { transcriptions: {} };
+
+      // Process audio files - transcribe and evaluate each part
+      for (const { part, audio, questions } of speakingAudioParts) {
+        try {
+          // Step 1: Transcribe audio to text
+          const transcription = await transcribeAudio(audio);
+
+          if (transcription.text && transcription.text.trim().length > 0) {
+            speakingEvaluations.transcriptions![part] = transcription.text;
+
+            // Step 2: Evaluate the transcription
+            const { evaluation } = await evaluateSpeaking({
+              part: part as 1 | 2 | 3,
+              prompt: {
+                topic: `Speaking Part ${part}`,
+                questions: questions,
+              },
+              transcription: transcription.text,
+              duration: transcription.duration || 60,
+            });
+
+            if (part === 1) speakingEvaluations.part1 = evaluation;
+            else if (part === 2) speakingEvaluations.part2 = evaluation;
+            else if (part === 3) speakingEvaluations.part3 = evaluation;
+          }
+        } catch (error) {
+          console.error(`Speaking part ${part} evaluation error:`, error);
+          // Continue even if one part fails
+        }
+      }
+
+      // Calculate combined speaking band (average of all evaluated parts)
+      const partBands = [
+        speakingEvaluations.part1?.overall_band,
+        speakingEvaluations.part2?.overall_band,
+        speakingEvaluations.part3?.overall_band,
+      ].filter((b): b is number => b !== undefined && b !== null);
+
+      if (partBands.length > 0) {
+        const averageBand = partBands.reduce((a, b) => a + b, 0) / partBands.length;
+        speakingEvaluations.combinedBand = Math.round(averageBand * 2) / 2; // Round to 0.5
+        bandScore = speakingEvaluations.combinedBand;
+      }
+
+      scoreDetails = {
+        part1: speakingEvaluations.part1,
+        part2: speakingEvaluations.part2,
+        part3: speakingEvaluations.part3,
+        transcriptions: speakingEvaluations.transcriptions,
+        combinedBand: speakingEvaluations.combinedBand,
+      };
     }
 
     // Create practice session for this section
@@ -203,18 +382,23 @@ export async function POST(request: NextRequest, context: RouteContext) {
       updateData.readingBand = bandScore;
     } else if (sectionUpper === 'WRITING') {
       updateData.writingSessionId = practiceSession.id;
-      // Writing band will be set after AI evaluation
+      if (bandScore !== null) {
+        updateData.writingBand = bandScore;
+      }
     } else if (sectionUpper === 'SPEAKING') {
       updateData.speakingSessionIds = [...(mockTest.speakingSessionIds || []), practiceSession.id];
-      // Speaking band will be set after AI evaluation
+      if (bandScore !== null) {
+        updateData.speakingBand = bandScore;
+      }
     }
 
     if (isLastSection) {
-      // Calculate overall band (average of available bands)
+      // Calculate overall band (average of all 4 modules)
       const bands = [
-        mockTest.listeningBand || bandScore,
-        mockTest.readingBand || (sectionUpper === 'READING' ? bandScore : null),
-        // Writing and Speaking require AI evaluation, will be updated later
+        mockTest.listeningBand,
+        mockTest.readingBand,
+        mockTest.writingBand || (sectionUpper === 'WRITING' ? bandScore : null),
+        bandScore, // Speaking band from current submission
       ].filter((b): b is number => b !== null);
 
       const overallBand =

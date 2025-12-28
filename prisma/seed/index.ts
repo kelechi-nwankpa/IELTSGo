@@ -25,6 +25,9 @@ async function main() {
   // Seed Task 2 prompts
   console.log('\nSeeding Task 2 prompts...');
   for (const prompt of task2Prompts) {
+    // isFree: true means isPremium: false (free users can access)
+    // isFree: undefined/false means isPremium: true (premium-only)
+    const isPremium = !prompt.isFree;
     await prisma.content.upsert({
       where: { id: prompt.id },
       update: {
@@ -34,6 +37,7 @@ async function main() {
           topic: prompt.topic,
         },
         difficultyBand: prompt.difficultyBand,
+        isPremium,
       },
       create: {
         id: prompt.id,
@@ -46,16 +50,17 @@ async function main() {
           topic: prompt.topic,
         },
         difficultyBand: prompt.difficultyBand,
-        isPremium: false,
+        isPremium,
       },
     });
-    console.log(`  ✓ ${prompt.title}`);
+    console.log(`  ✓ ${prompt.title}${isPremium ? '' : ' (free)'}`);
   }
   console.log(`Seeded ${task2Prompts.length} Task 2 Academic prompts`);
 
   // Seed Task 1 Academic prompts
   console.log('\nSeeding Task 1 Academic prompts...');
   for (const prompt of task1AcademicPrompts) {
+    const isPremium = !prompt.isFree;
     await prisma.content.upsert({
       where: { id: prompt.id },
       update: {
@@ -68,6 +73,7 @@ async function main() {
           imageDescription: prompt.imageDescription,
         },
         difficultyBand: prompt.difficultyBand,
+        isPremium,
       },
       create: {
         id: prompt.id,
@@ -83,16 +89,17 @@ async function main() {
           imageDescription: prompt.imageDescription,
         },
         difficultyBand: prompt.difficultyBand,
-        isPremium: false,
+        isPremium,
       },
     });
-    console.log(`  ✓ ${prompt.title}`);
+    console.log(`  ✓ ${prompt.title}${isPremium ? '' : ' (free)'}`);
   }
   console.log(`Seeded ${task1AcademicPrompts.length} Task 1 Academic prompts`);
 
   // Seed Task 1 GT prompts (Letters)
   console.log('\nSeeding Task 1 GT prompts...');
   for (const prompt of task1GTPrompts) {
+    const isPremium = !prompt.isFree;
     await prisma.content.upsert({
       where: { id: prompt.id },
       update: {
@@ -103,6 +110,7 @@ async function main() {
           letterType: prompt.letterType,
         },
         difficultyBand: prompt.difficultyBand,
+        isPremium,
       },
       create: {
         id: prompt.id,
@@ -116,16 +124,17 @@ async function main() {
           letterType: prompt.letterType,
         },
         difficultyBand: prompt.difficultyBand,
-        isPremium: false,
+        isPremium,
       },
     });
-    console.log(`  ✓ ${prompt.title}`);
+    console.log(`  ✓ ${prompt.title}${isPremium ? '' : ' (free)'}`);
   }
   console.log(`Seeded ${task1GTPrompts.length} Task 1 GT prompts`);
 
   // Seed Task 2 GT prompts
   console.log('\nSeeding Task 2 GT prompts...');
   for (const prompt of task2GTPrompts) {
+    const isPremium = !prompt.isFree;
     await prisma.content.upsert({
       where: { id: prompt.id },
       update: {
@@ -135,6 +144,7 @@ async function main() {
           topic: prompt.topic,
         },
         difficultyBand: prompt.difficultyBand,
+        isPremium,
       },
       create: {
         id: prompt.id,
@@ -147,10 +157,10 @@ async function main() {
           topic: prompt.topic,
         },
         difficultyBand: prompt.difficultyBand,
-        isPremium: false,
+        isPremium,
       },
     });
-    console.log(`  ✓ ${prompt.title}`);
+    console.log(`  ✓ ${prompt.title}${isPremium ? '' : ' (free)'}`);
   }
   console.log(`Seeded ${task2GTPrompts.length} Task 2 GT prompts`);
 

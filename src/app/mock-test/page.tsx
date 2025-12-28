@@ -36,6 +36,12 @@ export default function MockTestPage() {
             >
               Study Plan
             </Link>
+            <Link
+              href="/exam-prep"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              Exam Prep
+            </Link>
           </div>
         </div>
       </header>

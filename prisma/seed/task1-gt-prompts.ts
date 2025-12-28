@@ -8,6 +8,7 @@ export interface Task1GTPrompt {
   topic: string;
   letterType: 'formal' | 'semi-formal' | 'informal';
   difficultyBand: number;
+  isFree?: boolean; // Whether this prompt is available to free tier users
 }
 
 export const task1GTPrompts: Task1GTPrompt[] = [
@@ -31,6 +32,7 @@ Dear Sir or Madam,`,
     topic: 'consumer',
     letterType: 'formal',
     difficultyBand: 6.0,
+    isFree: true, // Free tier access
   },
   {
     id: 'task1g-002',
@@ -233,6 +235,7 @@ Dear Mr. Thompson,`,
     topic: 'housing',
     letterType: 'semi-formal',
     difficultyBand: 6.0,
+    isFree: true, // Free tier access
   },
   {
     id: 'task1g-012',
@@ -435,6 +438,7 @@ Hi James,`,
     topic: 'friendship',
     letterType: 'informal',
     difficultyBand: 5.5,
+    isFree: true, // Free tier access
   },
   {
     id: 'task1g-022',

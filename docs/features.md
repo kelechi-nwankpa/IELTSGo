@@ -4,7 +4,7 @@ This file is the authoritative checklist for all product features.
 Claude and developers must use this file to track build progress and avoid scope gaps.
 
 **Last updated:** 2025-12-27
-**Current phase:** 7 (Test Simulation) - In Progress
+**Current phase:** 7 (Test Simulation) - Complete
 
 Legend:
 
@@ -421,23 +421,23 @@ Legend:
 - [x] Task tabs with word count tracking
 - [x] Part 2 preparation timer (1 minute)
 - [x] Audio recording for all speaking parts
-- [ ] AI evaluation integration for writing
-- [ ] AI evaluation integration for speaking
+- [x] AI evaluation integration for writing
+- [x] AI evaluation integration for speaking
 
 ### Full Mock Tests
 
 - [x] Full test mode (orchestration system)
 - [x] Timed sections
 - [x] Section transitions
-- [~] Final band estimate (partial - L/R complete, W/S pending AI eval)
-- [ ] Performance summary
+- [x] Final band estimate
+- [x] Performance summary
 
 ### Exam Readiness Tools
 
-- [ ] Exam day checklist
-- [ ] Time management tips
-- [ ] Common mistakes warnings
-- [ ] Final revision mode
+- [x] Exam day checklist
+- [x] Time management tips
+- [x] Common mistakes warnings
+- [x] Final revision mode
 
 ---
 
@@ -545,10 +545,10 @@ Legend:
 | 4         | Payment & Premium      | 18       | 18        | 100%     |
 | 5         | Task 1 & GT            | 21       | 21        | 100%     |
 | 6         | Study Plans & Progress | 38       | 38        | 100%     |
-| 7         | Test Simulation        | 35       | 29        | 83%      |
+| 7         | Test Simulation        | 35       | 35        | 100%     |
 | 8         | Mobile Apps            | 17       | 0         | 0%       |
 | 9         | Polish & Scale         | 27       | 0         | 0%       |
-| **Total** |                        | **278**  | **206**   | **74%**  |
+| **Total** |                        | **278**  | **214**   | **77%**  |
 
 ---
 

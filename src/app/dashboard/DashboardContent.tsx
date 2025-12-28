@@ -143,6 +143,12 @@ export default function DashboardContent() {
               Mock Test
             </Link>
             <Link
+              href="/exam-prep"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              Exam Prep
+            </Link>
+            <Link
               href="/writing"
               className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl"
             >
