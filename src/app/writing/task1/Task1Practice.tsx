@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { EssayEditor, WritingPrompt, Timer } from '@/components/writing';
+import { SafeText, SafeTextList } from '@/components/ui/SafeText';
 
 interface Task1PracticeProps {
   promptId: string;
@@ -286,7 +287,7 @@ function EvaluationDisplay({
         {/* Overall Feedback */}
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6">
           <h2 className="mb-3 text-lg font-semibold text-gray-800">Overall Feedback</h2>
-          <p className="text-gray-700">{evaluation.overall_feedback}</p>
+          <SafeText as="p" className="text-gray-700">{evaluation.overall_feedback}</SafeText>
         </div>
 
         {/* Criteria Breakdown */}
@@ -303,33 +304,29 @@ function EvaluationDisplay({
                   {criterion.band}
                 </span>
               </div>
-              <p className="mb-3 text-sm text-gray-600">{criterion.summary}</p>
+              <SafeText as="p" className="mb-3 text-sm text-gray-600">{criterion.summary}</SafeText>
 
               {criterion.strengths.length > 0 && (
                 <div className="mb-3">
                   <p className="mb-1 text-xs font-medium text-green-700">Strengths:</p>
-                  <ul className="space-y-1 text-sm text-gray-600">
-                    {criterion.strengths.map((s, i) => (
-                      <li key={i} className="flex items-start gap-1">
-                        <span className="text-green-500">+</span>
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
+                  <SafeTextList
+                    items={criterion.strengths}
+                    prefix="+"
+                    itemClassName="flex items-start gap-1 text-sm text-gray-600"
+                    prefixClassName="text-green-500"
+                  />
                 </div>
               )}
 
               {criterion.improvements.length > 0 && (
                 <div>
                   <p className="mb-1 text-xs font-medium text-amber-700">To Improve:</p>
-                  <ul className="space-y-1 text-sm text-gray-600">
-                    {criterion.improvements.map((s, i) => (
-                      <li key={i} className="flex items-start gap-1">
-                        <span className="text-amber-500">!</span>
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
+                  <SafeTextList
+                    items={criterion.improvements}
+                    prefix="!"
+                    itemClassName="flex items-start gap-1 text-sm text-gray-600"
+                    prefixClassName="text-amber-500"
+                  />
                 </div>
               )}
             </div>
@@ -345,21 +342,21 @@ function EvaluationDisplay({
               <div className="rounded-lg border border-red-100 bg-red-50 p-4">
                 <p className="mb-2 text-xs font-medium text-red-700">Original:</p>
                 <p className="text-sm text-gray-700 italic">
-                  &quot;{evaluation.rewritten_excerpt.original}&quot;
+                  &quot;<SafeText>{evaluation.rewritten_excerpt.original}</SafeText>&quot;
                 </p>
               </div>
 
               <div className="rounded-lg border border-green-100 bg-green-50 p-4">
                 <p className="mb-2 text-xs font-medium text-green-700">Improved:</p>
                 <p className="text-sm text-gray-700 italic">
-                  &quot;{evaluation.rewritten_excerpt.improved}&quot;
+                  &quot;<SafeText>{evaluation.rewritten_excerpt.improved}</SafeText>&quot;
                 </p>
               </div>
             </div>
 
             <p className="text-sm text-gray-600">
               <span className="font-medium">Explanation:</span>{' '}
-              {evaluation.rewritten_excerpt.explanation}
+              <SafeText>{evaluation.rewritten_excerpt.explanation}</SafeText>
             </p>
           </div>
         )}

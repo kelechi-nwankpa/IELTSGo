@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { AudioRecorder } from '@/components/speaking/AudioRecorder';
 import { TranscriptionEditor } from '@/components/speaking/TranscriptionEditor';
 import { EnhancedMetrics } from '@/components/speaking/EnhancedMetrics';
+import { SafeText } from '@/components/ui/SafeText';
 
 interface Part1Prompt {
   id: string;
@@ -372,14 +373,14 @@ export default function SpeakingPart1Page() {
                         {criterion.band.toFixed(1)}
                       </span>
                     </div>
-                    <p className="mb-3 text-sm text-gray-600">{criterion.summary}</p>
+                    <SafeText as="p" className="mb-3 text-sm text-gray-600">{criterion.summary}</SafeText>
                     {criterion.strengths.length > 0 && (
                       <div className="mb-2">
                         <span className="text-xs font-medium text-green-600">Strengths:</span>
                         <ul className="mt-1 space-y-1">
                           {criterion.strengths.slice(0, 2).map((s, i) => (
                             <li key={i} className="text-xs text-gray-600">
-                              • {s}
+                              • <SafeText>{s}</SafeText>
                             </li>
                           ))}
                         </ul>
@@ -391,7 +392,7 @@ export default function SpeakingPart1Page() {
                         <ul className="mt-1 space-y-1">
                           {criterion.improvements.slice(0, 2).map((s, i) => (
                             <li key={i} className="text-xs text-gray-600">
-                              • {s}
+                              • <SafeText>{s}</SafeText>
                             </li>
                           ))}
                         </ul>
@@ -430,7 +431,7 @@ export default function SpeakingPart1Page() {
             {/* Overall Feedback */}
             <div className="rounded-xl border border-gray-200 bg-white p-6">
               <h3 className="mb-4 font-semibold text-gray-900">Overall Feedback</h3>
-              <p className="text-gray-700">{evaluationResult.evaluation.overall_feedback}</p>
+              <SafeText as="p" className="text-gray-700">{evaluationResult.evaluation.overall_feedback}</SafeText>
             </div>
 
             {/* Sample Improvements */}
@@ -442,13 +443,13 @@ export default function SpeakingPart1Page() {
                     <div key={index} className="rounded-lg bg-gray-50 p-4">
                       <div className="mb-2">
                         <span className="text-xs font-medium text-red-600">Original:</span>
-                        <p className="text-sm text-gray-600">&quot;{improvement.original}&quot;</p>
+                        <p className="text-sm text-gray-600">&quot;<SafeText>{improvement.original}</SafeText>&quot;</p>
                       </div>
                       <div className="mb-2">
                         <span className="text-xs font-medium text-green-600">Improved:</span>
-                        <p className="text-sm text-gray-600">&quot;{improvement.improved}&quot;</p>
+                        <p className="text-sm text-gray-600">&quot;<SafeText>{improvement.improved}</SafeText>&quot;</p>
                       </div>
-                      <p className="text-xs text-gray-500">{improvement.explanation}</p>
+                      <SafeText as="p" className="text-xs text-gray-500">{improvement.explanation}</SafeText>
                     </div>
                   ))}
                 </div>
