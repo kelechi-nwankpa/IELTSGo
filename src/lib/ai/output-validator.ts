@@ -55,6 +55,19 @@ export type ValidatedWritingEvaluation = z.infer<typeof writingEvaluationSchema>
 // Speaking Evaluation Schema
 // ============================================
 
+// Filler word entry schema
+const fillerWordEntrySchema = z.object({
+  word: z.string(),
+  count: z.number().int().min(0),
+});
+
+// Sample improvement schema
+const sampleImprovementSchema = z.object({
+  original: z.string().max(1000),
+  improved: z.string().max(1000),
+  explanation: z.string().max(1000),
+});
+
 export const speakingEvaluationSchema = z.object({
   overall_band: bandScoreSchema,
   criteria: z.object({
@@ -65,19 +78,27 @@ export const speakingEvaluationSchema = z.object({
   }),
   metrics: z.object({
     wordsPerMinute: z.number().min(0).max(500),
+    totalWords: z.number().int().min(0).max(10000),
     fillerWordCount: z.number().int().min(0).max(1000),
-    fillerWordPercentage: z.number().min(0).max(100),
-    repetitionRatio: z.number().min(0).max(1),
+    fillerWords: z.array(fillerWordEntrySchema).max(50),
+    uniqueVocabularyRatio: z.number().min(0).max(1),
     averageSentenceLength: z.number().min(0).max(200),
-    vocabularyDiversity: z.number().min(0).max(1),
-    uniqueWordCount: z.number().int().min(0).max(10000),
-    // These may be added by local analysis
-    repeatedWords: z.array(z.string()).optional(),
+    longPausesInferred: z.number().int().min(0).max(100),
+    // These may be added by local analysis after AI evaluation
+    repeatedWords: z
+      .array(
+        z.object({
+          word: z.string(),
+          count: z.number(),
+          percentage: z.number(),
+        })
+      )
+      .optional(),
     sentenceVarietyScore: z.number().min(0).max(100).optional(),
     overusedWords: z.array(z.string()).optional(),
   }),
   overall_feedback: z.string().min(1).max(2000),
-  improvement_tips: z.array(z.string().max(500)).max(10),
+  sample_improvements: z.array(sampleImprovementSchema).max(10),
 });
 
 export type ValidatedSpeakingEvaluation = z.infer<typeof speakingEvaluationSchema>;
@@ -86,31 +107,59 @@ export type ValidatedSpeakingEvaluation = z.infer<typeof speakingEvaluationSchem
 // Study Plan Schema
 // ============================================
 
-const studyTaskSchema = z.object({
-  id: z.string().min(1).max(100),
-  title: z.string().min(1).max(200),
-  description: z.string().max(1000),
-  module: z.enum(['WRITING', 'SPEAKING', 'READING', 'LISTENING']),
-  duration: z.number().int().min(1).max(480), // minutes
-  priority: z.enum(['HIGH', 'MEDIUM', 'LOW']),
-  skillFocus: z.array(z.string().max(100)).max(10),
+// Module breakdown schema (minutes + activities for each module)
+const moduleBreakdownSchema = z.object({
+  minutes: z.number().int().min(0).max(480),
+  activities: z.array(z.string().max(200)).max(10),
 });
 
-const weekPlanSchema = z.object({
-  weekNumber: z.number().int().min(1).max(52),
-  focusAreas: z.array(z.string().max(100)).max(10),
-  tasks: z.array(studyTaskSchema).max(30),
-  weeklyGoal: z.string().max(500),
+// Weekly plan schema matching GeneratedStudyPlan.weekly_plans
+const weeklyPlanSchema = z.object({
+  week: z.number().int().min(1).max(52),
+  theme: z.string().max(200),
+  goals: z.array(z.string().max(500)).max(10),
+  daily_breakdown: z.object({
+    listening: moduleBreakdownSchema,
+    reading: moduleBreakdownSchema,
+    writing: moduleBreakdownSchema,
+    speaking: moduleBreakdownSchema,
+  }),
+  milestone: z.string().max(500),
+});
+
+// Skill focus schema
+const skillFocusSchema = z.object({
+  skill: z.string().max(200),
+  current_issue: z.string().max(500),
+  recommended_practice: z.string().max(500),
+  success_indicator: z.string().max(500),
+});
+
+// Resource schema
+const resourceSchema = z.object({
+  resource: z.string().max(200),
+  purpose: z.string().max(500),
+  available_in_app: z.boolean(),
+});
+
+// Adaptation trigger schema
+const adaptationTriggerSchema = z.object({
+  condition: z.string().max(500),
+  adjustment: z.string().max(500),
 });
 
 export const studyPlanSchema = z.object({
-  totalWeeks: z.number().int().min(1).max(52),
-  weeklyHours: z.number().min(1).max(40),
-  targetBand: bandScoreSchema,
-  currentEstimatedBand: bandScoreSchema,
-  weeks: z.array(weekPlanSchema).max(52),
-  overallStrategy: z.string().max(2000),
-  keyPriorities: z.array(z.string().max(500)).max(10),
+  summary: z.object({
+    total_weeks: z.number().int().min(1).max(52),
+    focus_areas: z.array(z.string().max(100)).max(10),
+    expected_improvement: z.string().max(500),
+    key_strategy: z.string().max(1000),
+  }),
+  weekly_plans: z.array(weeklyPlanSchema).min(1).max(52),
+  skill_building_focus: z.array(skillFocusSchema).max(20),
+  resources_needed: z.array(resourceSchema).max(20),
+  test_day_tips: z.array(z.string().max(500)).max(20),
+  adaptation_triggers: z.array(adaptationTriggerSchema).max(10),
 });
 
 export type ValidatedStudyPlan = z.infer<typeof studyPlanSchema>;

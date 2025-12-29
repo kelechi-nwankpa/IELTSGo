@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { parseAndValidate, validateStudyPlan } from './output-validator';
 
 // Timeout for AI requests (90 seconds for longer plan generation)
 const AI_TIMEOUT_MS = 90000;
@@ -185,34 +186,15 @@ Generate a personalized study plan for this student.`;
       throw new Error('No text content in AI response');
     }
 
-    // Parse the JSON response
-    let jsonText = textContent.text.trim();
+    // Parse and validate the JSON response using Zod schema
+    const validationResult = parseAndValidate(textContent.text, validateStudyPlan);
 
-    // Try to extract JSON if wrapped in markdown code blocks
-    const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/);
-    if (jsonMatch) {
-      jsonText = jsonMatch[1].trim();
+    if (!validationResult.success) {
+      console.error('Study plan validation failed:', validationResult.error);
+      throw new Error(validationResult.error || 'AI response validation failed. Please try again.');
     }
 
-    // Try to find JSON object if there's extra text
-    const jsonStart = jsonText.indexOf('{');
-    const jsonEnd = jsonText.lastIndexOf('}');
-    if (jsonStart !== -1 && jsonEnd !== -1 && jsonStart < jsonEnd) {
-      jsonText = jsonText.slice(jsonStart, jsonEnd + 1);
-    }
-
-    let plan: GeneratedStudyPlan;
-    try {
-      plan = JSON.parse(jsonText) as GeneratedStudyPlan;
-    } catch {
-      console.error('JSON parse error. Raw response:', textContent.text.substring(0, 500));
-      throw new Error('AI response was not valid JSON. Please try again.');
-    }
-
-    // Validate required fields
-    if (!plan.summary || !plan.weekly_plans || !Array.isArray(plan.weekly_plans)) {
-      throw new Error('AI response missing required fields. Please try again.');
-    }
+    const plan = validationResult.data as GeneratedStudyPlan;
 
     // Calculate tokens used
     const tokensUsed = (response.usage?.input_tokens || 0) + (response.usage?.output_tokens || 0);

@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { sanitizeAIInput } from './input-sanitizer';
+import { parseAndValidate, validateSpeakingEvaluation } from './output-validator';
 
 const AI_TIMEOUT_MS = 60000;
 
@@ -242,65 +243,14 @@ ${sanitizedTranscription}`;
     throw new Error('No text response from AI');
   }
 
-  const evaluation = parseEvaluationResponse(textContent.text);
+  // Parse and validate the JSON response using Zod schema
+  const validationResult = parseAndValidate(textContent.text, validateSpeakingEvaluation);
+
+  if (!validationResult.success) {
+    throw new Error(validationResult.error || 'Failed to validate AI response');
+  }
+
   const tokensUsed = (response.usage?.input_tokens || 0) + (response.usage?.output_tokens || 0);
 
-  return { evaluation, tokensUsed };
-}
-
-function parseEvaluationResponse(text: string): SpeakingEvaluation {
-  let parsed: unknown;
-
-  try {
-    parsed = JSON.parse(text);
-  } catch {
-    const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-    if (jsonMatch) {
-      try {
-        parsed = JSON.parse(jsonMatch[1]);
-      } catch {
-        throw new Error('Failed to parse AI response as JSON');
-      }
-    } else {
-      throw new Error('Failed to parse AI response as JSON');
-    }
-  }
-
-  if (!isValidEvaluation(parsed)) {
-    throw new Error('AI response is missing required fields');
-  }
-
-  return parsed;
-}
-
-function isValidEvaluation(obj: unknown): obj is SpeakingEvaluation {
-  if (typeof obj !== 'object' || obj === null) {
-    return false;
-  }
-
-  const evaluation = obj as Record<string, unknown>;
-
-  if (typeof evaluation.overall_band !== 'number') return false;
-  if (typeof evaluation.overall_feedback !== 'string') return false;
-  if (typeof evaluation.criteria !== 'object' || evaluation.criteria === null) return false;
-  if (typeof evaluation.metrics !== 'object' || evaluation.metrics === null) return false;
-
-  const criteria = evaluation.criteria as Record<string, unknown>;
-  const requiredCriteria = [
-    'fluency_coherence',
-    'lexical_resource',
-    'grammatical_range',
-    'pronunciation',
-  ];
-
-  for (const key of requiredCriteria) {
-    if (!criteria[key] || typeof criteria[key] !== 'object') return false;
-    const criterion = criteria[key] as Record<string, unknown>;
-    if (typeof criterion.band !== 'number') return false;
-    if (typeof criterion.summary !== 'string') return false;
-    if (!Array.isArray(criterion.strengths)) return false;
-    if (!Array.isArray(criterion.improvements)) return false;
-  }
-
-  return true;
+  return { evaluation: validationResult.data as SpeakingEvaluation, tokensUsed };
 }
