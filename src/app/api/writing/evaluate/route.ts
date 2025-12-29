@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { evaluateWriting } from '@/lib/ai/writing-evaluator';
 import { ErrorCode, formatApiError, detectAnthropicError } from '@/lib/errors';
 import { canUseWritingEvaluation, incrementWritingEvaluation, getQuotaStatus } from '@/lib/quota';
+import { checkTokenBudget, recordTokenUsage, estimateTokens } from '@/lib/ai/token-budget';
 import {
   writingEvaluateSchema,
   validateBody,
@@ -63,6 +64,25 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+    // Estimate tokens and check token budget
+    const estimatedTokens = estimateTokens(body.essay || '');
+    const tokenBudget = await checkTokenBudget(userId, estimatedTokens);
+    if (!tokenBudget.canProceed) {
+      return NextResponse.json(
+        {
+          error: tokenBudget.reason,
+          code: 'TOKEN_BUDGET_EXCEEDED',
+          tokenUsage: {
+            dailyUsed: tokenBudget.dailyUsed,
+            dailyLimit: tokenBudget.dailyLimit,
+            monthlyUsed: tokenBudget.monthlyUsed,
+            monthlyLimit: tokenBudget.monthlyLimit,
+          },
+        },
+        { status: 429 }
+      );
+    }
+
     // Validate input with Zod schema
     const { promptId, essay, wordCount } = validateBody(writingEvaluateSchema, body);
 
@@ -114,6 +134,9 @@ export async function POST(request: NextRequest) {
 
     // Increment quota after successful evaluation
     await incrementWritingEvaluation(userId);
+
+    // Record token usage for budget tracking
+    await recordTokenUsage(userId, tokensUsed);
 
     // Get updated quota status to return to client
     const updatedQuota = await getQuotaStatus(userId);

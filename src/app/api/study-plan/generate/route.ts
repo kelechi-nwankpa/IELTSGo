@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { generateStudyPlan, StudyPlanInput } from '@/lib/ai/study-plan-generator';
+import { checkTokenBudget, recordTokenUsage } from '@/lib/ai/token-budget';
 import { z } from 'zod';
 
 // Zod schema for study plan generation
@@ -41,6 +42,24 @@ export async function POST(request: NextRequest) {
     }
 
     const { studyPlanId } = parseResult.data;
+
+    // Check token budget before processing (study plan generation uses ~5000 tokens)
+    const tokenBudget = await checkTokenBudget(userId, 5000);
+    if (!tokenBudget.canProceed) {
+      return NextResponse.json(
+        {
+          error: tokenBudget.reason,
+          code: 'TOKEN_BUDGET_EXCEEDED',
+          tokenUsage: {
+            dailyUsed: tokenBudget.dailyUsed,
+            dailyLimit: tokenBudget.dailyLimit,
+            monthlyUsed: tokenBudget.monthlyUsed,
+            monthlyLimit: tokenBudget.monthlyLimit,
+          },
+        },
+        { status: 429 }
+      );
+    }
 
     // Get the study plan with diagnostic
     const studyPlan = await prisma.studyPlan.findFirst({
@@ -178,6 +197,9 @@ export async function POST(request: NextRequest) {
 
     // Create study tasks for the first 2 weeks
     await createTasksForWeeks(studyPlanId, plan.weekly_plans.slice(0, 2), new Date());
+
+    // Record token usage for budget tracking
+    await recordTokenUsage(userId, tokensUsed);
 
     return NextResponse.json({
       studyPlan: updatedPlan,

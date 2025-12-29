@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { transcribeAudio } from '@/lib/ai/transcription';
 import { evaluateSpeaking } from '@/lib/ai/speaking-evaluator';
 import { analyzeSpeech } from '@/lib/ai/speech-analysis';
+import { checkTokenBudget, recordTokenUsage } from '@/lib/ai/token-budget';
 import {
   speakingEvaluateSchema,
   validateBody,
@@ -24,6 +25,24 @@ export async function POST(request: NextRequest) {
 
     if (!audio) {
       return NextResponse.json({ error: 'Audio file is required' }, { status: 400 });
+    }
+
+    // Check token budget before processing (speaking uses ~3000 tokens on average)
+    const tokenBudget = await checkTokenBudget(session.user.id, 3000);
+    if (!tokenBudget.canProceed) {
+      return NextResponse.json(
+        {
+          error: tokenBudget.reason,
+          code: 'TOKEN_BUDGET_EXCEEDED',
+          tokenUsage: {
+            dailyUsed: tokenBudget.dailyUsed,
+            dailyLimit: tokenBudget.dailyLimit,
+            monthlyUsed: tokenBudget.monthlyUsed,
+            monthlyLimit: tokenBudget.monthlyLimit,
+          },
+        },
+        { status: 429 }
+      );
     }
 
     // Validate text fields with Zod schema
@@ -108,6 +127,9 @@ export async function POST(request: NextRequest) {
         tokensUsed,
       },
     });
+
+    // Record token usage for budget tracking
+    await recordTokenUsage(session.user.id, tokensUsed);
 
     return NextResponse.json({
       success: true,
