@@ -154,6 +154,12 @@ export default function DashboardContent() {
             >
               Practice Now
             </Link>
+            <Link
+              href="/settings/account"
+              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              Account
+            </Link>
             <button
               onClick={() => signOut({ callbackUrl: '/' })}
               className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
