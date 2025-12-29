@@ -2,19 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import Anthropic from '@anthropic-ai/sdk';
+import { z } from 'zod';
 
-interface ExplainRequest {
-  passageId: string;
-  passageTitle: string;
-  passageText: string;
-  questionId: string;
-  questionType: string;
-  questionNumber: number;
-  questionText: string;
-  correctAnswer: string;
-  studentAnswer: string;
-  wasCorrect: boolean;
-}
+// Zod schema for reading explain validation
+const readingExplainSchema = z.object({
+  passageId: z.string().min(1, 'Passage ID is required'),
+  passageTitle: z.string().max(500).optional(),
+  passageText: z.string().max(50000).optional(),
+  questionId: z.string().min(1, 'Question ID is required'),
+  questionType: z.string().max(100).optional(),
+  questionNumber: z.number().int().positive().optional(),
+  questionText: z.string().min(1, 'Question text is required').max(2000),
+  correctAnswer: z.string().min(1, 'Correct answer is required').max(1000),
+  studentAnswer: z.string().max(1000).optional(),
+  wasCorrect: z.boolean().optional(),
+});
 
 interface ExplanationResponse {
   explanation: string;
@@ -39,7 +41,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = (await request.json()) as ExplainRequest;
+    const body = await request.json();
+
+    // Validate with Zod
+    const parseResult = readingExplainSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
     const {
       passageId,
       passageTitle,
@@ -51,12 +70,7 @@ export async function POST(request: NextRequest) {
       correctAnswer,
       studentAnswer,
       wasCorrect,
-    } = body;
-
-    // Validate required fields
-    if (!passageId || !questionId || !questionText || !correctAnswer) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
+    } = parseResult.data;
 
     // Check cache first (explanation doesn't change based on student answer)
     const cacheKey = `explanation:reading:${passageId}:${questionId}`;
@@ -116,9 +130,9 @@ Your explanation should help the student understand:
 You MUST respond with valid JSON only, no other text.`;
 
     const userMessage = `## Context
-- Passage Title: ${passageTitle}
-- Question Type: ${formatQuestionType(questionType)}
-- Question Number: ${questionNumber}
+- Passage Title: ${passageTitle || 'Unknown'}
+- Question Type: ${formatQuestionType(questionType || 'unknown')}
+- Question Number: ${questionNumber || 'N/A'}
 - Question Text: ${questionText}
 - Correct Answer: ${correctAnswer}
 

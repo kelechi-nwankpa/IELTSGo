@@ -3,15 +3,20 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { ErrorCode, formatApiError } from '@/lib/errors';
+import { z } from 'zod';
+
+// Zod schema for reading submission validation
+const readingSubmitSchema = z.object({
+  passageId: z.string().min(1, 'Passage ID is required'),
+  answers: z.record(
+    z.string(),
+    z.union([z.string(), z.array(z.string())]).transform((val) => val)
+  ),
+  timeSpent: z.number().int().nonnegative().optional(),
+});
 
 interface AnswerKey {
   [questionId: string]: string | string[];
-}
-
-interface SubmissionData {
-  passageId: string;
-  answers: Record<string, string | string[]>;
-  timeSpent: number; // in seconds
 }
 
 interface QuestionResult {
@@ -30,13 +35,25 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    const body: SubmissionData = await request.json();
-    const { passageId, answers, timeSpent } = body;
+    const body = await request.json();
 
-    // Validate required fields
-    if (!passageId || !answers) {
-      return NextResponse.json(formatApiError(ErrorCode.MISSING_FIELDS), { status: 400 });
+    // Validate with Zod
+    const parseResult = readingSubmitSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
     }
+
+    const { passageId, answers, timeSpent } = parseResult.data;
 
     // Fetch the passage with answers
     const content = await prisma.content.findUnique({

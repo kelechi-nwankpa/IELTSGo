@@ -3859,14 +3859,14 @@ When you submit essays for evaluation:
 
 ### Phase 1: Critical
 
-- [ ] **Remove .env from git history and rotate all secrets**
-- [ ] **Add authentication to `/api/writing/prompts` and `/api/reading/passages`**
-- [ ] **Implement AI input sanitization** (`src/lib/ai/input-sanitizer.ts`)
-- [ ] **Harden AI system prompts** (add security instructions)
-- [ ] **Add Zod validation to all API endpoints**
-- [ ] **Disable `allowDangerousEmailAccountLinking`**
-- [ ] **Implement PII detection and redaction** (`src/lib/security/pii-detector.ts`)
-- [ ] **Add secure quota implementation with race condition protection**
+- [ ] **Remove .env from git history and rotate all secrets** (Note: .env not in git history - verify secrets are rotated)
+- [x] **Add authentication to `/api/writing/prompts` and `/api/reading/passages`** ✅ (verified 2025-12-29)
+- [x] **Implement AI input sanitization** (`src/lib/ai/input-sanitizer.ts`) ✅ (verified 2025-12-29)
+- [x] **Harden AI system prompts** (add security instructions) ✅ (2025-12-29) - All 5 prompts updated with injection resistance
+- [ ] **Add Zod validation to all API endpoints** (9/24 POST routes have Zod - in progress)
+- [x] **Disable `allowDangerousEmailAccountLinking`** ✅ (2025-12-29)
+- [x] **Implement PII detection and redaction** (`src/lib/security/pii-detector.ts`) ✅ (2025-12-29)
+- [x] **Add secure quota implementation with race condition protection** ✅ (2025-12-29)
 
 ### Phase 2: High Priority
 
