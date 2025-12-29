@@ -3870,17 +3870,17 @@ When you submit essays for evaluation:
 
 ### Phase 2: High Priority
 
-- [ ] Implement rate limiting middleware (Upstash or similar)
-- [ ] **Implement rate limiting bypass prevention** (composite keys, multi-layer limits)
-- [ ] **Add SSRF protection** (`src/lib/security/ssrf-protection.ts`)
-- [ ] Add security headers to Next.js config
-- [ ] Implement brute force protection for auth
-- [ ] Add AI output validation with strict schema
-- [ ] Set up token budget enforcement
-- [ ] Add XSS sanitization for AI response rendering
-- [ ] **Implement JWT hardening** (short expiry, token binding)
-- [ ] **Add distributed locking for critical operations**
-- [ ] **Implement timing-safe authentication**
+- [x] **Implement rate limiting middleware** (Upstash) ✅ (2025-12-29) - `src/middleware.ts`, `src/lib/rate-limit/`
+- [x] **Implement rate limiting bypass prevention** ✅ (2025-12-29) - Composite keys (IP + fingerprint + userId), `src/lib/rate-limit/identifier.ts`
+- [x] **Add SSRF protection** ✅ (2025-12-29) - `src/lib/security/ssrf-protection.ts`
+- [x] **Add security headers to Next.js config** ✅ (2025-12-29) - CSP, HSTS, X-Frame-Options, etc. in `next.config.ts`
+- [x] **Implement brute force protection for auth** ✅ (2025-12-29) - `src/lib/auth/brute-force.ts` with progressive delays and lockout
+- [x] **Add AI output validation with strict schema** ✅ (2025-12-29) - `src/lib/ai/output-validator.ts` with Zod schemas
+- [x] **Set up token budget enforcement** ✅ (2025-12-29) - `src/lib/ai/token-budget.ts` with daily/monthly limits by tier
+- [x] **Add XSS sanitization for AI response rendering** ✅ (2025-12-29) - `src/lib/security/xss-sanitizer.ts`
+- [x] **Implement JWT hardening** ✅ (2025-12-29) - `src/lib/auth/jwt.ts` with token revocation, secure cookies
+- [x] **Add distributed locking for critical operations** ✅ (2025-12-29) - `src/lib/locks/distributed-lock.ts`
+- [x] **Implement timing-safe authentication** ✅ (2025-12-29) - `src/lib/auth/timing-safe.ts` with constant-time comparison
 
 ### Phase 3: Medium Priority
 

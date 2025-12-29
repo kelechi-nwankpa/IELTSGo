@@ -2,8 +2,9 @@ import { NextAuthOptions } from 'next-auth';
 import { Adapter, AdapterAccount, AdapterUser } from 'next-auth/adapters';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
+import { timingSafePasswordVerify, addTimingVariance } from './timing-safe';
+import { generateTokenId, JWT_CONFIG, getSecureCookieOptions } from './jwt';
 
 // Custom Prisma adapter that maps to our schema
 function CustomPrismaAdapter(): Adapter {
@@ -208,31 +209,42 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Email and password are required');
         }
 
+        // Add timing variance to prevent timing-based user enumeration
+        await addTimingVariance(50, 150);
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
-        if (!user || !user.passwordHash) {
-          throw new Error('Invalid email or password');
-        }
-
-        const isValid = await bcrypt.compare(credentials.password, user.passwordHash);
+        // Use timing-safe password verification
+        // This always performs hash comparison even if user doesn't exist
+        const isValid = await timingSafePasswordVerify(credentials.password, user?.passwordHash);
 
         if (!isValid) {
           throw new Error('Invalid email or password');
         }
 
         return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          image: user.image,
+          id: user!.id,
+          email: user!.email,
+          name: user!.name,
+          image: user!.image,
         };
       },
     }),
   ],
   session: {
     strategy: 'jwt',
+    maxAge: JWT_CONFIG.sessionMaxAge,
+  },
+  cookies: {
+    sessionToken: {
+      name:
+        process.env.NODE_ENV === 'production'
+          ? '__Secure-next-auth.session-token'
+          : 'next-auth.session-token',
+      options: getSecureCookieOptions(),
+    },
   },
   pages: {
     signIn: '/auth/signin',
@@ -272,9 +284,13 @@ export const authOptions: NextAuthOptions = {
       if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+      }
+      // Add unique token identifier (jti) on initial sign in
+      if (trigger === 'signIn' || !token.jti) {
+        token.jti = generateTokenId();
       }
       return token;
     },
