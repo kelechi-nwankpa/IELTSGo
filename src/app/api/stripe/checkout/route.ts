@@ -4,6 +4,14 @@ import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { getStripe } from '@/lib/stripe/client';
 import { STRIPE_CONFIG } from '@/lib/stripe/config';
+import { z } from 'zod';
+
+// Zod schema for stripe checkout
+const stripeCheckoutSchema = z.object({
+  plan: z.enum(['monthly', 'annual'], {
+    message: 'Invalid plan. Must be monthly or annual.',
+  }),
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,11 +20,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    const { plan } = await request.json();
+    const body = await request.json();
 
-    if (!['monthly', 'annual'].includes(plan)) {
-      return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 });
+    // Validate with Zod
+    const parseResult = stripeCheckoutSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
     }
+
+    const { plan } = parseResult.data;
 
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },

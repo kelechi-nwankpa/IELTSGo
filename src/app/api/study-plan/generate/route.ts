@@ -3,6 +3,12 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { generateStudyPlan, StudyPlanInput } from '@/lib/ai/study-plan-generator';
+import { z } from 'zod';
+
+// Zod schema for study plan generation
+const studyPlanGenerateSchema = z.object({
+  studyPlanId: z.string().min(1, 'Study plan ID is required'),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +23,24 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
     const body = await request.json();
-    const { studyPlanId } = body as { studyPlanId: string };
+
+    // Validate with Zod
+    const parseResult = studyPlanGenerateSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
+    const { studyPlanId } = parseResult.data;
 
     // Get the study plan with diagnostic
     const studyPlan = await prisma.studyPlan.findFirst({

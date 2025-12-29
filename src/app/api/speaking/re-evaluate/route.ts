@@ -4,6 +4,16 @@ import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { evaluateSpeaking } from '@/lib/ai/speaking-evaluator';
 import { analyzeSpeech } from '@/lib/ai/speech-analysis';
+import { z } from 'zod';
+
+// Zod schema for speaking re-evaluation
+const speakingReEvaluateSchema = z.object({
+  sessionId: z.string().min(1, 'Session ID is required'),
+  editedTranscription: z
+    .string()
+    .min(1, 'Transcription cannot be empty')
+    .max(50000, 'Transcription too long'),
+});
 
 /**
  * Re-evaluate a speaking response with edited transcription
@@ -16,18 +26,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { sessionId, editedTranscription } = body;
 
-    if (!sessionId || !editedTranscription) {
+    // Validate with Zod
+    const parseResult = speakingReEvaluateSchema.safeParse(body);
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: 'Missing required fields: sessionId, editedTranscription' },
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
         { status: 400 }
       );
     }
 
-    if (editedTranscription.trim().length === 0) {
-      return NextResponse.json({ error: 'Transcription cannot be empty' }, { status: 400 });
-    }
+    const { sessionId, editedTranscription } = parseResult.data;
 
     // Fetch the original practice session
     const practiceSession = await prisma.practiceSession.findUnique({

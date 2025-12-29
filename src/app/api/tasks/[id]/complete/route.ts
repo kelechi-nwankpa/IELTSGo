@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
+
+// Zod schema for task completion
+const taskCompleteSchema = z.object({
+  sessionId: z.string().min(1).optional(),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +23,24 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const userId = session.user.id;
     const { id: taskId } = await params;
     const body = await request.json().catch(() => ({}));
-    const { sessionId } = body as { sessionId?: string };
+
+    // Validate with Zod
+    const parseResult = taskCompleteSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
+    const { sessionId } = parseResult.data;
 
     // Verify task belongs to user's study plan
     const task = await prisma.studyTask.findFirst({

@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
+
+// Zod schema for account linking
+const accountLinkSchema = z.object({
+  provider: z.enum(['google', 'github'], {
+    message: 'Provider must be google or github',
+  }),
+});
 
 /**
  * POST /api/account/link
@@ -16,11 +24,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { provider } = body;
 
-    if (!provider) {
-      return NextResponse.json({ error: 'Provider is required' }, { status: 400 });
+    // Validate with Zod
+    const parseResult = accountLinkSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
     }
+
+    const { provider } = parseResult.data;
 
     // Verify user exists
     const user = await prisma.user.findUnique({

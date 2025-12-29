@@ -6,6 +6,14 @@ import { formatApiError, ErrorCode } from '@/lib/errors';
 import { evaluateWriting, WritingEvaluation } from '@/lib/ai/writing-evaluator';
 import { evaluateSpeaking, SpeakingEvaluation } from '@/lib/ai/speaking-evaluator';
 import { transcribeAudio } from '@/lib/ai/transcription';
+import { z } from 'zod';
+
+// Zod schema for JSON section submission (listening/reading/writing)
+const sectionSubmitJsonSchema = z.object({
+  contentId: z.string().min(1).optional(),
+  answers: z.record(z.string(), z.unknown()).optional().default({}),
+  timeSpent: z.number().int().nonnegative().optional(),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -126,9 +134,26 @@ export async function POST(request: NextRequest, context: RouteContext) {
     } else {
       // Handle JSON for other sections
       const body = await request.json();
-      contentId = body.contentId;
-      answers = body.answers || {};
-      timeSpent = body.timeSpent;
+
+      // Validate with Zod
+      const parseResult = sectionSubmitJsonSchema.safeParse(body);
+      if (!parseResult.success) {
+        return NextResponse.json(
+          {
+            error: 'Validation failed',
+            code: 'VALIDATION_ERROR',
+            details: parseResult.error.issues.map((issue) => ({
+              field: issue.path.join('.'),
+              message: issue.message,
+            })),
+          },
+          { status: 400 }
+        );
+      }
+
+      contentId = parseResult.data.contentId;
+      answers = parseResult.data.answers;
+      timeSpent = parseResult.data.timeSpent;
     }
 
     const now = new Date();

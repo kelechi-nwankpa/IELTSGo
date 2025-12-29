@@ -3,6 +3,43 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { diagnosticQuestions, getQuickDiagnosticSet } from '@/lib/diagnostic-questions';
+import { z } from 'zod';
+
+// Zod schemas for diagnostic validation
+const bandScoreSchema = z
+  .number()
+  .min(0, 'Band must be at least 0')
+  .max(9, 'Band cannot exceed 9')
+  .refine((val) => val % 0.5 === 0, 'Band must be in 0.5 increments');
+
+const manualBandsSchema = z.object({
+  listening: bandScoreSchema,
+  reading: bandScoreSchema,
+  writing: bandScoreSchema,
+  speaking: bandScoreSchema,
+});
+
+const diagnosticPostSchema = z.discriminatedUnion('mode', [
+  z.object({
+    mode: z.literal('start'),
+  }),
+  z.object({
+    mode: z.literal('manual'),
+    manualBands: manualBandsSchema,
+  }),
+]);
+
+const diagnosticResponseSchema = z.object({
+  questionId: z.string().min(1, 'Question ID is required'),
+  answer: z.union([z.string(), z.array(z.string())]),
+  timeSpent: z.number().int().nonnegative(),
+});
+
+const diagnosticPutSchema = z.object({
+  diagnosticId: z.string().min(1, 'Diagnostic ID is required'),
+  responses: z.array(diagnosticResponseSchema).min(1, 'At least one response is required'),
+  complete: z.boolean().optional(),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -65,17 +102,27 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
     const body = await request.json();
-    const { mode, manualBands } = body as {
-      mode: 'start' | 'manual';
-      manualBands?: {
-        listening: number;
-        reading: number;
-        writing: number;
-        speaking: number;
-      };
-    };
 
-    if (mode === 'manual' && manualBands) {
+    // Validate with Zod
+    const parseResult = diagnosticPostSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
+    const { mode } = parseResult.data;
+
+    if (mode === 'manual') {
+      const { manualBands } = parseResult.data;
       // User is skipping diagnostic and entering bands manually
       const overall =
         (manualBands.listening + manualBands.reading + manualBands.writing + manualBands.speaking) /
@@ -120,6 +167,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // This shouldn't be reached due to Zod validation, but TypeScript needs it
     return NextResponse.json({ error: 'Invalid mode' }, { status: 400 });
   } catch (error) {
     console.error('Diagnostic API error:', error);
@@ -138,15 +186,24 @@ export async function PUT(request: NextRequest) {
 
     const userId = session.user.id;
     const body = await request.json();
-    const { diagnosticId, responses, complete } = body as {
-      diagnosticId: string;
-      responses: Array<{
-        questionId: string;
-        answer: string | string[];
-        timeSpent: number;
-      }>;
-      complete?: boolean;
-    };
+
+    // Validate with Zod
+    const parseResult = diagnosticPutSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
+    const { diagnosticId, responses, complete } = parseResult.data;
 
     // Verify diagnostic belongs to user
     const diagnostic = await prisma.diagnosticAssessment.findFirst({

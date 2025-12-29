@@ -5,6 +5,14 @@ import { prisma } from '@/lib/prisma';
 import { canUseMockTest, incrementMockTest, getQuotaStatus } from '@/lib/quota';
 import { formatApiError, ErrorCode } from '@/lib/errors';
 import { TestType } from '@prisma/client';
+import { z } from 'zod';
+
+// Zod schema for mock test start
+const mockTestStartSchema = z.object({
+  testType: z.enum(['ACADEMIC', 'GENERAL'], {
+    message: 'Invalid test type. Must be ACADEMIC or GENERAL.',
+  }),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -26,15 +34,24 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
     const body = await request.json();
-    const { testType } = body as { testType?: string };
 
-    // Validate test type
-    if (!testType || !['ACADEMIC', 'GENERAL'].includes(testType)) {
+    // Validate with Zod
+    const parseResult = mockTestStartSchema.safeParse(body);
+    if (!parseResult.success) {
       return NextResponse.json(
-        formatApiError(ErrorCode.INVALID_INPUT, 'Invalid test type. Must be ACADEMIC or GENERAL.'),
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
         { status: 400 }
       );
     }
+
+    const { testType } = parseResult.data;
 
     // Check if user has an in-progress mock test
     const existingTest = await prisma.mockTest.findFirst({

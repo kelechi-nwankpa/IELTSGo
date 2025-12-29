@@ -3863,7 +3863,7 @@ When you submit essays for evaluation:
 - [x] **Add authentication to `/api/writing/prompts` and `/api/reading/passages`** ✅ (verified 2025-12-29)
 - [x] **Implement AI input sanitization** (`src/lib/ai/input-sanitizer.ts`) ✅ (verified 2025-12-29)
 - [x] **Harden AI system prompts** (add security instructions) ✅ (2025-12-29) - All 5 prompts updated with injection resistance
-- [ ] **Add Zod validation to all API endpoints** (9/24 POST routes have Zod - in progress)
+- [x] **Add Zod validation to all API endpoints** ✅ (2025-12-29) - All POST routes now have Zod validation
 - [x] **Disable `allowDangerousEmailAccountLinking`** ✅ (2025-12-29)
 - [x] **Implement PII detection and redaction** (`src/lib/security/pii-detector.ts`) ✅ (2025-12-29)
 - [x] **Add secure quota implementation with race condition protection** ✅ (2025-12-29)

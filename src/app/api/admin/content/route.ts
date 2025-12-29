@@ -4,6 +4,37 @@ import { authOptions } from '@/lib/auth/config';
 import { isAdmin } from '@/lib/auth/admin';
 import { prisma } from '@/lib/prisma';
 import { Module, ContentType, TestType } from '@prisma/client';
+import { z } from 'zod';
+
+// Zod schema for admin content creation
+const adminContentCreateSchema = z.object({
+  module: z.enum(['WRITING', 'SPEAKING', 'READING', 'LISTENING'], {
+    message: 'Invalid module value',
+  }),
+  type: z.enum(
+    [
+      'TASK1_ACADEMIC',
+      'TASK1_GENERAL',
+      'TASK2',
+      'SPEAKING_PART1',
+      'SPEAKING_PART2',
+      'SPEAKING_PART3',
+      'READING_PASSAGE',
+      'LISTENING_SECTION',
+    ],
+    { message: 'Invalid content type' }
+  ),
+  testType: z.enum(['ACADEMIC', 'GENERAL']).optional().nullable(),
+  title: z.string().max(500).optional().nullable(),
+  contentData: z.record(z.string(), z.unknown()),
+  answers: z.record(z.string(), z.unknown()).optional().nullable(),
+  difficultyBand: z
+    .union([z.number(), z.string().transform((v) => parseFloat(v))])
+    .pipe(z.number().min(1).max(9))
+    .optional()
+    .nullable(),
+  isPremium: z.boolean().optional().default(false),
+});
 
 // GET /api/admin/content - List all content with pagination and filters
 export async function GET(request: NextRequest) {
@@ -94,40 +125,37 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { module, type, testType, title, contentData, answers, difficultyBand, isPremium } = body;
 
-    // Validate required fields
-    if (!module || !type || !contentData) {
+    // Validate with Zod
+    const parseResult = adminContentCreateSchema.safeParse(body);
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: 'Missing required fields: module, type, contentData' },
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
         { status: 400 }
       );
     }
 
-    // Validate enums
-    if (!Object.values(Module).includes(module)) {
-      return NextResponse.json({ error: 'Invalid module value' }, { status: 400 });
-    }
-
-    if (!Object.values(ContentType).includes(type)) {
-      return NextResponse.json({ error: 'Invalid type value' }, { status: 400 });
-    }
-
-    if (testType && !Object.values(TestType).includes(testType)) {
-      return NextResponse.json({ error: 'Invalid testType value' }, { status: 400 });
-    }
+    const { module, type, testType, title, contentData, answers, difficultyBand, isPremium } =
+      parseResult.data;
 
     // Create content
     const content = await prisma.content.create({
       data: {
-        module,
-        type,
-        testType: testType || null,
+        module: module as Module,
+        type: type as ContentType,
+        testType: (testType as TestType) || null,
         title: title || null,
-        contentData,
-        answers: answers || null,
-        difficultyBand: difficultyBand ? parseFloat(difficultyBand) : null,
-        isPremium: isPremium || false,
+        contentData: contentData as object,
+        answers: answers ? (answers as object) : undefined,
+        difficultyBand: difficultyBand || null,
+        isPremium,
       },
     });
 

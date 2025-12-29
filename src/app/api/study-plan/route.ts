@@ -2,6 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
+
+// Zod schemas for study plan validation
+const studyPlanCreateSchema = z.object({
+  diagnosticId: z.string().min(1).optional(),
+  targetBand: z
+    .number()
+    .min(5, 'Target band must be at least 5')
+    .max(9, 'Target band cannot exceed 9'),
+  testDate: z.string().datetime().optional(),
+  hoursPerDay: z
+    .number()
+    .min(0.5, 'Hours per day must be at least 0.5')
+    .max(8, 'Hours per day cannot exceed 8'),
+  studyDaysPerWeek: z.number().int().min(1).max(7).optional().default(5),
+});
+
+const studyPlanUpdateSchema = z.object({
+  studyPlanId: z.string().min(1, 'Study plan ID is required'),
+  status: z.enum(['ACTIVE', 'PAUSED', 'COMPLETED', 'ARCHIVED']).optional(),
+  currentWeek: z.number().int().min(1).optional(),
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -68,25 +90,24 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
     const body = await request.json();
-    const { diagnosticId, targetBand, testDate, hoursPerDay, studyDaysPerWeek } = body as {
-      diagnosticId?: string;
-      targetBand: number;
-      testDate?: string;
-      hoursPerDay: number;
-      studyDaysPerWeek?: number;
-    };
 
-    // Validate input
-    if (!targetBand || targetBand < 5 || targetBand > 9) {
-      return NextResponse.json({ error: 'Target band must be between 5 and 9' }, { status: 400 });
-    }
-
-    if (!hoursPerDay || hoursPerDay < 0.5 || hoursPerDay > 8) {
+    // Validate with Zod
+    const parseResult = studyPlanCreateSchema.safeParse(body);
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: 'Hours per day must be between 0.5 and 8' },
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
         { status: 400 }
       );
     }
+
+    const { diagnosticId, targetBand, testDate, hoursPerDay, studyDaysPerWeek } = parseResult.data;
 
     // Archive any existing active plans
     await prisma.studyPlan.updateMany({
@@ -148,11 +169,24 @@ export async function PUT(request: NextRequest) {
 
     const userId = session.user.id;
     const body = await request.json();
-    const { studyPlanId, status, currentWeek } = body as {
-      studyPlanId: string;
-      status?: 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'ARCHIVED';
-      currentWeek?: number;
-    };
+
+    // Validate with Zod
+    const parseResult = studyPlanUpdateSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          code: 'VALIDATION_ERROR',
+          details: parseResult.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
+    const { studyPlanId, status, currentWeek } = parseResult.data;
 
     // Verify plan belongs to user
     const existingPlan = await prisma.studyPlan.findFirst({
