@@ -6,6 +6,7 @@ import { transcribeAudio } from '@/lib/ai/transcription';
 import { evaluateSpeaking } from '@/lib/ai/speaking-evaluator';
 import { analyzeSpeech } from '@/lib/ai/speech-analysis';
 import { checkTokenBudget, recordTokenUsage } from '@/lib/ai/token-budget';
+import { evaluationLock } from '@/lib/locks/distributed-lock';
 import {
   speakingEvaluateSchema,
   validateBody,
@@ -58,85 +59,98 @@ export async function POST(request: NextRequest) {
       duration,
     } = validateBody(speakingEvaluateSchema, formFields);
 
-    // Fetch the prompt
-    const promptContent = await prisma.content.findUnique({
-      where: { id: promptId },
-    });
-
-    if (!promptContent) {
-      return NextResponse.json({ error: 'Prompt not found' }, { status: 404 });
-    }
-
-    const contentData = promptContent.contentData as Record<string, unknown>;
-
-    // Step 1: Transcribe the audio
-    const transcription = await transcribeAudio(audio);
-
-    if (!transcription.text || transcription.text.trim().length === 0) {
+    // Acquire distributed lock to prevent duplicate submissions
+    const lock = await evaluationLock(session.user.id, 'SPEAKING');
+    if (!lock) {
       return NextResponse.json(
-        { error: 'Could not transcribe audio. Please speak clearly and try again.' },
-        { status: 400 }
+        { error: 'Evaluation already in progress', code: 'DUPLICATE_SUBMISSION' },
+        { status: 409 }
       );
     }
 
-    // Step 2: Run local speech analysis for enhanced metrics
-    const speechAnalysis = analyzeSpeech(transcription.text);
+    try {
+      // Fetch the prompt
+      const promptContent = await prisma.content.findUnique({
+        where: { id: promptId },
+      });
 
-    // Step 3: Evaluate the speaking response with AI
-    const { evaluation, tokensUsed } = await evaluateSpeaking({
-      part: partNumber as 1 | 2 | 3,
-      prompt: {
-        topic: contentData.topic as string,
-        questions: contentData.questions as string[] | undefined,
-        cueCard: contentData.cueCard as { mainTask: string; bulletPoints: string[] } | undefined,
-      },
-      transcription: transcription.text,
-      duration,
-    });
+      if (!promptContent) {
+        return NextResponse.json({ error: 'Prompt not found' }, { status: 404 });
+      }
 
-    // Enhance metrics with local analysis
-    evaluation.metrics.repeatedWords = speechAnalysis.repeatedWords;
-    evaluation.metrics.sentenceVarietyScore = speechAnalysis.sentenceVariety.score;
-    evaluation.metrics.overusedWords = speechAnalysis.overusedWords;
+      const contentData = promptContent.contentData as Record<string, unknown>;
 
-    // Step 4: Create practice session
-    const practiceSession = await prisma.practiceSession.create({
-      data: {
-        userId: session.user.id,
-        module: 'SPEAKING',
-        contentId: promptId,
-        completedAt: new Date(),
-        submissionData: {
-          transcription: transcription.text,
-          duration,
-          audioMimeType: audio.type,
+      // Step 1: Transcribe the audio
+      const transcription = await transcribeAudio(audio);
+
+      if (!transcription.text || transcription.text.trim().length === 0) {
+        return NextResponse.json(
+          { error: 'Could not transcribe audio. Please speak clearly and try again.' },
+          { status: 400 }
+        );
+      }
+
+      // Step 2: Run local speech analysis for enhanced metrics
+      const speechAnalysis = analyzeSpeech(transcription.text);
+
+      // Step 3: Evaluate the speaking response with AI
+      const { evaluation, tokensUsed } = await evaluateSpeaking({
+        part: partNumber as 1 | 2 | 3,
+        prompt: {
+          topic: contentData.topic as string,
+          questions: contentData.questions as string[] | undefined,
+          cueCard: contentData.cueCard as { mainTask: string; bulletPoints: string[] } | undefined,
         },
-      },
-    });
+        transcription: transcription.text,
+        duration,
+      });
 
-    // Step 5: Store evaluation
-    await prisma.evaluation.create({
-      data: {
-        userId: session.user.id,
+      // Enhance metrics with local analysis
+      evaluation.metrics.repeatedWords = speechAnalysis.repeatedWords;
+      evaluation.metrics.sentenceVarietyScore = speechAnalysis.sentenceVariety.score;
+      evaluation.metrics.overusedWords = speechAnalysis.overusedWords;
+
+      // Step 4: Create practice session
+      const practiceSession = await prisma.practiceSession.create({
+        data: {
+          userId: session.user.id,
+          module: 'SPEAKING',
+          contentId: promptId,
+          completedAt: new Date(),
+          submissionData: {
+            transcription: transcription.text,
+            duration,
+            audioMimeType: audio.type,
+          },
+        },
+      });
+
+      // Step 5: Store evaluation
+      await prisma.evaluation.create({
+        data: {
+          userId: session.user.id,
+          sessionId: practiceSession.id,
+          module: 'SPEAKING',
+          promptVersion: 'v1.0',
+          inputText: transcription.text,
+          aiResponse: evaluation as object,
+          bandEstimate: evaluation.overall_band,
+          tokensUsed,
+        },
+      });
+
+      // Record token usage for budget tracking
+      await recordTokenUsage(session.user.id, tokensUsed);
+
+      return NextResponse.json({
+        success: true,
+        transcription: transcription.text,
+        evaluation,
         sessionId: practiceSession.id,
-        module: 'SPEAKING',
-        promptVersion: 'v1.0',
-        inputText: transcription.text,
-        aiResponse: evaluation as object,
-        bandEstimate: evaluation.overall_band,
-        tokensUsed,
-      },
-    });
-
-    // Record token usage for budget tracking
-    await recordTokenUsage(session.user.id, tokensUsed);
-
-    return NextResponse.json({
-      success: true,
-      transcription: transcription.text,
-      evaluation,
-      sessionId: practiceSession.id,
-    });
+      });
+    } finally {
+      await lock.release();
+    }
   } catch (error) {
     // Handle validation errors
     if (error instanceof ValidationError) {

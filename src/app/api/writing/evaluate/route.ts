@@ -6,6 +6,7 @@ import { evaluateWriting } from '@/lib/ai/writing-evaluator';
 import { ErrorCode, formatApiError, detectAnthropicError } from '@/lib/errors';
 import { canUseWritingEvaluation, incrementWritingEvaluation, getQuotaStatus } from '@/lib/quota';
 import { checkTokenBudget, recordTokenUsage, estimateTokens } from '@/lib/ai/token-budget';
+import { evaluationLock } from '@/lib/locks/distributed-lock';
 import {
   writingEvaluateSchema,
   validateBody,
@@ -86,67 +87,80 @@ export async function POST(request: NextRequest) {
     // Validate input with Zod schema
     const { promptId, essay, wordCount } = validateBody(writingEvaluateSchema, body);
 
-    // Fetch the prompt
-    const content = await prisma.content.findUnique({
-      where: { id: promptId },
-    });
-
-    if (!content) {
-      return NextResponse.json(formatApiError(ErrorCode.CONTENT_NOT_FOUND), { status: 404 });
+    // Acquire distributed lock to prevent duplicate submissions
+    const lock = await evaluationLock(userId, 'WRITING');
+    if (!lock) {
+      return NextResponse.json(
+        { error: 'Evaluation already in progress', code: 'DUPLICATE_SUBMISSION' },
+        { status: 409 }
+      );
     }
 
-    const contentData = content.contentData as unknown as ContentData;
+    try {
+      // Fetch the prompt
+      const content = await prisma.content.findUnique({
+        where: { id: promptId },
+      });
 
-    // Determine task type from content
-    const taskType = getTaskType(content.type);
+      if (!content) {
+        return NextResponse.json(formatApiError(ErrorCode.CONTENT_NOT_FOUND), { status: 404 });
+      }
 
-    // Evaluate with AI
-    const { evaluation, tokensUsed } = await evaluateWriting({
-      taskType,
-      testType: content.testType === 'GENERAL' ? 'general' : 'academic',
-      questionPrompt: contentData.prompt,
-      userResponse: essay,
-    });
+      const contentData = content.contentData as unknown as ContentData;
 
-    // Create practice session and evaluation records
-    const practiceSession = await prisma.practiceSession.create({
-      data: {
-        userId,
-        module: 'WRITING',
-        contentId: promptId,
-        completedAt: new Date(),
-        submissionData: { essay, wordCount: wordCount || evaluation.word_count },
-      },
-    });
+      // Determine task type from content
+      const taskType = getTaskType(content.type);
 
-    await prisma.evaluation.create({
-      data: {
-        userId,
-        sessionId: practiceSession.id,
-        module: 'WRITING',
-        promptVersion: '1.0',
-        inputText: essay,
-        aiResponse: JSON.parse(JSON.stringify(evaluation)),
-        bandEstimate: evaluation.overall_band,
+      // Evaluate with AI
+      const { evaluation, tokensUsed } = await evaluateWriting({
+        taskType,
+        testType: content.testType === 'GENERAL' ? 'general' : 'academic',
+        questionPrompt: contentData.prompt,
+        userResponse: essay,
+      });
+
+      // Create practice session and evaluation records
+      const practiceSession = await prisma.practiceSession.create({
+        data: {
+          userId,
+          module: 'WRITING',
+          contentId: promptId,
+          completedAt: new Date(),
+          submissionData: { essay, wordCount: wordCount || evaluation.word_count },
+        },
+      });
+
+      await prisma.evaluation.create({
+        data: {
+          userId,
+          sessionId: practiceSession.id,
+          module: 'WRITING',
+          promptVersion: '1.0',
+          inputText: essay,
+          aiResponse: JSON.parse(JSON.stringify(evaluation)),
+          bandEstimate: evaluation.overall_band,
+          tokensUsed,
+        },
+      });
+
+      // Increment quota after successful evaluation
+      await incrementWritingEvaluation(userId);
+
+      // Record token usage for budget tracking
+      await recordTokenUsage(userId, tokensUsed);
+
+      // Get updated quota status to return to client
+      const updatedQuota = await getQuotaStatus(userId);
+
+      return NextResponse.json({
+        evaluation,
         tokensUsed,
-      },
-    });
-
-    // Increment quota after successful evaluation
-    await incrementWritingEvaluation(userId);
-
-    // Record token usage for budget tracking
-    await recordTokenUsage(userId, tokensUsed);
-
-    // Get updated quota status to return to client
-    const updatedQuota = await getQuotaStatus(userId);
-
-    return NextResponse.json({
-      evaluation,
-      tokensUsed,
-      wordCount: wordCount || evaluation.word_count,
-      quota: updatedQuota.writing,
-    });
+        wordCount: wordCount || evaluation.word_count,
+        quota: updatedQuota.writing,
+      });
+    } finally {
+      await lock.release();
+    }
   } catch (error) {
     // Handle validation errors
     if (error instanceof ValidationError) {

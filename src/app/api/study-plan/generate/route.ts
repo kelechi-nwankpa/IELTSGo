@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth/config';
 import { prisma } from '@/lib/prisma';
 import { generateStudyPlan, StudyPlanInput } from '@/lib/ai/study-plan-generator';
 import { checkTokenBudget, recordTokenUsage } from '@/lib/ai/token-budget';
+import { studyPlanLock } from '@/lib/locks/distributed-lock';
 import { z } from 'zod';
 
 // Zod schema for study plan generation
@@ -61,8 +62,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the study plan with diagnostic
-    const studyPlan = await prisma.studyPlan.findFirst({
+    // Acquire distributed lock to prevent duplicate study plan generation
+    const lock = await studyPlanLock(userId);
+    if (!lock) {
+      return NextResponse.json(
+        { error: 'Study plan generation already in progress', code: 'DUPLICATE_SUBMISSION' },
+        { status: 409 }
+      );
+    }
+
+    try {
+      // Get the study plan with diagnostic
+      const studyPlan = await prisma.studyPlan.findFirst({
       where: {
         id: studyPlanId,
         userId,
@@ -207,6 +218,9 @@ export async function POST(request: NextRequest) {
       tokensUsed,
       message: 'Study plan generated successfully',
     });
+    } finally {
+      await lock.release();
+    }
   } catch (error) {
     console.error('Study plan generation error:', error);
     return NextResponse.json({ error: 'Failed to generate study plan' }, { status: 500 });
