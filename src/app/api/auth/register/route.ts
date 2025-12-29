@@ -1,30 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
+import {
+  registerSchema,
+  validateBody,
+  ValidationError,
+  formatValidationError,
+} from '@/lib/validation/schemas';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, password } = body;
 
-    // Validate required fields
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
-    }
-
-    // Validate password length
-    if (password.length < 8) {
-      return NextResponse.json(
-        { error: 'Password must be at least 8 characters' },
-        { status: 400 }
-      );
-    }
+    // Validate input with Zod schema
+    const { name, email, password } = validateBody(registerSchema, body);
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -82,6 +71,11 @@ export async function POST(request: NextRequest) {
       user,
     });
   } catch (error) {
+    // Handle validation errors
+    if (error instanceof ValidationError) {
+      return NextResponse.json(formatValidationError(error), { status: 400 });
+    }
+
     console.error('Registration error:', error);
     return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
   }

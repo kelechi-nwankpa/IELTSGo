@@ -193,7 +193,9 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      allowDangerousEmailAccountLinking: true,
+      // SECURITY: Disabled dangerous email account linking
+      // Users must verify email ownership before linking accounts
+      // allowDangerousEmailAccountLinking: false (default)
     }),
     CredentialsProvider({
       name: 'credentials',
@@ -237,6 +239,29 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
   },
   callbacks: {
+    async signIn({ user, account }) {
+      // For OAuth providers, check if user exists with same email but different provider
+      if (account?.provider !== 'credentials') {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email! },
+          include: { accounts: true },
+        });
+
+        if (existingUser) {
+          // Check if this OAuth provider is already linked
+          const existingAccount = existingUser.accounts.find(
+            (acc) => acc.provider === account?.provider
+          );
+
+          if (!existingAccount) {
+            // User exists but hasn't linked this OAuth provider
+            // Redirect to error page explaining they need to sign in with existing method first
+            return '/auth/error?error=OAuthAccountNotLinked';
+          }
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

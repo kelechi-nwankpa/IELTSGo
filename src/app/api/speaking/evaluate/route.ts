@@ -5,6 +5,12 @@ import { prisma } from '@/lib/prisma';
 import { transcribeAudio } from '@/lib/ai/transcription';
 import { evaluateSpeaking } from '@/lib/ai/speaking-evaluator';
 import { analyzeSpeech } from '@/lib/ai/speech-analysis';
+import {
+  speakingEvaluateSchema,
+  validateBody,
+  ValidationError,
+  formatValidationError,
+} from '@/lib/validation/schemas';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,24 +21,23 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const audio = formData.get('audio') as Blob | null;
-    const promptId = formData.get('promptId') as string | null;
-    const part = formData.get('part') as string | null;
-    const duration = formData.get('duration') as string | null;
 
-    if (!audio || !promptId || !part || !duration) {
-      return NextResponse.json(
-        { error: 'Missing required fields: audio, promptId, part, duration' },
-        { status: 400 }
-      );
+    if (!audio) {
+      return NextResponse.json({ error: 'Audio file is required' }, { status: 400 });
     }
 
-    const partNumber = parseInt(part, 10);
-    if (![1, 2, 3].includes(partNumber)) {
-      return NextResponse.json(
-        { error: 'Invalid part number. Must be 1, 2, or 3.' },
-        { status: 400 }
-      );
-    }
+    // Validate text fields with Zod schema
+    const formFields = {
+      promptId: formData.get('promptId') as string | null,
+      part: formData.get('part') as string | null,
+      duration: formData.get('duration') as string | null,
+    };
+
+    const {
+      promptId,
+      part: partNumber,
+      duration,
+    } = validateBody(speakingEvaluateSchema, formFields);
 
     // Fetch the prompt
     const promptContent = await prisma.content.findUnique({
@@ -67,7 +72,7 @@ export async function POST(request: NextRequest) {
         cueCard: contentData.cueCard as { mainTask: string; bulletPoints: string[] } | undefined,
       },
       transcription: transcription.text,
-      duration: parseFloat(duration),
+      duration,
     });
 
     // Enhance metrics with local analysis
@@ -84,7 +89,7 @@ export async function POST(request: NextRequest) {
         completedAt: new Date(),
         submissionData: {
           transcription: transcription.text,
-          duration: parseFloat(duration),
+          duration,
           audioMimeType: audio.type,
         },
       },
@@ -111,6 +116,11 @@ export async function POST(request: NextRequest) {
       sessionId: practiceSession.id,
     });
   } catch (error) {
+    // Handle validation errors
+    if (error instanceof ValidationError) {
+      return NextResponse.json(formatValidationError(error), { status: 400 });
+    }
+
     console.error('Speaking evaluation error:', error);
 
     if (error instanceof Error) {

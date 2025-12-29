@@ -5,6 +5,12 @@ import { prisma } from '@/lib/prisma';
 import { evaluateWriting } from '@/lib/ai/writing-evaluator';
 import { ErrorCode, formatApiError, detectAnthropicError } from '@/lib/errors';
 import { canUseWritingEvaluation, incrementWritingEvaluation, getQuotaStatus } from '@/lib/quota';
+import {
+  writingEvaluateSchema,
+  validateBody,
+  ValidationError,
+  formatValidationError,
+} from '@/lib/validation/schemas';
 
 interface ContentData {
   prompt: string;
@@ -56,20 +62,9 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { promptId, essay, wordCount } = body;
 
-    // Validate required fields
-    if (!promptId || !essay) {
-      return NextResponse.json(formatApiError(ErrorCode.MISSING_FIELDS), { status: 400 });
-    }
-
-    // Validate essay is not empty or just whitespace
-    if (typeof essay !== 'string' || essay.trim().length === 0) {
-      return NextResponse.json(
-        formatApiError(ErrorCode.INVALID_INPUT, 'Essay content cannot be empty'),
-        { status: 400 }
-      );
-    }
+    // Validate input with Zod schema
+    const { promptId, essay, wordCount } = validateBody(writingEvaluateSchema, body);
 
     // Fetch the prompt
     const content = await prisma.content.findUnique({
@@ -130,6 +125,11 @@ export async function POST(request: NextRequest) {
       quota: updatedQuota.writing,
     });
   } catch (error) {
+    // Handle validation errors
+    if (error instanceof ValidationError) {
+      return NextResponse.json(formatValidationError(error), { status: 400 });
+    }
+
     console.error('Evaluation error:', error);
 
     // Detect specific error type

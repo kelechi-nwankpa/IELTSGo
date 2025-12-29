@@ -187,6 +187,95 @@ export async function incrementWritingEvaluation(userId: string): Promise<void> 
 }
 
 /**
+ * Atomically check and reserve a writing evaluation quota
+ * Prevents race conditions by combining check and increment in a transaction
+ *
+ * @returns Object with success status and current quota info
+ */
+export async function reserveWritingEvaluation(userId: string): Promise<{
+  success: boolean;
+  quotaStatus: QuotaStatus;
+  error?: string;
+}> {
+  return await prisma.$transaction(async (tx) => {
+    // Get user subscription info
+    const user = await tx.user.findUnique({
+      where: { id: userId },
+      select: {
+        subscriptionTier: true,
+        subscriptionStatus: true,
+        currentPeriodEnd: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const effectiveTier = getEffectiveTier(
+      user.subscriptionTier,
+      user.subscriptionStatus,
+      user.currentPeriodEnd
+    );
+    const limits = QUOTA_LIMITS[effectiveTier];
+
+    // Premium users have unlimited access
+    if (limits.writingEvaluations === Infinity) {
+      // Still increment for tracking purposes
+      await tx.usageQuota.upsert({
+        where: { userId },
+        update: { writingEvaluationsUsed: { increment: 1 } },
+        create: {
+          userId,
+          periodStart: new Date(),
+          writingEvaluationsUsed: 1,
+          speakingEvaluationsUsed: 0,
+          explanationsUsed: 0,
+        },
+      });
+
+      const quotaStatus = await getQuotaStatus(userId);
+      return { success: true, quotaStatus };
+    }
+
+    // For free tier, atomically check and increment
+    // Use raw SQL for atomic compare-and-swap operation
+    const result = await tx.usageQuota.upsert({
+      where: { userId },
+      update: {
+        writingEvaluationsUsed: { increment: 1 },
+      },
+      create: {
+        userId,
+        periodStart: new Date(),
+        writingEvaluationsUsed: 1,
+        speakingEvaluationsUsed: 0,
+        explanationsUsed: 0,
+      },
+    });
+
+    // Check if we exceeded the limit (rollback if so)
+    if (result.writingEvaluationsUsed > limits.writingEvaluations) {
+      // Decrement back since we exceeded
+      await tx.usageQuota.update({
+        where: { userId },
+        data: { writingEvaluationsUsed: { decrement: 1 } },
+      });
+
+      const quotaStatus = await getQuotaStatus(userId);
+      return {
+        success: false,
+        quotaStatus,
+        error: 'Writing evaluation quota exceeded',
+      };
+    }
+
+    const quotaStatus = await getQuotaStatus(userId);
+    return { success: true, quotaStatus };
+  });
+}
+
+/**
  * Check if a user can use a speaking evaluation
  */
 export async function canUseSpeakingEvaluation(userId: string): Promise<boolean> {
@@ -215,6 +304,70 @@ export async function incrementSpeakingEvaluation(userId: string): Promise<void>
       speakingEvaluationsUsed: 1,
       explanationsUsed: 0,
     },
+  });
+}
+
+/**
+ * Atomically check and reserve a speaking evaluation quota
+ * Prevents race conditions by combining check and increment in a transaction
+ */
+export async function reserveSpeakingEvaluation(userId: string): Promise<{
+  success: boolean;
+  quotaStatus: QuotaStatus;
+  error?: string;
+}> {
+  return await prisma.$transaction(async (tx) => {
+    const user = await tx.user.findUnique({
+      where: { id: userId },
+      select: {
+        subscriptionTier: true,
+        subscriptionStatus: true,
+        currentPeriodEnd: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const effectiveTier = getEffectiveTier(
+      user.subscriptionTier,
+      user.subscriptionStatus,
+      user.currentPeriodEnd
+    );
+    const limits = QUOTA_LIMITS[effectiveTier];
+
+    // Free tier cannot use speaking evaluations
+    if (limits.speakingEvaluations === 0) {
+      const quotaStatus = await getQuotaStatus(userId);
+      return {
+        success: false,
+        quotaStatus,
+        error: 'Speaking evaluations require a premium subscription',
+      };
+    }
+
+    // Premium users have unlimited access
+    if (limits.speakingEvaluations === Infinity) {
+      await tx.usageQuota.upsert({
+        where: { userId },
+        update: { speakingEvaluationsUsed: { increment: 1 } },
+        create: {
+          userId,
+          periodStart: new Date(),
+          writingEvaluationsUsed: 0,
+          speakingEvaluationsUsed: 1,
+          explanationsUsed: 0,
+        },
+      });
+
+      const quotaStatus = await getQuotaStatus(userId);
+      return { success: true, quotaStatus };
+    }
+
+    // Should not reach here with current limits, but handle gracefully
+    const quotaStatus = await getQuotaStatus(userId);
+    return { success: true, quotaStatus };
   });
 }
 
@@ -283,5 +436,80 @@ export async function incrementMockTest(userId: string): Promise<void> {
       explanationsUsed: 0,
       mockTestsUsed: 1,
     },
+  });
+}
+
+/**
+ * Atomically check and reserve a mock test quota
+ * Prevents race conditions by combining check and increment in a transaction
+ */
+export async function reserveMockTest(userId: string): Promise<{
+  success: boolean;
+  quotaStatus: QuotaStatus;
+  error?: string;
+}> {
+  return await prisma.$transaction(async (tx) => {
+    const user = await tx.user.findUnique({
+      where: { id: userId },
+      select: {
+        subscriptionTier: true,
+        subscriptionStatus: true,
+        currentPeriodEnd: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const effectiveTier = getEffectiveTier(
+      user.subscriptionTier,
+      user.subscriptionStatus,
+      user.currentPeriodEnd
+    );
+    const limits = QUOTA_LIMITS[effectiveTier];
+
+    // Free tier cannot use mock tests
+    if (effectiveTier === 'FREE') {
+      const quotaStatus = await getQuotaStatus(userId);
+      return {
+        success: false,
+        quotaStatus,
+        error: 'Mock tests require a premium subscription',
+      };
+    }
+
+    // Atomically increment and check
+    const result = await tx.usageQuota.upsert({
+      where: { userId },
+      update: { mockTestsUsed: { increment: 1 } },
+      create: {
+        userId,
+        periodStart: new Date(),
+        writingEvaluationsUsed: 0,
+        speakingEvaluationsUsed: 0,
+        explanationsUsed: 0,
+        mockTestsUsed: 1,
+      },
+    });
+
+    // Check if we exceeded the limit
+    if (result.mockTestsUsed > limits.mockTests) {
+      // Decrement back since we exceeded
+      await tx.usageQuota.update({
+        where: { userId },
+        data: { mockTestsUsed: { decrement: 1 } },
+      });
+
+      const quotaStatus = await getQuotaStatus(userId);
+      return {
+        success: false,
+        quotaStatus,
+        error: 'Monthly mock test limit reached',
+      };
+    }
+
+    const quotaStatus = await getQuotaStatus(userId);
+    return { success: true, quotaStatus };
   });
 }
