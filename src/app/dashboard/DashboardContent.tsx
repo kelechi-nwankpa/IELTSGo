@@ -4,6 +4,110 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 
+function MobileMenu({
+  isOpen,
+  onClose,
+  isAdmin,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  isAdmin: boolean;
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 lg:hidden">
+      {/* Backdrop */}
+      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
+
+      {/* Menu panel */}
+      <div className="fixed inset-y-0 right-0 w-full max-w-xs bg-white shadow-xl">
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4">
+          <span className="text-lg font-semibold text-slate-900">Menu</span>
+          <button onClick={onClose} className="rounded-lg p-2 text-slate-600 hover:bg-slate-100">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <nav className="px-4 py-4">
+          <div className="space-y-1">
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={onClose}
+                className="block rounded-lg px-4 py-3 text-base font-medium text-amber-600 hover:bg-amber-50"
+              >
+                Admin
+              </Link>
+            )}
+            <Link
+              href="/study-plan"
+              onClick={onClose}
+              className="block rounded-lg px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Study Plan
+            </Link>
+            <Link
+              href="/history"
+              onClick={onClose}
+              className="block rounded-lg px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100"
+            >
+              History
+            </Link>
+            <Link
+              href="/mock-test"
+              onClick={onClose}
+              className="block rounded-lg px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Mock Test
+            </Link>
+            <Link
+              href="/exam-prep"
+              onClick={onClose}
+              className="block rounded-lg px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Exam Prep
+            </Link>
+            <Link
+              href="/writing"
+              onClick={onClose}
+              className="block rounded-lg px-4 py-3 text-base font-medium text-blue-600 hover:bg-blue-50"
+            >
+              Practice Now
+            </Link>
+          </div>
+
+          <div className="mt-6 border-t border-slate-200 pt-6">
+            <Link
+              href="/settings/account"
+              onClick={onClose}
+              className="block rounded-lg px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Account Settings
+            </Link>
+            <button
+              onClick={() => {
+                onClose();
+                signOut({ callbackUrl: '/' });
+              }}
+              className="block w-full rounded-lg px-4 py-3 text-left text-base font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Sign out
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
+}
+
 interface DashboardData {
   user: {
     name: string | null;
@@ -47,6 +151,7 @@ export default function DashboardContent() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     async function fetchDashboard() {
@@ -106,16 +211,40 @@ export default function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        isAdmin={user.role === 'ADMIN'}
+      />
+
       {/* Header */}
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25">
               <span className="text-lg font-bold text-white">G</span>
             </div>
             <span className="text-xl font-bold text-slate-900">IELTSGo</span>
           </Link>
-          <div className="flex items-center gap-4">
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
+          >
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+
+          {/* Desktop navigation */}
+          <div className="hidden items-center gap-4 lg:flex">
             {user.role === 'ADMIN' && (
               <Link
                 href="/admin"
@@ -170,9 +299,9 @@ export default function DashboardContent() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
         {/* Welcome Section */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">
               Welcome back{user.name ? `, ${user.name.split(' ')[0]}` : ''}!
