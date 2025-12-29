@@ -4,28 +4,62 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-const errorMessages: Record<string, string> = {
-  Configuration: 'There is a problem with the server configuration.',
-  AccessDenied: 'You do not have permission to sign in.',
-  Verification: 'The verification link may have expired or already been used.',
-  OAuthSignin: 'Error in the OAuth sign in process.',
-  OAuthCallback: 'Error in the OAuth callback process.',
-  OAuthCreateAccount: 'Could not create an account using this OAuth provider.',
-  EmailCreateAccount: 'Could not create an account using this email.',
-  Callback: 'Error in the callback process.',
-  OAuthAccountNotLinked:
-    'This email is already associated with another account. Please sign in using your original method.',
-  EmailSignin: 'Error sending the verification email.',
-  CredentialsSignin: 'Invalid email or password.',
-  SessionRequired: 'Please sign in to access this page.',
-  Default: 'An error occurred during authentication.',
+interface ErrorInfo {
+  message: string;
+  description?: string;
+  showLinkingInstructions?: boolean;
+}
+
+const errorMessages: Record<string, ErrorInfo> = {
+  Configuration: {
+    message: 'There is a problem with the server configuration.',
+  },
+  AccessDenied: {
+    message: 'You do not have permission to sign in.',
+  },
+  Verification: {
+    message: 'The verification link may have expired or already been used.',
+  },
+  OAuthSignin: {
+    message: 'Error in the OAuth sign in process.',
+  },
+  OAuthCallback: {
+    message: 'Error in the OAuth callback process.',
+  },
+  OAuthCreateAccount: {
+    message: 'Could not create an account using this OAuth provider.',
+  },
+  EmailCreateAccount: {
+    message: 'Could not create an account using this email.',
+  },
+  Callback: {
+    message: 'Error in the callback process.',
+  },
+  OAuthAccountNotLinked: {
+    message: 'An account with this email already exists',
+    description:
+      'For security, we cannot automatically link accounts. Please sign in with your existing method first, then link your Google account in settings.',
+    showLinkingInstructions: true,
+  },
+  EmailSignin: {
+    message: 'Error sending the verification email.',
+  },
+  CredentialsSignin: {
+    message: 'Invalid email or password.',
+  },
+  SessionRequired: {
+    message: 'Please sign in to access this page.',
+  },
+  Default: {
+    message: 'An error occurred during authentication.',
+  },
 };
 
 function AuthErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error') || 'Default';
 
-  const errorMessage = errorMessages[error] || errorMessages.Default;
+  const errorInfo = errorMessages[error] || errorMessages.Default;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
@@ -48,17 +82,32 @@ function AuthErrorContent() {
                 />
               </svg>
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-gray-900">Authentication Error</h2>
-            <p className="mt-2 text-sm text-gray-600">{errorMessage}</p>
+            <h2 className="mt-4 text-xl font-semibold text-gray-900">{errorInfo.message}</h2>
+            {errorInfo.description && (
+              <p className="mt-2 text-sm text-gray-600">{errorInfo.description}</p>
+            )}
           </div>
         </div>
+
+        {errorInfo.showLinkingInstructions && (
+          <div className="rounded-lg bg-blue-50 p-4 text-left">
+            <h3 className="text-sm font-medium text-blue-800">How to link your accounts:</h3>
+            <ol className="mt-2 list-inside list-decimal space-y-1 text-sm text-blue-700">
+              <li>Sign in with your email and password</li>
+              <li>Go to Account Settings</li>
+              <li>Click &quot;Link Google Account&quot;</li>
+            </ol>
+          </div>
+        )}
 
         <div className="space-y-3">
           <Link
             href="/auth/signin"
             className="block w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
           >
-            Try signing in again
+            {errorInfo.showLinkingInstructions
+              ? 'Sign in with email & password'
+              : 'Try signing in again'}
           </Link>
           <Link
             href="/"

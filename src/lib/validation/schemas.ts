@@ -190,7 +190,7 @@ export const adminContentSchema = z.object({
   type: z.string().max(100),
   testType: testTypeSchema,
   difficultyBand: z.number().min(1).max(9).optional(),
-  contentData: z.record(z.unknown()),
+  contentData: z.record(z.string(), z.unknown()),
   tags: z.array(z.string().max(50)).optional(),
 });
 

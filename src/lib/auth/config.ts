@@ -262,6 +262,16 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
+    async redirect({ url, baseUrl }) {
+      // Handle linking callback - redirect back to settings after OAuth
+      if (url.includes('/api/auth/callback') && url.includes('linking=true')) {
+        return `${baseUrl}/settings/account?linked=true`;
+      }
+      // Default behavior
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

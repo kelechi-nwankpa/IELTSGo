@@ -143,19 +143,24 @@ export function detectPII(text: string): PIIDetectionResult {
     // Reset regex state
     pattern.lastIndex = 0;
 
-    let match;
+    let match: RegExpExecArray | null;
     while ((match = pattern.exec(text)) !== null) {
+      // Capture values to avoid null check issues in callback
+      const matchIndex = match.index;
+      const matchValue = match[0];
+      const matchEnd = matchIndex + matchValue.length;
+
       // Avoid duplicate matches at same position
       const isDuplicate = matches.some(
-        (m) => m.startIndex === match.index && m.endIndex === match.index + match[0].length
+        (m) => m.startIndex === matchIndex && m.endIndex === matchEnd
       );
 
       if (!isDuplicate) {
         matches.push({
           type,
-          value: match[0],
-          startIndex: match.index,
-          endIndex: match.index + match[0].length,
+          value: matchValue,
+          startIndex: matchIndex,
+          endIndex: matchEnd,
           confidence,
         });
       }
