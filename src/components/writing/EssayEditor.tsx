@@ -18,6 +18,7 @@ export function EssayEditor({
   isSubmitting = false,
 }: EssayEditorProps) {
   const [content, setContent] = useState(initialContent);
+  const [showWarning, setShowWarning] = useState(false);
 
   const wordCount = useCallback(() => {
     if (!content.trim()) return 0;
@@ -37,9 +38,14 @@ export function EssayEditor({
 
   const handleSubmit = () => {
     if (isUnderMin) {
-      alert(`Please write at least ${minWords} words before submitting.`);
+      setShowWarning(true);
       return;
     }
+    onSubmit(content, count);
+  };
+
+  const handleConfirmSubmit = () => {
+    setShowWarning(false);
     onSubmit(content, count);
   };
 
@@ -77,6 +83,54 @@ export function EssayEditor({
           {isSubmitting ? 'Evaluating...' : 'Submit for Evaluation'}
         </button>
       </div>
+
+      {/* Under word count warning modal */}
+      {showWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
+                <svg
+                  className="h-5 w-5 text-amber-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Below Minimum Word Count</h3>
+            </div>
+            <p className="mb-2 text-gray-600">
+              Your response is <span className="font-semibold text-amber-600">{count} words</span>,
+              which is below the minimum of {minWords} words.
+            </p>
+            <p className="mb-6 text-sm text-gray-500">
+              In the real IELTS exam, responses under the word limit receive a penalty in Task
+              Achievement. Your evaluation will reflect this.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowWarning(false)}
+                className="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                Keep Writing
+              </button>
+              <button
+                onClick={handleConfirmSubmit}
+                className="flex-1 rounded-lg bg-amber-500 px-4 py-2 font-medium text-white transition-colors hover:bg-amber-600"
+              >
+                Submit Anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

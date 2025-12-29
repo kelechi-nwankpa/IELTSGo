@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server';
-import crypto from 'crypto';
 
 /**
  * Trusted proxy headers in order of preference
@@ -83,6 +82,20 @@ export function getClientIP(request: NextRequest): string {
 }
 
 /**
+ * Simple hash function for fingerprinting (Edge Runtime compatible)
+ * Not cryptographically secure, but sufficient for fingerprinting
+ */
+function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash).toString(16).padStart(8, '0');
+}
+
+/**
  * Generate a fingerprint from request characteristics
  * Used as a secondary identifier to prevent bypass
  */
@@ -93,7 +106,8 @@ export function getRequestFingerprint(request: NextRequest): string {
     request.headers.get('accept-encoding') || '',
   ];
 
-  const hash = crypto.createHash('sha256').update(components.join('|')).digest('hex');
+  // Use simple hash for Edge Runtime compatibility
+  const hash = simpleHash(components.join('|'));
 
   return hash.substring(0, 16);
 }

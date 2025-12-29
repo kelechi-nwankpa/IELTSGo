@@ -74,150 +74,150 @@ export async function POST(request: NextRequest) {
     try {
       // Get the study plan with diagnostic
       const studyPlan = await prisma.studyPlan.findFirst({
-      where: {
-        id: studyPlanId,
-        userId,
-      },
-      include: {
-        diagnostic: true,
-      },
-    });
+        where: {
+          id: studyPlanId,
+          userId,
+        },
+        include: {
+          diagnostic: true,
+        },
+      });
 
-    if (!studyPlan) {
-      return NextResponse.json({ error: 'Study plan not found' }, { status: 404 });
-    }
-
-    // Get user's practice history for context
-    const recentSessions = await prisma.practiceSession.findMany({
-      where: {
-        userId,
-        completedAt: { not: null },
-      },
-      select: {
-        module: true,
-        score: true,
-      },
-      orderBy: { completedAt: 'desc' },
-      take: 20,
-    });
-
-    const recentEvaluations = await prisma.evaluation.findMany({
-      where: { userId },
-      select: {
-        module: true,
-        bandEstimate: true,
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 10,
-    });
-
-    // Build practice summary
-    const practiceCounts: Record<string, number> = {};
-    const practiceScores: Record<string, number[]> = {};
-
-    for (const session of recentSessions) {
-      const modName = session.module.toLowerCase();
-      practiceCounts[modName] = (practiceCounts[modName] || 0) + 1;
-      if (session.score !== null) {
-        practiceScores[modName] = practiceScores[modName] || [];
-        practiceScores[modName].push(session.score);
+      if (!studyPlan) {
+        return NextResponse.json({ error: 'Study plan not found' }, { status: 404 });
       }
-    }
 
-    for (const evaluation of recentEvaluations) {
-      const modName = evaluation.module.toLowerCase();
-      practiceScores[modName] = practiceScores[modName] || [];
-      practiceScores[modName].push(evaluation.bandEstimate);
-    }
+      // Get user's practice history for context
+      const recentSessions = await prisma.practiceSession.findMany({
+        where: {
+          userId,
+          completedAt: { not: null },
+        },
+        select: {
+          module: true,
+          score: true,
+        },
+        orderBy: { completedAt: 'desc' },
+        take: 20,
+      });
 
-    const practiceSummary =
-      Object.entries(practiceCounts)
-        .map(([module, count]) => {
-          const scores = practiceScores[module] || [];
-          const avgScore =
-            scores.length > 0
-              ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
-              : 'N/A';
-          return `${module}: ${count} sessions (avg: ${avgScore})`;
-        })
-        .join(', ') || 'No previous practice data';
+      const recentEvaluations = await prisma.evaluation.findMany({
+        where: { userId },
+        select: {
+          module: true,
+          bandEstimate: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+      });
 
-    // Get current bands from diagnostic or estimate from practice
-    const currentBands = {
-      listening: studyPlan.diagnostic?.listeningBand ?? 5.5,
-      reading: studyPlan.diagnostic?.readingBand ?? 5.5,
-      writing: studyPlan.diagnostic?.writingBand ?? 5.5,
-      speaking: studyPlan.diagnostic?.speakingBand ?? 5.5,
-    };
+      // Build practice summary
+      const practiceCounts: Record<string, number> = {};
+      const practiceScores: Record<string, number[]> = {};
 
-    // Get weak areas
-    const weakAreas = (studyPlan.diagnostic?.weakAreas as string[]) || [];
+      for (const session of recentSessions) {
+        const modName = session.module.toLowerCase();
+        practiceCounts[modName] = (practiceCounts[modName] || 0) + 1;
+        if (session.score !== null) {
+          practiceScores[modName] = practiceScores[modName] || [];
+          practiceScores[modName].push(session.score);
+        }
+      }
 
-    // Prepare input for AI generator
-    const planInput: StudyPlanInput = {
-      currentBands,
-      targetBand: studyPlan.targetBand,
-      testType: 'academic', // TODO: Get from user profile
-      testDate: studyPlan.testDate,
-      hoursPerDay: studyPlan.hoursPerDay,
-      studyDaysPerWeek: studyPlan.studyDaysPerWeek,
-      weakAreas,
-      practiceSummary,
-    };
+      for (const evaluation of recentEvaluations) {
+        const modName = evaluation.module.toLowerCase();
+        practiceScores[modName] = practiceScores[modName] || [];
+        practiceScores[modName].push(evaluation.bandEstimate);
+      }
 
-    // Generate the plan
-    const { plan, tokensUsed } = await generateStudyPlan(planInput);
+      const practiceSummary =
+        Object.entries(practiceCounts)
+          .map(([module, count]) => {
+            const scores = practiceScores[module] || [];
+            const avgScore =
+              scores.length > 0
+                ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)
+                : 'N/A';
+            return `${module}: ${count} sessions (avg: ${avgScore})`;
+          })
+          .join(', ') || 'No previous practice data';
 
-    // Update the study plan with generated content
-    const updatedPlan = await prisma.studyPlan.update({
-      where: { id: studyPlanId },
-      data: {
-        planData: plan as object,
+      // Get current bands from diagnostic or estimate from practice
+      const currentBands = {
+        listening: studyPlan.diagnostic?.listeningBand ?? 5.5,
+        reading: studyPlan.diagnostic?.readingBand ?? 5.5,
+        writing: studyPlan.diagnostic?.writingBand ?? 5.5,
+        speaking: studyPlan.diagnostic?.speakingBand ?? 5.5,
+      };
+
+      // Get weak areas
+      const weakAreas = (studyPlan.diagnostic?.weakAreas as string[]) || [];
+
+      // Prepare input for AI generator
+      const planInput: StudyPlanInput = {
+        currentBands,
+        targetBand: studyPlan.targetBand,
+        testType: 'academic', // TODO: Get from user profile
+        testDate: studyPlan.testDate,
+        hoursPerDay: studyPlan.hoursPerDay,
+        studyDaysPerWeek: studyPlan.studyDaysPerWeek,
+        weakAreas,
+        practiceSummary,
+      };
+
+      // Generate the plan
+      const { plan, tokensUsed } = await generateStudyPlan(planInput);
+
+      // Update the study plan with generated content
+      const updatedPlan = await prisma.studyPlan.update({
+        where: { id: studyPlanId },
+        data: {
+          planData: plan as object,
+          tokensUsed,
+          promptVersion: '1.0.0',
+          status: 'ACTIVE',
+          lastRegeneratedAt: new Date(),
+        },
+      });
+
+      // Create weekly goals from the plan
+      const weeklyGoalData = plan.weekly_plans.map((week) => ({
+        studyPlanId,
+        weekNumber: week.week,
+        goals: week.goals.map((g, i) => ({
+          module: ['listening', 'reading', 'writing', 'speaking'][i % 4],
+          target: 1,
+          description: g,
+        })),
+        theme: week.theme,
+        milestone: week.milestone,
+        totalTasks: Object.values(week.daily_breakdown).reduce(
+          (sum, m) => sum + m.activities.length,
+          0
+        ),
+      }));
+
+      // Delete existing goals and create new ones
+      await prisma.weeklyGoal.deleteMany({
+        where: { studyPlanId },
+      });
+
+      await prisma.weeklyGoal.createMany({
+        data: weeklyGoalData,
+      });
+
+      // Create study tasks for the first 2 weeks
+      await createTasksForWeeks(studyPlanId, plan.weekly_plans.slice(0, 2), new Date());
+
+      // Record token usage for budget tracking
+      await recordTokenUsage(userId, tokensUsed);
+
+      return NextResponse.json({
+        studyPlan: updatedPlan,
+        plan,
         tokensUsed,
-        promptVersion: '1.0.0',
-        status: 'ACTIVE',
-        lastRegeneratedAt: new Date(),
-      },
-    });
-
-    // Create weekly goals from the plan
-    const weeklyGoalData = plan.weekly_plans.map((week) => ({
-      studyPlanId,
-      weekNumber: week.week,
-      goals: week.goals.map((g, i) => ({
-        module: ['listening', 'reading', 'writing', 'speaking'][i % 4],
-        target: 1,
-        description: g,
-      })),
-      theme: week.theme,
-      milestone: week.milestone,
-      totalTasks: Object.values(week.daily_breakdown).reduce(
-        (sum, m) => sum + m.activities.length,
-        0
-      ),
-    }));
-
-    // Delete existing goals and create new ones
-    await prisma.weeklyGoal.deleteMany({
-      where: { studyPlanId },
-    });
-
-    await prisma.weeklyGoal.createMany({
-      data: weeklyGoalData,
-    });
-
-    // Create study tasks for the first 2 weeks
-    await createTasksForWeeks(studyPlanId, plan.weekly_plans.slice(0, 2), new Date());
-
-    // Record token usage for budget tracking
-    await recordTokenUsage(userId, tokensUsed);
-
-    return NextResponse.json({
-      studyPlan: updatedPlan,
-      plan,
-      tokensUsed,
-      message: 'Study plan generated successfully',
-    });
+        message: 'Study plan generated successfully',
+      });
     } finally {
       await lock.release();
     }
